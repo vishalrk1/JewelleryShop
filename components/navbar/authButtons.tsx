@@ -1,0 +1,52 @@
+"use client";
+
+import { RootState } from "@/redux/store/store";
+import React, { use, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Button } from "../ui/button";
+import { logoutUser } from "@/redux/store/auth/action";
+import Link from "next/link";
+import UserDropdown from "./userDetails";
+import { Heart, ShoppingCart } from "lucide-react";
+import IconButton from "../buttons/IconButton";
+
+const AuthButtons = () => {
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const { user, userData } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
+  return (
+    <div className="flex items-center justify-center">
+      {user ? (
+        <div className="flex items-center justify-center gap-4">
+          <IconButton
+            href="#"
+            icon={<ShoppingCart className="w-6 h-6" />}
+            label="Your Cart"
+          />
+          <IconButton
+            href="#"
+            icon={<Heart className="w-6 h-6" />}
+            label="Your Cart"
+          />
+          <UserDropdown userData={userData} />
+        </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <Link href="/login">
+            <Button>Login</Button>
+          </Link>
+          <Link href="/register">
+            <Button>Register</Button>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AuthButtons;
