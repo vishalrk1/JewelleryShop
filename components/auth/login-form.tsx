@@ -29,7 +29,7 @@ const LoginForm = () => {
   const [error, setError] = React.useState<string | undefined>("");
   const [success, setSuccess] = React.useState<string | undefined>("");
   const { user } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch<any>()
+  const dispatch = useDispatch<any>();
 
   if (user) {
     redirect("/");
@@ -38,15 +38,15 @@ const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
   const handleSubmit = (values: z.infer<typeof LoginSchema>) => {
-    const password = values.password
-    const email = values.email
-    dispatch(loginUser({email, password}))
+    const password = values.password;
+    const username = values.username;
+    dispatch(loginUser({ username, password }));
   };
 
   return (
@@ -61,16 +61,16 @@ const LoginForm = () => {
           <div className="space-y-4">
             <FormField
               control={form.control}
-              name="email"
+              name="username"
               disabled={isPending}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      type="email"
-                      placeholder="Enter your email"
+                      type="text"
+                      placeholder="Enter your username"
                     />
                   </FormControl>
                   <FormMessage />

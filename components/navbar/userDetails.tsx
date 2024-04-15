@@ -44,6 +44,7 @@ const UserDropdown: React.FC<Props> = ({ userData }) => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem>Wishlist</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handelLogout}>Logout</DropdownMenuItem>

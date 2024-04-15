@@ -1,4 +1,5 @@
 import prismadb from "@/lib/prismadb";
+import { apiErrorResponse } from "@/utils/utils";
 import { NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -28,18 +29,19 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
       where: {
         auth_user: {
           email: email,
-          id: parseInt(user_id)
+          id: parseInt(user_id),
         },
       },
       include: {
-        cart_cartitem: true,
+        cart_cartitem: {
+          include: {
+            products_product: true,
+          },
+        },
       },
     });
-    console.log(catData);
     return NextResponse.json(catData ? catData : [], { status: 200 });
   } catch (error) {
-    return new NextResponse("Failed to get cart details", {
-      status: 404,
-    });
+    return apiErrorResponse();
   }
 }

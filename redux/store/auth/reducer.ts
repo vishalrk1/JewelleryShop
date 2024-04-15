@@ -1,4 +1,3 @@
-
 import { createReducer } from "@reduxjs/toolkit";
 import { loginUser, logoutUser, registerUser } from "./action";
 
@@ -39,8 +38,8 @@ const authReducer = createReducer(initialState, (builder) => {
     })
     .addCase(loginUser.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.user = action.payload.user;
-      state.userData = action.payload.userData;
+      state.user = action?.payload?.user;
+      state.userData = action?.payload?.userData;
     })
     .addCase(logoutUser.fulfilled, (state) => {
       state.status = "succeeded";

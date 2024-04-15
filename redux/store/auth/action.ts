@@ -21,27 +21,6 @@ export const registerUser = createAsyncThunk(
       if (error) {
         return thunkAPI.rejectWithValue(error.message);
       } else {
-        try {
-          await prismadb.auth_user.create({
-            data: {
-              email: email,
-              password: password,
-              first_name: "",
-              last_name: "",
-              date_joined: new Date(),
-              username: name,
-              is_active: true,
-              is_staff: false,
-              is_superuser: false,
-            },
-            include: {
-              main_userprofile: true,
-            },
-          });
-        } catch (error: any) {
-          console.log(error);
-          throw new Error("Error creating user in prisma");
-        }
         return data;
       }
     } catch (error: any) {
@@ -52,24 +31,19 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async ({ email, password }: any, thunkAPI) => {
+  async ({ username, password }: any, thunkAPI) => {
+    console.log("Details:", username, password);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
-      if (error) {
-        return thunkAPI.rejectWithValue(error.message);
-      }
-      const res = await axios.get("http://localhost:3000/api/userDetails", {
+      const res = await axios.get("http://localhost:3000/api/auth/login", {
         params: {
-          email: email,
+          username: username,
+          password: password,
         },
       });
       if (res.data) {
-        return { user: data.user, userData: res.data };
+        return { user: res.data, userData: res.data.main_userprofile };
       }
-      return { user: data.user, userData: null };
+      return null;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
