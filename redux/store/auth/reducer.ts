@@ -18,7 +18,6 @@ const initialState: AuthState = {
 
 const authReducer = createReducer(initialState, (builder) => {
   builder
-
     // fetching state
     .addCase(registerUser.pending, (state) => {
       state.status = "loading";

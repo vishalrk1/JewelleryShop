@@ -9,15 +9,16 @@ import { Heart } from "lucide-react";
 
 interface Props {
   productsData: products_product[];
+  currentTab: string;
 }
 
-const ProductList: React.FC<Props> = ({ productsData }) => {
+const ProductList: React.FC<Props> = ({ productsData, currentTab }) => {
   return (
     <TabsContent
-      value="all"
+      value= {currentTab}
       className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
     >
-      {productsData.map((product) => {
+      {productsData?.map((product) => {
         return (
           <div className="bg-background group cursor-pointer rounded-xl border p-3 space-y-4">
             <div className="aspect-square rounded-xl bg-gray-100 relative">
@@ -29,11 +30,14 @@ const ProductList: React.FC<Props> = ({ productsData }) => {
                 className="aspect-square object-cover rounded-md"
               />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col justify-between space-y-1">
               <div className="flex justify-between items-start space-x-2">
-                <p className="w-3/4 text-lg font-semibold">{product.prod_title}</p>
-                <Heart className="w-6 h-6"/>
+                <p className="w-3/4 text-lg font-semibold">
+                  {product.prod_title}
+                </p>
+                <Heart className="w-6 h-6" />
               </div>
+              <p className="text-xs text-gray-500">{product.prod_desc}</p>
               <p>{`Rs. ${product.prod_price}`}</p>
               <Button className="w-full my-2">Add to Cart</Button>
             </div>
