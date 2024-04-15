@@ -24,14 +24,14 @@ const AuthButtons = () => {
       {user ? (
         <div className="flex items-center justify-center gap-4">
           <IconButton
-            href="#"
+            href="/cart"
             icon={<ShoppingCart className="w-6 h-6" />}
             label="Your Cart"
           />
           <IconButton
-            href="#"
+            href="/wishlist"
             icon={<Heart className="w-6 h-6" />}
-            label="Your Cart"
+            label="Your wishlist"
           />
           <UserDropdown userData={userData} />
         </div>

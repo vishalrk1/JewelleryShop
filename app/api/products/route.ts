@@ -26,15 +26,25 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
       });
     }
 
-    const productsData = await prismadb.products_product.findMany({
-      where: {
-        category_id: parseInt(catId, 10),
-        is_featured: isFeatured === "true" ? true : false,
-      },
-      include: {
-        categories_category: true,
-      },
-    });
+    const productsData =
+      isFeatured === "true"
+        ? await prismadb.products_product.findMany({
+            where: {
+              category_id: parseInt(catId, 10),
+              is_featured: true,
+            },
+            include: {
+              categories_category: true,
+            },
+          })
+        : await prismadb.products_product.findMany({
+            where: {
+              category_id: parseInt(catId, 10),
+            },
+            include: {
+              categories_category: true,
+            },
+          });
 
     if (!productsData) {
       return new NextResponse("Internal server error", {

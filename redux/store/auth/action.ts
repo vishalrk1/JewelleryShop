@@ -21,6 +21,27 @@ export const registerUser = createAsyncThunk(
       if (error) {
         return thunkAPI.rejectWithValue(error.message);
       } else {
+        try {
+          await prismadb.auth_user.create({
+            data: {
+              email: email,
+              password: password,
+              first_name: "",
+              last_name: "",
+              date_joined: new Date(),
+              username: name,
+              is_active: true,
+              is_staff: false,
+              is_superuser: false,
+            },
+            include: {
+              main_userprofile: true,
+            },
+          });
+        } catch (error: any) {
+          console.log(error);
+          throw new Error("Error creating user in prisma");
+        }
         return data;
       }
     } catch (error: any) {

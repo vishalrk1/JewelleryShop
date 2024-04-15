@@ -4,15 +4,18 @@ import { Button } from "../ui/button";
 import { ShoppingCart } from "lucide-react";
 import ProductList from "./ProductList";
 import { products_product } from "@prisma/client";
+import Loader from "../Loader";
 
 interface Props {
   productsData: products_product[];
+  isLoading: boolean;
   currentTab: string;
   setCurrentTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ProductsTabs: React.FC<Props> = ({
   productsData,
+  isLoading,
   currentTab,
   setCurrentTab,
 }) => {
@@ -39,7 +42,13 @@ const ProductsTabs: React.FC<Props> = ({
           </Button>
         </div>
       </div>
-      <ProductList productsData={productsData} currentTab={currentTab} />
+      {isLoading ? (
+        <div className="w-full h-screen flex justify-center items-center">
+          <Loader />
+        </div>
+      ) : (
+        <ProductList productsData={productsData} currentTab={currentTab} />
+      )}
     </Tabs>
   );
 };

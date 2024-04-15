@@ -15,7 +15,7 @@ const ProductsPage: React.FC<Props> = ({ params }) => {
   const categoryId = parseInt(params.catId[1], 10);
   const dispatch = useDispatch<any>();
   const [currentTab, setCurrentTab] = React.useState("all");
-  const { products } = useSelector((state: RootState) => state.products);
+  const { products, fetching } = useSelector((state: RootState) => state.products);
 
   useEffect(() => {
     const isFeatured = currentTab !== "all";
@@ -28,6 +28,7 @@ const ProductsPage: React.FC<Props> = ({ params }) => {
         productsData={products as products_product[]}
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
+        isLoading={fetching}
       />
     </main>
   );
