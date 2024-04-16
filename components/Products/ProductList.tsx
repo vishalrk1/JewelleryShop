@@ -15,8 +15,8 @@ interface Props {
 const ProductList: React.FC<Props> = ({ productsData, currentTab }) => {
   return (
     <TabsContent
-      value= {currentTab}
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+      value={currentTab}
+      className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
     >
       {productsData?.map((product) => {
         return (
@@ -32,14 +32,18 @@ const ProductList: React.FC<Props> = ({ productsData, currentTab }) => {
             </div>
             <div className="flex flex-col justify-between space-y-1">
               <div className="flex justify-between items-start space-x-2">
-                <p className="w-3/4 text-lg font-semibold">
+                <p className="md:w-3/4 text-sm md:text-lg font-semibold">
                   {product.prod_title}
                 </p>
-                <Heart className="w-6 h-6" />
+                <Heart className="hidden md:block w-6 h-6" />
               </div>
-              <p className="text-xs text-gray-500">{product.prod_desc}</p>
-              <p>{`Rs. ${product.prod_price}`}</p>
-              <Button className="w-full my-2">Add to Cart</Button>
+              <p className="hidden md:block text-xs text-gray-500">
+                {product.prod_desc}
+              </p>
+              <p className="text-xs md:text-sm">{`Rs. ${product.prod_price}`}</p>
+              <Button className="w-full my-2 text-xs md:text-base px-4">
+                Add to Cart
+              </Button>
             </div>
           </div>
         );

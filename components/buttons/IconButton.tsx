@@ -16,7 +16,7 @@ interface Props {
 const IconButton: React.FC<Props> = ({ icon, label, href }) => {
   return (
     <TooltipProvider delayDuration={100}>
-      <Link href={href}>
+      <Link href={href} className="hidden md:flex">
         <Tooltip>
           <TooltipTrigger>{icon}</TooltipTrigger>
           <TooltipContent>

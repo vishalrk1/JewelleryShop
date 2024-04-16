@@ -36,7 +36,7 @@ const CartPage = () => {
             <>
               <div className="md:h-[44rem] m-2 p-3 md:m-5 flex flex-col md:w-3/4 rounded-lg">
                 <div className="text-gray-600 md:text-2xl">All Products</div>
-                <div className="flex flex-col overflow-y-scroll no-scrollbar">
+                <div className="w-full flex flex-col overflow-y-scroll no-scrollbar p-1 md:p-3">
                   {cartItems?.length === 0 ? (
                     <div className="flex justify-center items-center overflow-hidden h-[40rem]">
                       <div className="text-gray-600 md:text-2xl mt-5">

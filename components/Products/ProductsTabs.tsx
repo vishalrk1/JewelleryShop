@@ -20,7 +20,7 @@ const ProductsTabs: React.FC<Props> = ({
   setCurrentTab,
 }) => {
   return (
-    <Tabs defaultValue={currentTab}>
+    <Tabs defaultValue={currentTab} className="w-full">
       <div className="flex items-center">
         <TabsList>
           <TabsTrigger value="all" onClick={() => setCurrentTab("all")}>
