@@ -37,10 +37,16 @@ const WislistPage = () => {
             </div>
           ) : (
             <>
-              {wishlist && (
+              {wishlist?.length === 0 ? (
+                <div className="w-full flex flex-col justify-center items-center h-screen">
+                  <h1 className="text-2xl text-gray-700">
+                    Wishlist Is Empty 🙃
+                  </h1>
+                </div>
+              ) : (
                 <ProductList
                   currentTab="all"
-                  productsData={wishlist}
+                  productsData={wishlist ? wishlist : []}
                   isWishlist={true}
                 />
               )}

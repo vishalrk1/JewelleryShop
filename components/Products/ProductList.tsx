@@ -9,6 +9,8 @@ import { Heart } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemTOCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
+import { twMerge } from "tailwind-merge";
+import { deleteWishlistItem } from "@/redux/store/wishlist/action";
 
 interface Props {
   productsData: any[];
@@ -33,6 +35,25 @@ const ProductList: React.FC<Props> = ({
   }) => {
     console.log("cart_id", cart_id, "product_id", product_id);
     dispatch(addItemTOCart({ cart_id, product_id }));
+  };
+
+  const handelRemoveSavedItem = ({
+    id,
+    wishlist_id,
+    product_id,
+  }: {
+    id: string;
+    wishlist_id: string;
+    product_id: string;
+  }) => {
+    console.log("id", id, "wishlist_id", wishlist_id, "product_id", product_id);
+    dispatch(
+      deleteWishlistItem({
+        id,
+        wishlist_id,
+        product_id,
+      })
+    );
   };
 
   return (
@@ -60,7 +81,23 @@ const ProductList: React.FC<Props> = ({
                 <p className="md:w-4/5 text-sm md:text-base font-semibold line-clamp-1">
                   {product.prod_title}
                 </p>
-                <Heart className="hidden md:block w-6 h-6" />
+                <Heart
+                  className={twMerge(
+                    "w-6 h-6 border-none",
+                    !isWishlist && "hidden md:block"
+                  )}
+                  fill={isWishlist ? "red" : "none"}
+                  color={isWishlist ? "red" : "black"}
+                  onClick={() =>
+                    isWishlist
+                      ? handelRemoveSavedItem({
+                          id: item?.id,
+                          wishlist_id: item?.wishlist_id,
+                          product_id: item.product_id,
+                        })
+                      : () => {}
+                  }
+                />
               </div>
               {/* <p className="hidden md:block text-xs text-gray-500 line-clamp-1">
                 {product.prod_desc}
