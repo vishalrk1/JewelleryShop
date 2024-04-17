@@ -49,7 +49,7 @@ const CartPage = () => {
                         key={index}
                         cartProduct={item}
                         product={item?.products_product}
-                        cartId={cart?.cart_id}
+                        cartId={item?.cart_id}
                       />
                     ))
                   )}

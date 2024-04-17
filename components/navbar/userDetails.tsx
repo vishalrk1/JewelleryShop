@@ -13,6 +13,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "@/redux/store/auth/action";
+import { redirect, useRouter } from "next/navigation";
 
 interface Props {
   userData: any;
@@ -20,6 +21,7 @@ interface Props {
 
 const UserDropdown: React.FC<Props> = ({ userData }) => {
   const dispatch = useDispatch<any>();
+  const router = useRouter();
   const handelLogout = () => {
     dispatch(logoutUser());
   };
@@ -44,7 +46,13 @@ const UserDropdown: React.FC<Props> = ({ userData }) => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Wishlist</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            router.push("/wishlist");
+          }}
+        >
+          Wishlist
+        </DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handelLogout}>Logout</DropdownMenuItem>

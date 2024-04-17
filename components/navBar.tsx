@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import prismadb from "@/lib/prismadb";
 import AuthButtons from "./navbar/authButtons";
+import Link from "next/link";
 
 const Navbar = async () => {
   const routes = [] as any[];
@@ -25,7 +26,9 @@ const Navbar = async () => {
   return (
     <nav className="border-b bg-background dark:bg-secondary">
       <div className="flex h-16 items-center px-4">
-        <h1 className="space-x-2 text-xl font-bold">Store</h1>
+        <Link href="/">
+          <h1 className="space-x-2 text-xl font-bold">Illusion</h1>
+        </Link>
         <div>
           <NavLinks routes={routes} className="mx-6" />
         </div>

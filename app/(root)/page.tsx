@@ -1,17 +1,5 @@
 "use client";
-import LoginForm from "@/components/auth/login-form";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { File, ListFilter, PlusCircle, ShoppingCart } from "lucide-react";
-import Image from "next/image";
 
 export default function Home() {
   return (

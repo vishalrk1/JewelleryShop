@@ -1,6 +1,9 @@
+"use client";
 import React, { useContext, useState } from "react";
 import { Trash } from "lucide-react";
 import { cart_cartitem, products_product } from "@prisma/client";
+import { useDispatch } from "react-redux";
+import { deleteCartItem, updateCartItem } from "@/redux/store/cart/action";
 
 interface Props {
   cartProduct: cart_cartitem;
@@ -9,17 +12,32 @@ interface Props {
 }
 
 const CartItamCard: React.FC<Props> = ({ cartProduct, cartId, product }) => {
+  const dispatch = useDispatch<any>();
   const [quantity, setQuantity] = useState(cartProduct.quantity);
   //   const { removeProductFromCart, updateProductQuantity } =
   //     useContext(CartContext);
 
   const handleRemoveProductFromCart = () => {
-    // removeProductFromCart(cartProduct.id);
+    if (cartId) {
+      dispatch(
+        deleteCartItem({
+          cart_id: cartId,
+          cart_item_id: cartProduct.cart_item_id,
+        })
+      );
+    }
   };
 
   const handleDecreaseQuantity = () => {
+    if (!cartId) return;
     if (cartProduct.quantity > 1) {
-      //   updateProductQuantity(cartProduct.id, cartProduct.cart, quantity - 1);
+      dispatch(
+        updateCartItem({
+          cart_id: cartId,
+          cart_item_id: cartProduct.cart_item_id,
+          quantity: quantity - 1,
+        })
+      );
       setQuantity(quantity - 1);
     } else {
       handleRemoveProductFromCart();
@@ -27,7 +45,14 @@ const CartItamCard: React.FC<Props> = ({ cartProduct, cartId, product }) => {
   };
 
   const handleIncreaseQuantity = () => {
-    // updateProductQuantity(cartProduct.id, cartProduct.cart, quantity + 1);
+    if (!cartId) return;
+    dispatch(
+      updateCartItem({
+        cart_id: cartId,
+        cart_item_id: cartProduct.cart_item_id,
+        quantity: quantity + 1,
+      })
+    );
     setQuantity(quantity + 1);
   };
 

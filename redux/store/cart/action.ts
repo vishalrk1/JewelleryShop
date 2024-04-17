@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const getCart = createAsyncThunk(
   "cart/getCart",
-  async ({ id, email }: any, thunkAPI) => {
+  async ({ id, email }: { id: string; email: string }, thunkAPI) => {
     try {
       const res = await axios.get("http://localhost:3000/api/cart", {
         params: {
@@ -15,6 +15,92 @@ export const getCart = createAsyncThunk(
         return thunkAPI.rejectWithValue("Error in getting data");
       }
       return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const deleteCartItem = createAsyncThunk(
+  "cart/deleteCartItem",
+  async (
+    { cart_id, cart_item_id }: { cart_id: string; cart_item_id: string },
+    thunkAPI
+  ) => {
+    try {
+      const req = await axios.delete(
+        `http://localhost:3000/api/cart/${cart_id}`,
+        {
+          params: {
+            cart_item_id: cart_item_id,
+          },
+        }
+      );
+      if (!req.data) {
+        throw new Error("Error in deleting cart item");
+      }
+      return req.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const addItemTOCart = createAsyncThunk(
+  "cart/addItemTOCart",
+  async (
+    { cart_id, product_id }: { cart_id: number; product_id: number },
+    thunkAPI
+  ) => {
+    try {
+      const req = await axios.post(
+        "http://localhost:3000/api/cart",
+        {},
+        {
+          params: {
+            id: cart_id,
+            product_id: product_id,
+          },
+        }
+      );
+      if (!req.data) {
+        throw new Error("Error in adding item to cart");
+      }
+      return req.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const updateCartItem = createAsyncThunk(
+  "cart/updateCartItem",
+  async (
+    {
+      cart_id,
+      cart_item_id,
+      quantity,
+    }: { cart_id: string; cart_item_id: string; quantity: number },
+    thunkAPI
+  ) => {
+    try {
+      const req = await axios.patch(
+        `http://localhost:3000/api/cart/${cart_id}`,
+        {},
+        {
+          params: {
+            cart_item_id: cart_item_id,
+            quantity: quantity,
+          },
+        }
+      );
+      if (!req.data) {
+        throw new Error("Error in deleting cart item");
+      }
+      return req.data;
     } catch (error) {
       console.log(error);
       return thunkAPI.rejectWithValue(error);

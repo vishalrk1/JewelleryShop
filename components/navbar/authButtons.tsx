@@ -25,13 +25,15 @@ const AuthButtons = () => {
         <div className="flex items-center justify-center gap-4">
           <IconButton
             href="/cart"
-            icon={<ShoppingCart className="w-6 h-6" />}
+            icon={<ShoppingCart className="w-5 h-5" />}
             label="Your Cart"
+            className="flex items-center"
           />
           <IconButton
             href="/wishlist"
-            icon={<Heart className="w-6 h-6" />}
+            icon={<Heart className="w-5 h-5" />}
             label="Your wishlist"
+            className="hidden md:flex items-center"
           />
           <UserDropdown userData={userData} />
         </div>

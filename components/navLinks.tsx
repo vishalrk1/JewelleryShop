@@ -22,8 +22,8 @@ const NavLinks: React.FC<Props> = ({ className, routes }) => {
           className={cn(
             "text-xs md:text-sm font-medium transition-colors hover:text-primary",
             pathname === route.href
-              ? "text-black dark:text-white"
-              : "text-muted-foreground"
+              ? "text-black dark:text-white font-bold"
+              : "text-gray-700"
           )}
         >
           {route.label}
