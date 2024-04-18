@@ -10,6 +10,9 @@ import AuthButtons from "./navbar/authButtons";
 import Link from "next/link";
 import { getCategories } from "@/redux/store/categories/action";
 import { MobileSidebar } from "./mobileSidebar";
+import Image from "next/image";
+
+import logo from "@/public/assets/LogoBlack.png";
 
 const Navbar = () => {
   const [routes, setRoutes] = useState<any[]>([]);
@@ -39,15 +42,21 @@ const Navbar = () => {
 
   return (
     <nav className="border-b bg-background dark:bg-secondary">
-      <div className="flex h-16 items-center px-4">
+      <div className="flex h-16 items-center px-8">
         <MobileSidebar routes={routes} />
         <Link href="/">
-          <h1 className="hidden md:block space-x-2 text-xl font-bold">
-            Illusion
-          </h1>
+          <div className="hidden md:flex items-center justify-center aspect-square rounded-xl relative">
+            <Image
+              src={logo}
+              title="illusion"
+              alt="illusion-logo"
+              className="object-cover"
+              width={32}
+              height={32}
+            />
+          </div>
         </Link>
         <NavLinks routes={routes} className="mx-6" />
-
         <div className="ml-auto flex items-center space-x-4">
           {/* <ModeToggle /> */}
           <AuthButtons />
