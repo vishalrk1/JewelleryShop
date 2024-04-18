@@ -56,6 +56,7 @@ model auth_user {
   is_staff                   Boolean
   is_active                  Boolean
   date_joined                DateTime                     @db.Timestamptz(6)
+  Wishlist                   Wishlist?
   auth_user_groups           auth_user_groups[]
   auth_user_user_permissions auth_user_user_permissions[]
   cart_cart                  cart_cart?
@@ -63,8 +64,6 @@ model auth_user {
   main_userprofile           main_userprofile?
   order_order                order_order[]
   products_wishlist          products_wishlist?
-
-  Wishlist Wishlist?
 
   @@index([username], map: "auth_user_username_6821ab7c_like")
 }
@@ -262,11 +261,11 @@ model products_product {
   prod_date_updated          DateTime                     @db.Timestamptz(6)
   category_id                BigInt?
   is_featured                Boolean
+  WishlistItem               WishlistItem[]
   cart_cartitem              cart_cartitem[]
   order_orderitem            order_orderitem[]
   categories_category        categories_category?         @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "products_product_category_id_9b594869_fk_categories_category_id")
   products_wishlist_products products_wishlist_products[]
-  WishlistItem               WishlistItem[]
 
   @@index([category_id], map: "products_product_category_id_9b594869")
   @@index([prod_id], map: "products_product_prod_id_7f41088c_like")
@@ -301,11 +300,11 @@ model Wishlist {
 
 model WishlistItem {
   id         Int              @id @default(autoincrement())
-  product    products_product @relation(fields: [productId], references: [id])
-  wishlist   Wishlist         @relation(fields: [wishlistId], references: [id])
   productId  BigInt
   wishlistId Int
   createdAt  DateTime         @default(now())
+  product    products_product @relation(fields: [productId], references: [id])
+  wishlist   Wishlist         @relation(fields: [wishlistId], references: [id])
 
   @@unique([productId, wishlistId])
 }

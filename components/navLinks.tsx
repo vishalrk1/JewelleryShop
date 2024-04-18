@@ -14,7 +14,7 @@ const NavLinks: React.FC<Props> = ({ className, routes }) => {
   const pathname = usePathname();
 
   return (
-    <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
+    <nav className={cn("hidden md:flex items-center space-x-4 lg:space-x-6", className)}>
       {routes?.map((route) => (
         <Link
           key={route.href}

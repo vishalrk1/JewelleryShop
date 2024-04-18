@@ -40,10 +40,10 @@ const AuthButtons = () => {
       ) : (
         <div className="flex items-center gap-2">
           <Link href="/login">
-            <Button>Login</Button>
+            <Button className="text-xs md:text-base">Login</Button>
           </Link>
           <Link href="/register">
-            <Button>Register</Button>
+            <Button className="text-xs md:text-base">Register</Button>
           </Link>
         </div>
       )}

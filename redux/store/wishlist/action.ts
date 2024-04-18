@@ -15,7 +15,6 @@ export const getWishlist = createAsyncThunk(
       }
       return req.data;
     } catch (error: any) {
-      console.log(error);
       return { error: error.message };
     }
   }

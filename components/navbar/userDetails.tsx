@@ -45,7 +45,13 @@ const UserDropdown: React.FC<Props> = ({ userData }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            router.push("/profile");
+          }}
+        >
+          Profile
+        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             router.push("/wishlist");
