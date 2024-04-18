@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 const WislistPage = () => {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: RootState) => state.auth);
-  const { wishlist, fetching } = useSelector(
+  const { wishlistItems, fetching } = useSelector(
     (state: RootState) => state.wishlist
   );
 
@@ -23,7 +23,6 @@ const WislistPage = () => {
     }
   }, []);
 
-  console.log(wishlist);
   return (
     <main className="h-screen">
       <section className="p-4">
@@ -37,7 +36,7 @@ const WislistPage = () => {
             </div>
           ) : (
             <>
-              {wishlist?.length === 0 ? (
+              {wishlistItems?.length === 0 ? (
                 <div className="w-full flex flex-col justify-center items-center h-screen">
                   <h1 className="text-2xl text-gray-700">
                     Wishlist Is Empty 🙃
@@ -46,7 +45,7 @@ const WislistPage = () => {
               ) : (
                 <ProductList
                   currentTab="all"
-                  productsData={wishlist ? wishlist : []}
+                  productsData={wishlistItems ? wishlistItems : []}
                   isWishlist={true}
                 />
               )}

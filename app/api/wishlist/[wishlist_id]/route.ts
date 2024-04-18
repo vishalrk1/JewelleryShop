@@ -16,15 +16,15 @@ export async function DELETE(req: NextRequest, res: NextApiResponse) {
   }
 
   const wishlist_id = match[1];
-  const id = req.nextUrl.searchParams.get("id");
+  const item_id = req.nextUrl.searchParams.get("id");
   const product_id = req.nextUrl.searchParams.get("product_id");
 
   try {
-    await prismadb.products_wishlist_products.delete({
+    await prismadb.wishlistItem.delete({
       where: {
-        id: BigInt(Number(id)),
-        wishlist_id: parseInt(wishlist_id),
-        product_id: BigInt(Number(product_id)),
+        id: Number(item_id),
+        wishlistId: parseInt(wishlist_id),
+        productId: Number(product_id),
       },
     });
 
@@ -41,19 +41,20 @@ export async function DELETE(req: NextRequest, res: NextApiResponse) {
       },
     });
 
-    const wishlistItems = await prismadb.products_wishlist_products.findMany({
+    const wishlistItems = await prismadb.wishlistItem.findMany({
       where: {
-        wishlist_id: parseInt(wishlist_id),
+        wishlistId: parseInt(wishlist_id),
       },
       include: {
-        products_product: true,
+        product: true,
+        wishlist: true,
       },
     });
 
     return NextResponse.json(
       {
         message: "Item removed from woshlist",
-        products_wishlist_products: wishlistItems,
+        wishlistItems: wishlistItems,
       },
       { status: 200 }
     );

@@ -14,20 +14,59 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
         }
       );
     }
-    const userWishlist = await prismadb.products_wishlist.findUnique({
+    // const userWishlist = await prismadb.products_wishlist.findUnique({
+    //   where: {
+    //     user_id: parseInt(user_id),
+    //   },
+    //   include: {
+    //     products_wishlist_products: {
+    //       include: {
+    //         products_product: true,
+    //       },
+    //     },
+    //   },
+    // });
+
+    const wishlist = await prismadb.wishlist.findUnique({
       where: {
-        user_id: parseInt(user_id),
-      },
-      include: {
-        products_wishlist_products: {
-          include: {
-            products_product: true,
-          },
-        },
+        userId: parseInt(user_id),
       },
     });
 
-    return NextResponse.json(userWishlist, { status: 200 });
+    if (!wishlist) {
+      return new NextResponse(
+        "Failed to get wishlist details, User Id is required",
+        {
+          status: 404,
+        }
+      );
+    }
+
+    const userWishlist = await prismadb.wishlistItem.findMany({
+      where: {
+        wishlistId: wishlist.id,
+      },
+      include: {
+        product: true,
+        wishlist: true,
+      },
+    });
+    // const wl = await prismadb.wishlist.create({
+    //   data: {
+    //     userId: parseInt(user_id),
+    //   },
+    // });
+
+    // console.log(wl);
+
+    return NextResponse.json(
+      {
+        message: "Wishlist details fetched sucessfully",
+        wishlist: wishlist,
+        wishlistItems: userWishlist,
+      },
+      { status: 200 }
+    );
   } catch (err) {
     apiErrorResponse();
   }
@@ -46,42 +85,54 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
         }
       );
     }
+    if (!product_id) {
+      return new NextResponse(
+        "Failed to get wishlist details, User Id is required",
+        {
+          status: 404,
+        }
+      );
+    }
 
-    const wishlist = await prismadb.products_wishlist.findUnique({
+    const wishlist = await prismadb.wishlist.findUnique({
       where: {
-        user_id: parseInt(user_id),
+        userId: parseInt(user_id),
       },
       include: {
-        products_wishlist_products: true,
+        items: true,
       },
     });
 
-    if (wishlist) {
-      await prismadb.products_wishlist_products.create({
-        data: {
-          product_id: BigInt(Number(product_id)),
-          wishlist_id: wishlist.products_wishlist_products[0].wishlist_id,
-        },
-      });
-    } else {
-      const newwWishlist = await prismadb.products_wishlist.create({
-        data: {
-          user_id: parseInt(user_id),
-        },
-        include: {
-          products_wishlist_products: true,
-        },
-      });
-      await prismadb.products_wishlist_products.create({
-        data: {
-          product_id: BigInt(Number(product_id)),
-          wishlist_id: newwWishlist.products_wishlist_products[0].wishlist_id,
-        },
-      });
+    if (!wishlist) {
+      return new NextResponse(
+        "Failed to get wishlist details, User Id is required",
+        {
+          status: 404,
+        }
+      );
     }
+
+    const wlItem = await prismadb.wishlistItem.create({
+      data: {
+        productId: parseInt(product_id),
+        wishlistId: wishlist.id,
+      },
+    });
+
+    const items = await prismadb.wishlistItem.findMany({
+      where: {
+        wishlistId: wishlist.id,
+      },
+      include: {
+        product: true,
+        wishlist: true,
+      },
+    });
+
     return NextResponse.json(
       {
         message: "Item added to sucessfully",
+        wishlist: items,
       },
       { status: 200 }
     );

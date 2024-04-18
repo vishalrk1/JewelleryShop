@@ -16,7 +16,7 @@ const ProductsPageLayout: React.FC<Props> = ({ children }) => {
   const { cart } = useSelector((state: RootState) => state.cart);
 
   useEffect(() => {
-    if (!cart && userStatus === "succeeded") {
+    if (!cart && user) {
       const id = user?.id;
       const email = user?.email;
       dispatch(getCart({ id, email }));

@@ -64,6 +64,8 @@ model auth_user {
   order_order                order_order[]
   products_wishlist          products_wishlist?
 
+  Wishlist Wishlist?
+
   @@index([username], map: "auth_user_username_6821ab7c_like")
 }
 
@@ -264,6 +266,7 @@ model products_product {
   order_orderitem            order_orderitem[]
   categories_category        categories_category?         @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "products_product_category_id_9b594869_fk_categories_category_id")
   products_wishlist_products products_wishlist_products[]
+  WishlistItem               WishlistItem[]
 
   @@index([category_id], map: "products_product_category_id_9b594869")
   @@index([prod_id], map: "products_product_prod_id_7f41088c_like")
@@ -287,4 +290,22 @@ model products_wishlist_products {
   @@unique([wishlist_id, product_id], map: "products_wishlist_products_wishlist_id_product_id_93f957f9_uniq")
   @@index([product_id], map: "products_wishlist_products_product_id_05f4af42")
   @@index([wishlist_id], map: "products_wishlist_products_wishlist_id_40bfe746")
+}
+
+model Wishlist {
+  id     Int            @id @unique @default(autoincrement())
+  userId Int            @unique
+  user   auth_user      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  items  WishlistItem[]
+}
+
+model WishlistItem {
+  id         Int              @id @default(autoincrement())
+  product    products_product @relation(fields: [productId], references: [id])
+  wishlist   Wishlist         @relation(fields: [wishlistId], references: [id])
+  productId  BigInt
+  wishlistId Int
+  createdAt  DateTime         @default(now())
+
+  @@unique([productId, wishlistId])
 }

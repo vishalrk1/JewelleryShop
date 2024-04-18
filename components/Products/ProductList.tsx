@@ -11,6 +11,7 @@ import { addItemTOCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
 import { twMerge } from "tailwind-merge";
 import { deleteWishlistItem } from "@/redux/store/wishlist/action";
+import { showErrorToast } from "@/utils/toasts";
 
 interface Props {
   productsData: any[];
@@ -24,7 +25,9 @@ const ProductList: React.FC<Props> = ({
   isWishlist = false,
 }) => {
   const dispatch = useDispatch<any>();
+  const { user } = useSelector((state: RootState) => state.auth);
   const { cart } = useSelector((state: RootState) => state.cart);
+  const { wishlist } = useSelector((state: RootState) => state.wishlist);
 
   const handelAddToCart = ({
     cart_id,
@@ -33,8 +36,12 @@ const ProductList: React.FC<Props> = ({
     cart_id: number;
     product_id: number;
   }) => {
-    console.log("cart_id", cart_id, "product_id", product_id);
-    dispatch(addItemTOCart({ cart_id, product_id }));
+    console.log(!user);
+    if (!user) {
+      showErrorToast("Please login to add items to cart");
+    } else {
+      dispatch(addItemTOCart({ cart_id, product_id }));
+    }
   };
 
   const handelRemoveSavedItem = ({
@@ -63,7 +70,7 @@ const ProductList: React.FC<Props> = ({
     >
       {productsData?.map((item) => {
         const product = isWishlist
-          ? (item?.products_product as products_product)
+          ? (item?.product as products_product)
           : (item as products_product);
         return (
           <div className="bg-background group cursor-pointer rounded-xl border p-3 space-y-4">
@@ -89,11 +96,11 @@ const ProductList: React.FC<Props> = ({
                   fill={isWishlist ? "red" : "none"}
                   color={isWishlist ? "red" : "black"}
                   onClick={() =>
-                    isWishlist
+                    isWishlist && wishlist
                       ? handelRemoveSavedItem({
                           id: item?.id,
-                          wishlist_id: item?.wishlist_id,
-                          product_id: item.product_id,
+                          wishlist_id: wishlist.id.toString(),
+                          product_id: product.id.toString(),
                         })
                       : () => {}
                   }

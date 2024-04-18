@@ -33,14 +33,6 @@ const ProductsTabs: React.FC<Props> = ({
             Trending
           </TabsTrigger>
         </TabsList>
-        <div className="ml-auto flex items-center gap-2">
-          <Button size="sm" className="h-7 gap-1">
-            <ShoppingCart className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Cart
-            </span>
-          </Button>
-        </div>
       </div>
       {isLoading ? (
         <div className="w-full h-screen flex justify-center items-center">
