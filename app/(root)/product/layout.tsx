@@ -1,6 +1,7 @@
 "use client";
 import { getCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
+import { getWishlist } from "@/redux/store/wishlist/action";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,6 +15,7 @@ const ProductsPageLayout: React.FC<Props> = ({ children }) => {
     (state: RootState) => state.auth
   );
   const { cart } = useSelector((state: RootState) => state.cart);
+  const { wishlist } = useSelector((state: RootState) => state.wishlist);
 
   useEffect(() => {
     if (!cart && user) {
@@ -21,7 +23,11 @@ const ProductsPageLayout: React.FC<Props> = ({ children }) => {
       const email = user?.email;
       dispatch(getCart({ id, email }));
     }
+    if (!wishlist && user) {
+      dispatch(getWishlist({ user_id: user?.id }));
+    }
   }, []);
+
   return <>{children}</>;
 };
 

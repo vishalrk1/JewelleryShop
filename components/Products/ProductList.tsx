@@ -10,7 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemTOCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
 import { twMerge } from "tailwind-merge";
-import { deleteWishlistItem } from "@/redux/store/wishlist/action";
+import {
+  addItemToWishlist,
+  deleteWishlistItem,
+} from "@/redux/store/wishlist/action";
 import { showErrorToast } from "@/utils/toasts";
 
 interface Props {
@@ -53,7 +56,6 @@ const ProductList: React.FC<Props> = ({
     wishlist_id: string;
     product_id: string;
   }) => {
-    console.log("id", id, "wishlist_id", wishlist_id, "product_id", product_id);
     dispatch(
       deleteWishlistItem({
         id,
@@ -62,6 +64,27 @@ const ProductList: React.FC<Props> = ({
       })
     );
   };
+
+  const handelAddToWishlist = ({
+    wishlist_id,
+    product_id,
+  }: {
+    wishlist_id: string;
+    product_id: string;
+  }) => {
+    if (!user) {
+      showErrorToast("Please login to add items to wishlist");
+    } else {
+      dispatch(
+        addItemToWishlist({
+          wishlist_id,
+          product_id,
+        })
+      );
+    }
+  };
+
+  console.log(wishlist);
 
   return (
     <TabsContent
@@ -95,15 +118,20 @@ const ProductList: React.FC<Props> = ({
                   )}
                   fill={isWishlist ? "red" : "none"}
                   color={isWishlist ? "red" : "black"}
-                  onClick={() =>
-                    isWishlist && wishlist
-                      ? handelRemoveSavedItem({
-                          id: item?.id,
-                          wishlist_id: wishlist.id.toString(),
-                          product_id: product.id.toString(),
-                        })
-                      : () => {}
-                  }
+                  onClick={() => {
+                    user && wishlist
+                      ? isWishlist
+                        ? handelRemoveSavedItem({
+                            id: item?.id,
+                            wishlist_id: wishlist.id.toString(),
+                            product_id: product.id.toString(),
+                          })
+                        : handelAddToWishlist({
+                            wishlist_id: wishlist?.id.toString(),
+                            product_id: product.id.toString(),
+                          })
+                      : showErrorToast("Please login");
+                  }}
                 />
               </div>
               {/* <p className="hidden md:block text-xs text-gray-500 line-clamp-1">

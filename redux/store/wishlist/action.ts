@@ -20,6 +20,36 @@ export const getWishlist = createAsyncThunk(
   }
 );
 
+export const addItemToWishlist = createAsyncThunk(
+  "wishlist/addItemToWishlist",
+  async ({
+    wishlist_id,
+    product_id,
+  }: {
+    wishlist_id: string;
+    product_id: string;
+  }) => {
+    try {
+      const req = await axios.post(
+        `http://localhost:3000/api/wishlist/${wishlist_id}`,
+        {},
+        {
+          params: {
+            product_id: product_id,
+          },
+        }
+      );
+      if (req.status === 200) {
+        return req.data;
+      } else {
+        throw new Error("Error adding item to wishlist");
+      }
+    } catch (error: any) {
+      return { error: error.message };
+    }
+  }
+);
+
 export const deleteWishlistItem = createAsyncThunk(
   "wishlist/deleteWishlistItem",
   async ({

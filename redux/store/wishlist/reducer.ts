@@ -4,7 +4,8 @@ import {
   WishlistItem,
 } from "@prisma/client";
 import { createReducer } from "@reduxjs/toolkit";
-import { deleteWishlistItem, getWishlist } from "./action";
+import { addItemToWishlist, deleteWishlistItem, getWishlist } from "./action";
+import { addItemTOCart } from "../cart/action";
 
 interface wishlistState {
   wishlist: Wishlist | null;
@@ -28,6 +29,9 @@ const wishlistReducer = createReducer(initialState, (builder) => {
     .addCase(deleteWishlistItem.pending, (state) => {
       state.fetching = true;
     })
+    .addCase(addItemToWishlist.pending, (state) => {
+      state.fetching = true;
+    })
 
     .addCase(getWishlist.fulfilled, (state, action) => {
       state.fetching = false;
@@ -38,12 +42,20 @@ const wishlistReducer = createReducer(initialState, (builder) => {
       state.fetching = false;
       state.wishlistItems = action.payload.wishlistItems;
     })
+    .addCase(addItemToWishlist.fulfilled, (state, action) => {
+      state.fetching = false;
+      state.wishlistItems = action.payload?.wishlist?.items;
+    })
 
     .addCase(getWishlist.rejected, (state, action) => {
       state.fetching = false;
       state.error = action?.payload as string;
     })
     .addCase(deleteWishlistItem.rejected, (state, action) => {
+      state.fetching = false;
+      state.error = action?.payload as string;
+    })
+    .addCase(addItemToWishlist.rejected, (state, action) => {
       state.fetching = false;
       state.error = action?.payload as string;
     });

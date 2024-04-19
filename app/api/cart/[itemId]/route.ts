@@ -81,8 +81,6 @@ export async function PATCH(req: NextRequest, res: NextApiResponse) {
   const cart_item_id = req.nextUrl.searchParams.get("cart_item_id");
   const quantity = req.nextUrl.searchParams.get("quantity");
 
-  console.log(cart_id, cart_item_id, quantity);
-
   try {
     if (!cart_id) {
       return new NextResponse(

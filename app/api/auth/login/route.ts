@@ -19,9 +19,6 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
     const username = req.nextUrl.searchParams.get("username");
     const password = req.nextUrl.searchParams.get("password");
 
-    console.log("username", username);
-    console.log("password", password);
-
     if (!username)
       return new NextResponse(
         "Username is required please provide a username",
@@ -49,7 +46,6 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
 
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.log(error);
     return apiErrorResponse();
   }
 }

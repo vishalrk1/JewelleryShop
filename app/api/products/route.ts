@@ -18,7 +18,6 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
   try {
     const catId = req.nextUrl.searchParams.get("catId");
     const isFeatured = req.nextUrl.searchParams.get("isFeatured");
-    console.log("isFeatured", isFeatured);
 
     if (!catId) {
       return new NextResponse("Category ID is required", {

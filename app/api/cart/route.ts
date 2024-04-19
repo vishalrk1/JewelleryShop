@@ -50,7 +50,6 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
         },
       },
     });
-    console.log(catData);
     return NextResponse.json(catData, { status: 200 });
   } catch (error) {
     return apiErrorResponse();
@@ -60,9 +59,6 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
 export async function POST(req: NextRequest, res: NextApiResponse) {
   const cart_id = req.nextUrl.searchParams.get("id"); // id here is cart id
   const product_id = req.nextUrl.searchParams.get("product_id");
-
-  console.log("cart_id", cart_id);
-  console.log("product_id", product_id);
 
   try {
     if (!cart_id) {
@@ -115,8 +111,6 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
         },
       },
     });
-
-    console.log(cart);
 
     return NextResponse.json(cart ? cart : [], { status: 200 });
   } catch (error) {
