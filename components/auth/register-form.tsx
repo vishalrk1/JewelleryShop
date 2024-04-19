@@ -23,16 +23,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser, registerUser } from "@/redux/store/auth/action";
 import { RootState } from "@/redux/store/store";
 import { redirect } from "next/navigation";
+import Loader from "../Loader";
 
 const RegisterForm = () => {
   const dispatch = useDispatch<any>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, fetching } = useSelector((state: RootState) => state.auth);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = React.useState<string | undefined>("");
   const [success, setSuccess] = React.useState<string | undefined>("");
 
-  if(user) {
-    redirect('/')
+  if (user) {
+    redirect("/");
   }
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -109,7 +110,14 @@ const RegisterForm = () => {
           </div>
           <FormError message={error} />
           <FormSucess message={success} />
-          <Button className="w-full" type="submit" disabled={isPending}>
+          <Button
+            className="w-full flex gap-2"
+            type="submit"
+            disabled={fetching}
+          >
+            {fetching && (
+              <Loader className="w-4 h-4 border-2" color="border-gray-100" />
+            )}
             Create an account
           </Button>
         </form>

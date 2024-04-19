@@ -1,12 +1,19 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
-export default function Loader({ className }: { className?: string }) {
+export default function Loader({
+  className,
+  color,
+}: {
+  className?: string;
+  color?: string;
+}) {
   return (
     <div className="flex items-center justify-center">
       <div
         className={twMerge(
-          "inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-black border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]",
+          color ? color : "border-black",
+          "inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]",
           className
         )}
         role="status"

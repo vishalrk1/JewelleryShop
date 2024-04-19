@@ -24,12 +24,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { redirect } from "next/navigation";
 import { loginUser } from "@/redux/store/auth/action";
+import Loader from "../Loader";
 
 const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = React.useState<string | undefined>("");
   const [success, setSuccess] = React.useState<string | undefined>("");
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, fetching } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<any>();
 
   if (user) {
@@ -95,7 +96,14 @@ const LoginForm = () => {
           </div>
           <FormError message={error} />
           <FormSucess message={success} />
-          <Button className="w-full" type="submit">
+          <Button
+            className="w-full flex gap-2"
+            type="submit"
+            disabled={fetching}
+          >
+            {fetching && (
+              <Loader className="w-4 h-4 border-2" color="border-gray-100" />
+            )}
             Login
           </Button>
         </form>

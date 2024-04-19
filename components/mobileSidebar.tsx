@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet";
 
 import logo from "@/public/assets/Logo Gold.png";
 import Image from "next/image";
@@ -24,30 +24,32 @@ export const MobileSidebar: React.FC<Props> = ({ pending = false, routes }) => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="flex flex-col items-center p-0 w-[300px] sm:w-[440px]"
+        className="flex flex-col items-center p-2 w-[300px] sm:w-[440px]"
       >
-        <div className="flex items-center justify-center h-1/6 w-full bg-gray-100">
+        <div className="flex items-center justify-center h-1/6 w-full bg-gray-100 rounded-lg">
           <Image
             src={logo}
             alt="illusion-logo"
-            className="h-32 w-32 object-contain p-4 relative"
+            className="h-24 w-24 object-contain p-4 relative"
           />
         </div>
         {pending && "Loading..."}
-        {routes?.map((route) => (
-          <button
-            key={route.href}
-            onClick={() => router.push(route.href)}
-            className={cn(
-              "w-full items-center m-1 p-1 border- rounded-lg shadow-sm bg-white hover:bg-gray-100 transition",
-              route.active
-                ? "text-black dark:text-white bg-gray-50"
-                : "text-muted-foreground"
-            )}
-          >
-            <span>{route.label}</span>
-          </button>
-        ))}
+        <div className="flex flex-col gap-1 w-full">
+          <p className="py-0 text-left mb-1">Categories</p>
+          {routes?.map((route) => (
+            <SheetClose asChild>
+              <Button
+                className="w-full p-2"
+                variant="secondary"
+                onClick={() => {
+                  router.push(route.href);
+                }}
+              >
+                <p className="text-black">{route.label}</p>
+              </Button>
+            </SheetClose>
+          ))}
+        </div>
       </SheetContent>
     </Sheet>
   );
