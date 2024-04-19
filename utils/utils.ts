@@ -5,3 +5,20 @@ export function apiErrorResponse() {
     status: 404,
   });
 }
+
+export function apiResponse({
+  message,
+  status,
+}: {
+  message: string;
+  status: number;
+}) {
+  return NextResponse.json(
+    {
+      message: message,
+    },
+    {
+      status: status,
+    }
+  );
+}

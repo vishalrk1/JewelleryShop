@@ -59,6 +59,13 @@ const UserDropdown: React.FC<Props> = ({ userData }) => {
         >
           Wishlist
         </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            router.push("/orders");
+          }}
+        >
+          My Orders
+        </DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handelLogout}>Logout</DropdownMenuItem>
