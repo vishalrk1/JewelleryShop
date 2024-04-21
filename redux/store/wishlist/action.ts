@@ -1,3 +1,4 @@
+import { showErrorToast, showSucessToast } from "@/utils/toasts";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -40,6 +41,7 @@ export const addItemToWishlist = createAsyncThunk(
         }
       );
       if (req.status === 200) {
+        showSucessToast("Item added to wishlist");
         return req.data;
       } else {
         throw new Error("Error adding item to wishlist");
@@ -72,8 +74,10 @@ export const deleteWishlistItem = createAsyncThunk(
         }
       );
       if (!req.data) {
+        showErrorToast("Item not removed from wishlist, Try again!!", true);
         throw new Error("Error deleting wishlist item");
       }
+      showSucessToast("Item removed from wishlist");
       return req.data;
     } catch (error: any) {
       console.log(error);

@@ -1,3 +1,4 @@
+import { showErrorToast, showSucessToast } from "@/utils/toasts";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -38,8 +39,10 @@ export const deleteCartItem = createAsyncThunk(
         }
       );
       if (!req.data) {
+        showErrorToast("Cant remove item right now, Try again!!", true);
         throw new Error("Error in deleting cart item");
       }
+      showSucessToast("Item removed from cart successfully");
       return req.data;
     } catch (error) {
       console.log(error);
@@ -66,8 +69,10 @@ export const addItemTOCart = createAsyncThunk(
         }
       );
       if (!req.data) {
+        showErrorToast("Item not added to cart, Try again!!", true);
         throw new Error("Error in adding item to cart");
       }
+      showSucessToast("Item added to cart successfully");
       return req.data;
     } catch (error) {
       console.log(error);

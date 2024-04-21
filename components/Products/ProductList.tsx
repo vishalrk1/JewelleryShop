@@ -137,7 +137,7 @@ const ProductList: React.FC<Props> = ({
               {/* <p className="hidden md:block text-xs text-gray-500 line-clamp-1">
                 {product.prod_desc}
               </p> */}
-              <p className="text-xs md:text-sm">{`Rs. ${product.prod_price}`}</p>
+              <p className="text-sm md:text-base">{`Rs. ${product.prod_price}`}</p>
               <Button
                 className="w-full my-2 text-xs md:text-base px-4"
                 onClick={() =>
