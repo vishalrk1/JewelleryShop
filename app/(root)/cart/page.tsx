@@ -1,7 +1,9 @@
 "use client";
 
 import CartItamCard from "@/components/Cards/CartItemCard";
+import CheckoutCard from "@/components/Cards/CheckoutCard";
 import Loader from "@/components/Loader";
+import Container from "@/components/ui/Container";
 import { getCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
 import { redirect } from "next/navigation";
@@ -26,45 +28,47 @@ const CartPage = () => {
   }, [user]);
 
   return (
-    <main className="md:h-max">
-      <div className="p-5 text-sm md:text-xl font-bold text-center border-b ">
-        Your Cart
-      </div>
-      {user && (
-        <div className="md:flex md:flex-row md:justify-evenly h-fit">
-          {!fetching ? (
-            <>
-              <div className="md:h-[44rem] m-2 p-3 md:m-5 flex flex-col md:w-3/4 rounded-lg">
-                <div className="text-gray-600 md:text-2xl">All Products</div>
-                <div className="w-full flex flex-col overflow-y-scroll no-scrollbar p-1 md:p-3">
-                  {cartItems?.length === 0 ? (
-                    <div className="flex justify-center items-center overflow-hidden h-[40rem]">
-                      <div className="text-gray-600 md:text-2xl mt-5">
-                        No products in cart 🫠
-                      </div>
-                    </div>
-                  ) : (
-                    cartItems?.map((item, index) => (
-                      <CartItamCard
-                        key={index}
-                        cartProduct={item}
-                        product={item?.products_product}
-                        cartId={item?.cart_id}
-                      />
-                    ))
-                  )}
-                </div>
-              </div>
-              {/* <CheckoutCard /> */}
-            </>
-          ) : (
-            <div className="h-screen w-full flex justify-center items-center">
-              <Loader />
-            </div>
-          )}
+    <Container>
+      <main className="md:h-max">
+        <div className="p-5 text-sm md:text-xl font-bold text-center border-b ">
+          Your Cart
         </div>
-      )}
-    </main>
+        {user && (
+          <div className="md:flex md:flex-row md:justify-evenly h-fit">
+            {!fetching ? (
+              <>
+                <div className="md:h-[44rem] m-2 p-3 md:m-5 flex flex-col md:w-3/4 rounded-lg">
+                  <div className="text-gray-600 md:text-2xl">All Products</div>
+                  <div className="w-full flex flex-col overflow-y-scroll no-scrollbar p-1 md:p-3">
+                    {cartItems?.length === 0 ? (
+                      <div className="flex justify-center items-center overflow-hidden h-[40rem]">
+                        <div className="text-gray-600 md:text-2xl mt-5">
+                          No products in cart 🫠
+                        </div>
+                      </div>
+                    ) : (
+                      cartItems?.map((item, index) => (
+                        <CartItamCard
+                          key={index}
+                          cartProduct={item}
+                          product={item?.products_product}
+                          cartId={item?.cart_id}
+                        />
+                      ))
+                    )}
+                  </div>
+                </div>
+                <CheckoutCard />
+              </>
+            ) : (
+              <div className="h-screen w-full flex justify-center items-center">
+                <Loader />
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+    </Container>
   );
 };
 

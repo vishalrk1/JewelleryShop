@@ -14,16 +14,21 @@ const NavLinks: React.FC<Props> = ({ className, routes }) => {
   const pathname = usePathname();
 
   return (
-    <nav className={cn("hidden md:flex items-center space-x-4 lg:space-x-6", className)}>
+    <nav
+      className={cn(
+        "hidden md:flex items-center space-x-4 lg:space-x-6",
+        className
+      )}
+    >
       {routes?.map((route) => (
         <Link
           key={route.href}
           href={route.href}
           className={cn(
-            "text-xs md:text-sm font-medium transition-colors hover:text-primary",
+            "text-sm md:text-base font-medium transition-colors hover:text-primary",
             pathname === route.href
               ? "text-black dark:text-white font-bold"
-              : "text-gray-700"
+              : "text-primary"
           )}
         >
           {route.label}

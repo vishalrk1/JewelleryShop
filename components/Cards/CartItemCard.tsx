@@ -70,8 +70,10 @@ const CartItamCard: React.FC<Props> = ({ cartProduct, cartId, product }) => {
           <div className="text-base md:text-xl font-bold">
             {product?.prod_title}
           </div>
-          <div className="hidden md:block text-gray-600 text-xs md:text-base ">
-            {product?.prod_desc}
+          <div className="hidden md:block">
+            <p className="text-gray-600 text-xs md:text-base line-clamp-2">
+              {product?.prod_desc}
+            </p>
           </div>
           <div className="flex w-full items-start mt-1 md:mt-2 divide-x divide-solid divide-gray-400">
             <div className="text-gray-600 font-bold text-sm md:text-base">
