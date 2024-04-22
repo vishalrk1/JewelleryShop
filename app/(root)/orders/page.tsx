@@ -23,7 +23,7 @@ const OrdersPage = () => {
   }, []);
 
   return (
-    <main className="flex flex-col divide-y-2 mx-auto max-w-8xl md:mt-6 px-4 md:px-12">
+    <main className="flex flex-col divide-y-2 mx-auto max-w-6xl md:mt-6 px-4 md:px-12">
       <section className="mt-6 mx-3 mb-2">
         <h1 className="text-base md:text-2xl text-black font-bold">
           Your Orders

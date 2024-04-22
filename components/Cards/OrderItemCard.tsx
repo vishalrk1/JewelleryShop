@@ -11,13 +11,13 @@ const OrderItamCard: React.FC<OrderItemCardProps> = ({ orderItem }) => {
       <div className="flex items-center justify-center w-max h-max p-2">
         <img
           src={orderItem?.products_product?.prod_image_url}
-          className="w-20 md:w-32 h-full md:h-28 object-cover rounded-lg"
+          className="w-20 md:w-32 h-full md:h-20 object-cover rounded-lg"
           alt=""
         />
       </div>
       <div className="w-full p-2 flex my-2">
         <div className="flex flex-col w-full items-centerc justify-center">
-          <div className="text-sm md:text-xl font-bold">
+          <div className="text-sm md:text-lg font-bold">
             {orderItem?.products_product?.prod_title}
           </div>
           <div className="flex w-full items-start mt-1 md:mt-2 divide-x divide-solid divide-gray-400">
