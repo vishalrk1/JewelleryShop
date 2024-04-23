@@ -1,4 +1,5 @@
 "use client";
+import Container from "@/components/ui/Container";
 import { getCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
 import { getWishlist } from "@/redux/store/wishlist/action";
@@ -28,7 +29,7 @@ const ProductsPageLayout: React.FC<Props> = ({ children }) => {
     }
   }, []);
 
-  return <>{children}</>;
+  return <Container>{children}</Container>;
 };
 
 export default ProductsPageLayout;

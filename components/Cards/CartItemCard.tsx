@@ -71,7 +71,7 @@ const CartItamCard: React.FC<Props> = ({ cartProduct, cartId, product }) => {
             {product?.prod_title}
           </div>
           <div className="hidden md:block">
-            <p className="text-gray-600 text-xs md:text-base line-clamp-2">
+            <p className="text-gray-600 text-xs md:text-sm line-clamp-2">
               {product?.prod_desc}
             </p>
           </div>

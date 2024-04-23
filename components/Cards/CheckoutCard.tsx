@@ -27,7 +27,7 @@ const CheckoutCard = () => {
   }, [cartItems]);
 
   return (
-    <div className="w-full p-5 md:mt-5 text-sm md:text-base flex justify-center font-poppins">
+    <div className="w-full h-max p-5 md:mt-5 text-sm md:text-base flex justify-center font-poppins">
       <div className="w-50 md:w-96 h-50 md:h-90 p-5 rounded-xl bg-white border text-center ">
         <h2 className="text-black mb-5 font-bold">Enter your details</h2>
         <form className="flex flex-col">
