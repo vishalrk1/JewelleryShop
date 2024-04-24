@@ -21,7 +21,7 @@ export const UserDetailsFormSchema = z.object({
   last_name: z.string().min(1, { message: "Last name is required" }),
   user_gender: z.string().min(1, { message: "Gender is required" }),
   user_phone: z.string().min(1, { message: "Phone is required" }),
-  user_image_url: z.string().min(1, { message: "Image is required" }),
+  user_pfp_url: z.string().min(1, { message: "Image is required" }),
   user_image_file: z
     .any()
     .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)

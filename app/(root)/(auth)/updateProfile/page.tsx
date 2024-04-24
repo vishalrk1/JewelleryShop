@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RootState } from "@/redux/store/store";
 import { UserDetailsFormFields, UserDetailsFormSchema } from "@/schemas";
 import { redirect } from "next/navigation";
@@ -35,17 +35,19 @@ import { useSelector } from "react-redux";
 import * as z from "zod";
 
 const UpdateProfileDetailsPage = () => {
-  const { user, fetching } = useSelector((state: RootState) => state.auth);
+  const { user, userData, fetching } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const form = useForm<z.infer<typeof UserDetailsFormSchema>>({
     defaultValues: {
       username: user?.username,
       email: user?.email,
-      first_name: "",
-      last_name: "",
-      user_gender: "",
-      user_image_url: "",
-      user_phone: "",
+      first_name: user?.first_name ? user?.first_name : "",
+      last_name: user?.last_name ? user?.last_name : "",
+      user_gender: userData?.user_gender ? userData?.user_gender : "",
+      user_pfp_url: userData?.user_pfp_url ? userData?.user_pfp_url : "",
+      user_phone: userData?.user_phone ? userData?.user_phone : "",
     },
   });
 
@@ -57,10 +59,15 @@ const UpdateProfileDetailsPage = () => {
   }, [user]);
 
   return (
-    <>
+    <Tabs defaultValue="profileDetails">
+      <TabsList>
+        <TabsTrigger value="pfpImage">Profile Image</TabsTrigger>
+        <TabsTrigger value="profileDetails">Profile Details</TabsTrigger>
+        <TabsTrigger value="userAddress">Address</TabsTrigger>
+      </TabsList>
       {!fetching ? (
-        <div className="flex items-start">
-          <Card className="md:w-screen max-w-md">
+        <div className="flex items-start my-4">
+          <Card className="md:w-screen max-w-5xl">
             <CardHeader>
               <CardTitle>Update Profile Details</CardTitle>
               <CardDescription>
@@ -68,12 +75,13 @@ const UpdateProfileDetailsPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Form {...form}>
-                <form className="space-y-2">
-                  {UserDetailsFormFields.map((item) => {
-                    return (
-                      <>
+              <TabsContent value="profileDetails">
+                <Form {...form}>
+                  <form className="grid grid-cols-2 gap-4">
+                    {UserDetailsFormFields.map((item, index) => {
+                      return (
                         <FormField
+                          key={index}
                           name={item.name}
                           render={({ field }) => (
                             <FormItem>
@@ -116,16 +124,13 @@ const UpdateProfileDetailsPage = () => {
                             </FormItem>
                           )}
                         />
-                        {item.addSeprator && (
-                          <div className="py-4">
-                            <Separator />
-                          </div>
-                        )}
-                      </>
-                    );
-                  })}
-                </form>
-              </Form>
+                      );
+                    })}
+                  </form>
+                </Form>
+              </TabsContent>
+              <TabsContent value="pfpImage">Image Data Input</TabsContent>
+              <TabsContent value="userAddress">Address Data Input</TabsContent>
             </CardContent>
           </Card>
         </div>
@@ -134,7 +139,7 @@ const UpdateProfileDetailsPage = () => {
           <Loader className="h-10 w-10" />
         </div>
       )}
-    </>
+    </Tabs>
   );
 };
 
