@@ -12,6 +12,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { twMerge } from "tailwind-merge";
 import { Heart, ShoppingCart } from "lucide-react";
+import Image from "next/image";
+import { showSucessToast } from "@/utils/toasts";
+import Loader from "@/components/Loader";
 
 interface Props {
   params: { productId: string };
@@ -23,7 +26,6 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const getProductData = async (prodId: string) => {
-    setIsLoading(true);
     const res = await axios.get(`http://localhost:3000/api/products/${prodId}`);
     if (res.status === 200) {
       setProduct(res?.data?.data as products_product);
@@ -34,51 +36,85 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     getProductData(prodId);
   }, []);
 
-  console.log(product);
-
   return (
-    <main className="flex flex-col md:flex-row items-center gap-2 p-3">
-      <section className="flex-1 bg-black text-white">Produce Image</section>
-      <section className="flex-1 text-white w-full">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">
-              {product?.prod_title}
-            </CardTitle>
-            <CardDescription className="text-sm">
-              {product?.prod_desc}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Badge
-              className={twMerge(
-                "rounded-md",
-                product?.prod_instock && "bg-green-500"
-              )}
-              variant={product?.prod_instock ? "default" : "secondary"}
-            >
-              Available
-            </Badge>
-            <p className="text-lg">{`Price: ${product?.prod_price}`}</p>
-          </CardContent>
-        </Card>
-        <div className="flex gap-2 my-3 w-full items-center">
-          <Card className="w-full">
-            <CardHeader className="flex flex-row items-center justify-center gap-4">
-              <ShoppingCart className="w-7 h-7" />
-              <p className="text-base">Add to Cart</p>
-            </CardHeader>
-          </Card>
-          <Card className="h-full">
-            <CardHeader className="flex flex-col items-center justify-center gap-2">
-              <Heart className="w- 7h-7" />
-            </CardHeader>
-          </Card>
+    <main className="flex flex-col md:flex-row items-start gap-2 p-3">
+      {!isLoading ? (
+        <>
+          <section className="flex-1 w-full">
+            <Card className="overflow-hidden">
+              <CardHeader>
+                <CardTitle className="text-xl">Product Image</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-2 items-center justify-center">
+                  {product && (
+                    <Image
+                      src={product.prod_image_url}
+                      alt=""
+                      className="rounded-md object-cover"
+                      height={400}
+                      width={400}
+                    />
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+          <section className="flex-1 text-white w-full">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl md:text-2xl font-semibold">
+                  {product?.prod_title}
+                </CardTitle>
+                <CardDescription className="text-sm">
+                  {product?.prod_desc}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-row gap-4">
+                  <Badge
+                    className={twMerge(
+                      "rounded-md",
+                      product?.prod_instock && "bg-green-500"
+                    )}
+                    variant={product?.prod_instock ? "default" : "secondary"}
+                  >
+                    {product?.prod_instock ? "Available" : "Out of stock"}
+                  </Badge>
+                  <p className="text-lg">{`Price: ${product?.prod_price}`}</p>
+                </div>
+              </CardContent>
+            </Card>
+            <div className="flex gap-2 my-3 w-full items-center">
+              <Card
+                className="w-full cursor-pointer"
+                onClick={() => showSucessToast("Item added to cart")}
+              >
+                <CardHeader className="flex flex-row items-center justify-center gap-4">
+                  <ShoppingCart className="w-7 h-7" />
+                  <p className="text-base">Add to Cart</p>
+                </CardHeader>
+              </Card>
+              <Card
+                className="h-full cursor-pointer"
+                onClick={() => showSucessToast("whislist btn pressed")}
+              >
+                <CardHeader className="flex flex-col items-center justify-center gap-2">
+                  <Heart className="w- 7h-7" />
+                </CardHeader>
+              </Card>
+            </div>
+          </section>
+        </>
+      ) : (
+        <div className="flex h-screen w-full items-center justify-center">
+          <Loader className="h-12 w-12" />
         </div>
-      </section>
+      )}
     </main>
   );
 };

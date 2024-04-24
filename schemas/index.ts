@@ -1,5 +1,8 @@
 import * as z from "zod";
 
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+
 export const LoginSchema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
   password: z.string().min(1, { message: "Password is required" }),
@@ -10,3 +13,134 @@ export const RegisterSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z.string().min(1, { message: "Password is required" }),
 });
+
+export const UserDetailsFormSchema = z.object({
+  username: z.string().min(1, { message: "Username is requires" }),
+  email: z.string().email({ message: "Invalid email" }),
+  first_name: z.string().min(1, { message: "First name is required" }),
+  last_name: z.string().min(1, { message: "Last name is required" }),
+  user_gender: z.string().min(1, { message: "Gender is required" }),
+  user_phone: z.string().min(1, { message: "Phone is required" }),
+  user_image_url: z.string().min(1, { message: "Image is required" }),
+  user_image_file: z
+    .any()
+    .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+      "Only .jpg, .jpeg and .png formats are supported."
+    ),
+});
+
+export const UserDetailsFormFields = [
+  {
+    label: "username",
+    name: "username",
+    type: "text",
+    placeholder: "Enter your name",
+    required: true,
+    disabled: true,
+    addSeprator: false,
+  },
+  {
+    label: "email",
+    name: "email",
+    type: "email",
+    placeholder: "Enter your email",
+    required: true,
+    disabled: true,
+    addSeprator: true,
+  },
+  {
+    label: "First Name",
+    name: "first_name",
+    type: "text",
+    placeholder: "Enter your name",
+    required: true,
+    disabled: false,
+    addSeprator: false,
+  },
+  {
+    label: "Last Name",
+    name: "last_name",
+    type: "text",
+    placeholder: "",
+    required: false,
+    disabled: false,
+    addSeprator: false,
+  },
+  {
+    label: "Phone",
+    name: "user_phone",
+    type: "number",
+    placeholder: "Enter your phone",
+    required: true,
+    disabled: false,
+    addSeprator: false,
+  },
+  {
+    label: "Gender",
+    name: "user_gender",
+    type: "select",
+    placeholder: "select your gendet",
+    required: true,
+    disabled: false,
+    addSeprator: false,
+    options: [
+      { label: "Male", value: "M" },
+      { label: "Female", value: "F" },
+      { label: "Other", value: "O" },
+    ],
+  },
+];
+
+export const UserAddressSchema = [
+  {
+    label: "address_type",
+    name: "address_type",
+    type: "select",
+    placeholder: "select your address type",
+    required: true,
+  },
+  {
+    label: "address_line1",
+    name: "address_line1",
+    type: "text",
+    placeholder: "Enter your address",
+    required: true,
+  },
+  {
+    label: "address_line2",
+    name: "address_line2",
+    type: "text",
+    placeholder: "Enter your address",
+    required: false,
+  },
+  {
+    label: "city",
+    name: "city",
+    type: "text",
+    placeholder: "Enter your city",
+    required: true,
+  },
+  {
+    label: "state",
+    name: "state",
+    type: "text",
+    placeholder: "Enter your state",
+    required: true,
+  },
+  {
+    label: "country",
+    name: "country",
+    type: "text",
+    placeholder: "Enter your country",
+    required: true,
+  },
+  {
+    label: "postal_code",
+    name: "postal_code",
+    type: "number",
+    placeholder: "Enter your pincode",
+    required: true,
+  },
+];

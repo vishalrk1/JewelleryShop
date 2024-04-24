@@ -17,9 +17,10 @@ import { redirect, useRouter } from "next/navigation";
 
 interface Props {
   userData: any;
+  is_staff: boolean;
 }
 
-const UserDropdown: React.FC<Props> = ({ userData }) => {
+const UserDropdown: React.FC<Props> = ({ userData, is_staff }) => {
   const dispatch = useDispatch<any>();
   const router = useRouter();
   const handelLogout = () => {
@@ -45,6 +46,18 @@ const UserDropdown: React.FC<Props> = ({ userData }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {is_staff && (
+          <>
+            <DropdownMenuItem
+              onClick={() => {
+                // router.push("/admin/dashboard");
+              }}
+            >
+              Admin Dashboard
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem
           onClick={() => {
             router.push("/profile");

@@ -35,7 +35,7 @@ const AuthButtons = () => {
             label="Your wishlist"
             className="hidden md:flex items-center"
           />
-          <UserDropdown userData={userData} />
+          <UserDropdown userData={userData} is_staff={user?.is_staff} />
         </div>
       ) : (
         <div className="flex items-center gap-2">
