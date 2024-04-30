@@ -37,7 +37,10 @@ const CartPage = () => {
           <div className="md:flex md:flex-row md:justify-evenly h-fit w-full">
             {!fetching ? (
               <>
-                <div className="md:h-[40rem] m-2 flex flex-col md:w-3/4 rounded-lg">
+                <div className="bg-black h-screen w-screen ">
+                  <h1>Hello</h1>
+                </div>
+                {/* <div className="md:h-[40rem] m-2 flex flex-col md:w-3/4 rounded-lg">
                   <div className="text-gray-600 md:text-2xl">All Products</div>
                   <div className="w-full flex flex-col overflow-y-scroll no-scrollbar p-1 md:p-3">
                     {cartItems?.length === 0 ? (
@@ -57,8 +60,8 @@ const CartPage = () => {
                       ))
                     )}
                   </div>
-                </div>
-                <CheckoutCard />
+                </div> */}
+                {/* <CheckoutCard /> */}
               </>
             ) : (
               <div className="h-screen w-full flex justify-center items-center">

@@ -3,6 +3,17 @@ import * as z from "zod";
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
+export interface FormSchemaType {
+  label: string;
+  name: string;
+  type: string;
+  placeholder: string;
+  required: boolean;
+  disabled?: boolean;
+  addSeprator?: boolean;
+  options?: { label: string; value: string }[];
+}
+
 export const LoginSchema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
   password: z.string().min(1, { message: "Password is required" }),
@@ -29,6 +40,16 @@ export const UserDetailsFormSchema = z.object({
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
       "Only .jpg, .jpeg and .png formats are supported."
     ),
+});
+
+export const AddressDetailsSchema = z.object({
+  address_type: z.string().min(1, { message: "Address type is required" }),
+  address_line1: z.string().min(1, { message: "Address line 1 is required" }),
+  address_line2: z.string().min(1, { message: "Address line 2 is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  state: z.string().min(1, { message: "State is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  postal_code: z.string().min(1, { message: "Postal code is required" }),
 });
 
 export const UserDetailsFormFields = [
@@ -91,56 +112,61 @@ export const UserDetailsFormFields = [
       { label: "Other", value: "O" },
     ],
   },
-];
+] as FormSchemaType[];
 
-export const UserAddressSchema = [
+export const UserAddressFormFields = [
   {
-    label: "address_type",
+    label: "Address Type",
     name: "address_type",
     type: "select",
     placeholder: "select your address type",
     required: true,
+    options: [
+      { label: "Home", value: "Home" },
+      { label: "Work", value: "Work" },
+      { label: "Other", value: "Other" },
+    ],
   },
   {
-    label: "address_line1",
+    label: "Address Line 1",
     name: "address_line1",
     type: "text",
     placeholder: "Enter your address",
     required: true,
   },
   {
-    label: "address_line2",
+    label: "Address Line 2",
     name: "address_line2",
     type: "text",
     placeholder: "Enter your address",
     required: false,
   },
   {
-    label: "city",
+    label: "City",
     name: "city",
     type: "text",
     placeholder: "Enter your city",
     required: true,
   },
   {
-    label: "state",
+    label: "State",
     name: "state",
     type: "text",
     placeholder: "Enter your state",
     required: true,
   },
   {
-    label: "country",
+    label: "Country",
     name: "country",
     type: "text",
     placeholder: "Enter your country",
     required: true,
   },
   {
-    label: "postal_code",
+    label: "Postal code",
     name: "postal_code",
     type: "number",
     placeholder: "Enter your pincode",
     required: true,
   },
-];
+] as FormSchemaType[];

@@ -38,8 +38,6 @@ const Navbar = () => {
     setRoutes(newRoutes);
   }, [categories]);
 
-  console.log(routes);
-
   return (
     <nav className="border-b bg-background dark:bg-secondary">
       <div className="flex h-16 items-center px-8">
