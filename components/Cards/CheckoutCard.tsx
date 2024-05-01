@@ -2,6 +2,11 @@ import { RootState } from "@/redux/store/store";
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
+import { showErrorToast } from "@/utils/toasts";
+
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+
 // import AddressDropdown from "./AddressDropdown";
 
 const CheckoutCard = () => {
@@ -11,6 +16,7 @@ const CheckoutCard = () => {
   const [phone, setPhone] = useState("");
   const [cartValue, setCartValue] = useState(0);
   const [convenienceFee, setConvenienceFee] = useState(150);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (cartItems.length > 0) {
@@ -25,6 +31,34 @@ const CheckoutCard = () => {
       }
     }
   }, [cartItems]);
+
+  const handelCheckout = async () => {
+    try {
+      setLoading(true);
+      const orderId = uuidv4();
+      const res = await axios.post(
+        `http://localhost:3000/api/orders/${orderId}/checkout`,
+        {},
+        {
+          params: {
+            userId: user?.id,
+            email: user?.email,
+            cartId: cart?.id,
+          },
+        }
+      );
+      console.log(res);
+      if (res.status === 200) {
+        window.location.assign(res.data.url);
+      } else {
+        throw new Error("Something went wrong");
+      }
+    } catch (error) {
+      showErrorToast("Something went wrong cant procced order right now");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full h-max p-5 md:mt-5 text-sm md:text-base flex justify-center font-poppins">
@@ -98,8 +132,8 @@ const CheckoutCard = () => {
             <div className=" text-gray-600">Order Total</div>
             <div className=" font-bold">{convenienceFee + cartValue}</div>
           </div>
-          <Button type="submit" onClick={() => {}}>
-            Place Order
+          <Button type="submit" onClick={handelCheckout} disabled={loading}>
+            Checkout
           </Button>
         </form>
       </div>
