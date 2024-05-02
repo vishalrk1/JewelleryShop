@@ -22,6 +22,9 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
           },
         },
       },
+      orderBy: {
+        created_at: "desc",
+      },
     });
     return NextResponse.json(
       {

@@ -27,8 +27,6 @@ const CartPage = () => {
     }
   }, [user]);
 
-  console.log(userData);
-
   return (
     <Container>
       <main className="md:h-max">

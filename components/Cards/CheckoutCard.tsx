@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 // import AddressDropdown from "./AddressDropdown";
 
 const CheckoutCard = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, userData } = useSelector((state: RootState) => state.auth);
   const { cart, cartItems } = useSelector((state: RootState) => state.cart);
   const [addressType, setAddressType] = useState("Home");
   const [phone, setPhone] = useState("");
@@ -19,7 +19,7 @@ const CheckoutCard = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (cartItems.length > 0) {
+    if (cartItems?.length > 0) {
       let cartTotal = cartItems.reduce((acc, item) => {
         return acc + item?.products_product?.prod_price * item?.quantity;
       }, 0);
@@ -44,6 +44,7 @@ const CheckoutCard = () => {
             userId: user?.id,
             email: user?.email,
             cartId: cart?.id,
+            addressId: userData?.main_useraddress[0].id,
           },
         }
       );

@@ -30,98 +30,100 @@ export async function POST(req: Request) {
   const cartId = session?.metadata?.cartId;
   const addressId = session?.metadata?.addressId;
 
-  if (event.type === "checkout.session.completed") {
-    if (!userId || !orderId || !addressId || !cartId) {
-      return new NextResponse("Webhook error metadata missing", {
-        status: 400,
+  switch (event.type) {
+    case "checkout.session.completed":
+      if (!userId || !orderId || !addressId || !cartId) {
+        return new NextResponse("Webhook error metadata missing", {
+          status: 400,
+        });
+      }
+      // create order and order item, and empty users cart
+      const address = await prismadb.main_useraddress.findUnique({
+        where: {
+          id: parseInt(addressId),
+          main_userprofile: {
+            auth_user: {
+              id: parseInt(userId),
+            },
+          },
+        },
+        include: {
+          main_userprofile: true,
+        },
       });
-    }
-    // create order and order item, and empty users cart
-    const address = await prismadb.main_useraddress.findUnique({
-      where: {
-        id: parseInt(addressId),
-        main_userprofile: {
-          auth_user: {
-            id: parseInt(userId),
-          },
-        },
-      },
-      include: {
-        main_userprofile: true,
-      },
-    });
 
-    if (!address) {
-      return new NextResponse("Webhook error address not found", {
-        status: 400,
-      });
-    }
+      if (!address) {
+        return new NextResponse("Webhook error address not found", {
+          status: 400,
+        });
+      }
 
-    const order = await prismadb.order_order.create({
-      data: {
-        order_id: orderId,
-        total_amount: session?.amount_total ? session.amount_total : 0,
-        delivery_status: "pending",
-        payment_status: session.payment_status,
-        is_paid: true,
-        created_at: new Date(),
-        updated_at: new Date(),
-        payment_date: new Date(),
-        transaction_id: session.payment_intent?.toString(),
-        auth_user: {
-          connect: {
-            id: parseInt(userId),
-          },
-        },
-        main_useraddress: {
-          connect: {
-            id: parseInt(addressId),
-          },
-        },
-      },
-    });
-
-    const order_items = [];
-    const cart_products = await prismadb.cart_cartitem.findMany({
-      where: {
-        cart_id: Number(cartId),
-      },
-      include: {
-        products_product: true,
-      },
-    });
-
-    cart_products?.forEach(async (item) => {
-      const order_item = await prismadb.order_orderitem.create({
+      const order = await prismadb.order_order.create({
         data: {
-          quantity: item.quantity,
-          products_product: {
+          order_id: orderId,
+          total_amount: session?.amount_total ? session.amount_total / 100 : 0,
+          delivery_status: "pending",
+          payment_status: session.payment_status,
+          is_paid: true,
+          created_at: new Date(),
+          updated_at: new Date(),
+          payment_date: new Date(),
+          transaction_id:
+            session.payment_intent?.toString() === "paid"
+              ? "sucess"
+              : "pending",
+          auth_user: {
             connect: {
-              id: item.products_product.id,
+              id: parseInt(userId),
             },
           },
-          order_order: {
+          main_useraddress: {
             connect: {
-              id: order.id,
+              id: parseInt(addressId),
             },
           },
         },
       });
-      order_items.push(order_item);
-    });
 
-    // empty cart
-    await prismadb.cart_cartitem.deleteMany({
-      where: {
-        cart_id: parseInt(cartId),
-      },
-    });
+      const cart_products = await prismadb.cart_cartitem.findMany({
+        where: {
+          cart_id: Number(cartId),
+        },
+        include: {
+          products_product: true,
+        },
+      });
 
-    return new NextResponse("Webhook success", { status: 200 });
-  } else {
-    return new NextResponse("Webhook error unhandled error type", {
-      status: 200,
-    });
+      cart_products?.forEach(async (item) => {
+        const order_item = await prismadb.order_orderitem.create({
+          data: {
+            quantity: item.quantity,
+            products_product: {
+              connect: {
+                id: item.products_product.id,
+              },
+            },
+            order_order: {
+              connect: {
+                id: order.id,
+              },
+            },
+          },
+        });
+      });
+
+      // empty cart
+      await prismadb.cart_cartitem.deleteMany({
+        where: {
+          cart_id: parseInt(cartId),
+        },
+      });
+      return new NextResponse("Webhook success", { status: 200 });
+    case "checkout.session.async_payment_failed":
+      return null;
+    default:
+      return new NextResponse("Webhook error unhandled error type", {
+        status: 200,
+      });
   }
-  return new NextResponse(null, { status: 200 });
 }

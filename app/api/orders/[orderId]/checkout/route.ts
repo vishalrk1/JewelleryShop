@@ -44,9 +44,10 @@ export async function POST(
             description: item.products_product?.prod_desc as string,
             images: [item.products_product.prod_image_url],
           },
-          unit_amount: Math.round(
+          // unit_amount: Math.round(Number(item.products_product.prod_price)*100),
+          unit_amount_decimal: Math.round(
             Number(item.products_product.prod_price) * 100
-          ),
+          ).toString(),
         },
       }));
 
@@ -76,8 +77,8 @@ export async function POST(
       customer: stripeCustomer.stripeCustomerId,
       line_items,
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/orders`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cart`,
       metadata: {
         orderId: params.orderId,
         userId: userId,
