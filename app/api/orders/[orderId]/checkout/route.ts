@@ -13,10 +13,11 @@ export async function POST(
     const userId = req.nextUrl.searchParams.get("userId");
     const email = req.nextUrl.searchParams.get("email");
     const cartId = req.nextUrl.searchParams.get("cartId");
+    const addressId = req.nextUrl.searchParams.get("addressId");
 
     console.log(userId, email, cartId);
 
-    if (!userId || !email || !cartId) {
+    if (!userId || !email || !cartId || !addressId) {
       return new NextResponse("UNAUTHORISED USER", { status: 401 });
     }
 
@@ -80,6 +81,8 @@ export async function POST(
       metadata: {
         orderId: params.orderId,
         userId: userId,
+        cartId: cartId,
+        addressId: addressId,
       },
     });
 

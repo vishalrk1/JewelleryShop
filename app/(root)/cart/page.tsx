@@ -27,7 +27,7 @@ const CartPage = () => {
     }
   }, [user]);
 
-  console.log(user);
+  console.log(userData);
 
   return (
     <Container>
