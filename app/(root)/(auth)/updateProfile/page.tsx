@@ -76,7 +76,7 @@ const UpdateProfileDetailsPage = () => {
       user_gender: userData?.user_gender ? userData?.user_gender : "",
       user_pfp_url: userData?.user_pfp_url
         ? userData?.user_pfp_url
-        : "https://cdztpolwphkawmvkmrei.supabase.co/storage/v1/object/public/Images/user_pfp/_744764ec-4726-41c4-8374-ffedf7fd8676.jpg",
+        : process.env.NEXT_DEFAULT_PFP_IMAGE,
       user_phone: userData?.user_phone ? userData?.user_phone : "",
     },
   });
@@ -109,7 +109,7 @@ const UpdateProfileDetailsPage = () => {
     // }
   }, [user, userData, fetching]);
 
-  console.log(userData)
+  console.log(userData);
 
   if (!isHidrate) return null;
 
@@ -129,7 +129,7 @@ const UpdateProfileDetailsPage = () => {
         showSucessToast("Cant upload image please try again ");
         return;
       }
-      userDetails.user_pfp_url = `https://cdztpolwphkawmvkmrei.supabase.co/storage/v1/object/public/Images/${data.path}`;
+      userDetails.user_pfp_url = `${process.env.NEXT_STORAGE_BUCKET}/Images/${data.path}`;
     }
     dispatch(
       createUserProfile({

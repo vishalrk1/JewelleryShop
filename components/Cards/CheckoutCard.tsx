@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { RootState } from "@/redux/store/store";
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -27,6 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import Loader from "../Loader";
 
 // import AddressDropdown from "./AddressDropdown";
 
@@ -58,7 +59,6 @@ const CheckoutCard = () => {
   }, [userData]);
 
   const handelCheckout = async () => {
-    console.log("clicked")
     try {
       setLoading(true);
       const orderId = uuidv4();
@@ -141,7 +141,7 @@ const CheckoutCard = () => {
                   }
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
+              <DropdownMenuContent className="w-full">
                 <DropdownMenuLabel>Choose Address</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup
@@ -182,7 +182,15 @@ const CheckoutCard = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="button" onSubmit={() => handelCheckout()} className="w-full">
+          <Button
+            type="button"
+            onClick={() => handelCheckout()}
+            className="w-full"
+            disabled={loading}
+          >
+            {loading && (
+              <Loader className="w-4 h-4 border-2 mx-2" color="border-gray-100" />
+            )}
             Proceed to Checkout
           </Button>
         </CardFooter>
