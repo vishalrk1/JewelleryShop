@@ -127,6 +127,7 @@ const CheckoutCard = () => {
               type="text"
               id="phone"
               placeholder={userData?.user_phone}
+              disabled
             />
           </div>
           {addressId && (

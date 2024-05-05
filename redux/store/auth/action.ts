@@ -3,6 +3,8 @@ import { supabase } from "@/redux/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { redirect } from "next/navigation";
 import axios from "axios";
+import { z } from "zod";
+import { UserDetailsFormSchema } from "@/schemas";
 
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
@@ -62,6 +64,13 @@ export const logoutUser = createAsyncThunk(
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
+  }
+);
+
+export const updateUserProfile = createAsyncThunk(
+  "user/updateUserProfile",
+  async (userProfile: z.infer<typeof UserDetailsFormSchema>, thunkAPI) => {
+    console.log(userProfile);
   }
 );
 
