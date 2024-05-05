@@ -13,7 +13,7 @@ interface Props {
 
 const CartItamCard: React.FC<Props> = ({ cartProduct, cartId, product }) => {
   const dispatch = useDispatch<any>();
-  const [quantity, setQuantity] = useState(cartProduct.quantity);
+  const [quantity, setQuantity] = useState(cartProduct?.quantity);
   //   const { removeProductFromCart, updateProductQuantity } =
   //     useContext(CartContext);
 

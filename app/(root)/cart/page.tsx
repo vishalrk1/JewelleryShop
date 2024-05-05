@@ -3,7 +3,19 @@
 import CartItamCard from "@/components/Cards/CartItemCard";
 import CheckoutCard from "@/components/Cards/CheckoutCard";
 import Loader from "@/components/Loader";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Container from "@/components/ui/Container";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import { getCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
 import { redirect } from "next/navigation";
@@ -28,47 +40,44 @@ const CartPage = () => {
   }, [user]);
 
   return (
-    <Container>
-      <main className="md:h-max">
+    <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 py-12">
+      <div className="space-y-6">
         <div className="p-5 text-sm md:text-xl font-bold text-center border-b ">
           Your Cart
         </div>
-        {user && (
-          <div className="md:flex md:flex-row md:justify-evenly h-fit w-full">
-            {!fetching ? (
-              <>
-                <div className="md:h-[40rem] m-2 flex flex-col md:w-3/4 rounded-lg">
-                  <div className="text-gray-600 md:text-2xl">All Products</div>
-                  <div className="w-full flex flex-col overflow-y-scroll no-scrollbar p-1 md:p-3">
-                    {cartItems?.length === 0 ? (
-                      <div className="flex justify-center items-center overflow-hidden h-[40rem]">
-                        <div className="text-gray-600 md:text-2xl mt-5">
-                          No products in cart 🫠
-                        </div>
+        <div className="space-y-4">
+          {user && (
+            <>
+              {!fetching ? (
+                <div className="h-[500px] w-full flex flex-col overflow-y-scroll no-scrollbar md:p-3 border-slate-50">
+                  {cartItems?.length === 0 ? (
+                    <div className="flex justify-center items-center overflow-hidden h-[40rem]">
+                      <div className="text-gray-600 md:text-2xl mt-5">
+                        No products in cart 🫠
                       </div>
-                    ) : (
-                      cartItems?.map((item, index) => (
-                        <CartItamCard
-                          key={index}
-                          cartProduct={item}
-                          product={item?.products_product}
-                          cartId={item?.cart_id}
-                        />
-                      ))
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    cartItems?.map((item, index) => (
+                      <CartItamCard
+                        key={index}
+                        cartProduct={item}
+                        product={item?.products_product}
+                        cartId={item?.cart_id}
+                      />
+                    ))
+                  )}
                 </div>
-                <CheckoutCard />
-              </>
-            ) : (
-              <div className="h-screen w-full flex justify-center items-center">
-                <Loader />
-              </div>
-            )}
-          </div>
-        )}
-      </main>
-    </Container>
+              ) : (
+                <div className="h-48 w-full flex justify-center items-center">
+                  <Loader />
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+      <CheckoutCard />
+    </div>
   );
 };
 

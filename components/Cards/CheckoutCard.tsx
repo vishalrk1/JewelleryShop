@@ -6,13 +6,33 @@ import { showErrorToast } from "@/utils/toasts";
 
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { Separator } from "../ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 // import AddressDropdown from "./AddressDropdown";
 
 const CheckoutCard = () => {
   const { user, userData } = useSelector((state: RootState) => state.auth);
   const { cart, cartItems } = useSelector((state: RootState) => state.cart);
-  const [addressType, setAddressType] = useState("Home");
+  const [addressId, setAddressId] = useState<null | string>(null);
   const [phone, setPhone] = useState("");
   const [cartValue, setCartValue] = useState(0);
   const [convenienceFee, setConvenienceFee] = useState(150);
@@ -31,6 +51,10 @@ const CheckoutCard = () => {
       }
     }
   }, [cartItems]);
+
+  useEffect(() => {
+    setAddressId(userData?.main_useraddress[0].id);
+  }, [userData]);
 
   const handelCheckout = async () => {
     try {
@@ -61,83 +85,107 @@ const CheckoutCard = () => {
     }
   };
 
+  console.log(userData);
+
   return (
-    <div className="w-full h-max p-5 md:mt-5 text-sm md:text-base flex justify-center font-poppins">
-      <div className="w-50 md:w-96 h-50 md:h-90 p-5 rounded-xl bg-white border text-center ">
-        <h2 className="text-black mb-5 font-bold">Enter your details</h2>
-        <form className="flex flex-col">
-          <label className="text-left mb-1 mt-2" htmlFor="email">
-            E-mail
-          </label>
-          {user && (
-            <input
-              className="p-2 mb-2 border-[1px] border-solid border-[#ddd] rounded-lg "
-              name="email"
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>User Details</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                name="email"
+                type="text"
+                id="username"
+                placeholder="Full name on card"
+                value={`${user?.first_name} ${user?.last_name}`}
+                readOnly
+                disabled
+              />
+            </div>
+            {user && (
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  name="email"
+                  type="text"
+                  id="username"
+                  placeholder={user?.email}
+                  disabled
+                />
+              </div>
+            )}
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="phone">Phone</Label>
+            <Input
+              name="phone"
               type="text"
-              id="username"
-              placeholder={user?.email}
-              disabled
+              id="phone"
+              placeholder={userData?.user_phone}
             />
+          </div>
+          {addressId && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  {
+                    userData?.main_useraddress.find(
+                      (address: any) => address.id === addressId
+                    )?.address_type
+                  }
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>Choose Address</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup
+                  value={addressId}
+                  onValueChange={setAddressId}
+                >
+                  {userData?.main_useraddress.map((address: any) => (
+                    <DropdownMenuRadioItem
+                      value={address.id}
+                      className="hover:cursor-pointer"
+                    >
+                      {`${address.address_type} - ${address.address_line1}`}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
-          <label className="text-left mb-1 mt-2" htmlFor="email">
-            User Name
-          </label>
-          <input
-            className="p-2 mb-2 border-[1px] border-solid border-[#ddd] rounded-lg "
-            name="email"
-            type="text"
-            id="username"
-            placeholder="Full name on card"
-            value={`${user?.first_name} ${user?.last_name}`}
-            readOnly
-            disabled
-          />
-          <label className="text-left mb-1 mt-2" htmlFor="email">
-            Phone
-          </label>
-          <input
-            className="p-2 mb-2 border-[1px] border-solid border-[#ddd] rounded-lg "
-            name="phone"
-            type="text"
-            id="username"
-            placeholder="Enter your phone number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          {/* <AddressDropdown
-            labelText="Address"
-            selectedValue={addressType}
-            onSelectChange={setAddressType}
-            options={userObject?.address.map((addr) => {
-              return addr.address_line1;
-            })}
-            values={userObject?.address.map((addr) => {
-              return addr.address_type;
-            })}
-          /> */}
-          <div className="mt-4 p-2 font-bold text-sm md:text-base border-b">
-            Order Summary
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Order Summary</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <div className="grid grid-cols-[1fr_auto] items-center gap-4">
+            <p>Cart Total</p>
+            <p>{cartValue}</p>
           </div>
-
-          <div className="text-sm md:text-base p-1 w-full flex items-center justify-between">
-            <div className="text-gray-600">Cart Total</div>
-            <div className="font-bold">{cartValue}</div>
+          <div className="grid grid-cols-[1fr_auto] items-center gap-4">
+            <p>Convenience Fee</p>
+            <p>{convenienceFee}</p>
           </div>
-
-          <div className="text-sm md:text-base p-1 w-full flex items-center justify-between">
-            <div className=" text-gray-600">Convenience Fee</div>
-            <div className=" font-bold">{convenienceFee}</div>
+          <Separator />
+          <div className="grid grid-cols-[1fr_auto] items-center gap-4 font-medium">
+            <p>Order Total</p>
+            <p>{convenienceFee + cartValue}</p>
           </div>
-
-          <div className="text-sm mb-4 md:text-base p-1 w-full flex items-center justify-between">
-            <div className=" text-gray-600">Order Total</div>
-            <div className=" font-bold">{convenienceFee + cartValue}</div>
-          </div>
-          <Button type="submit" onClick={handelCheckout} disabled={loading}>
-            Checkout
+        </CardContent>
+        <CardFooter>
+          <Button type="submit" onSubmit={handelCheckout} className="w-full">
+            Proceed to Checkout
           </Button>
-        </form>
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
