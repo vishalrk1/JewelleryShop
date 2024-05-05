@@ -39,7 +39,7 @@ const UserDropdown: React.FC<Props> = ({ userData, is_staff }) => {
             width={36}
             height={36}
             alt="Avatar"
-            className="overflow-hidden rounded-full object-cover"
+            className="overflow-hidden rounded-full"
           />
         </Button>
       </DropdownMenuTrigger>

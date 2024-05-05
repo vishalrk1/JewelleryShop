@@ -1,5 +1,10 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { loginUser, logoutUser, registerUser } from "./action";
+import {
+  createUserProfile,
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "./action";
 
 interface AuthState {
   user: any | null;
@@ -35,6 +40,11 @@ const authReducer = createReducer(initialState, (builder) => {
       state.error = null;
       state.fetching = true;
     })
+    .addCase(createUserProfile.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+      state.fetching = true;
+    })
 
     // call suces state
     .addCase(registerUser.fulfilled, (state, action) => {
@@ -51,6 +61,13 @@ const authReducer = createReducer(initialState, (builder) => {
     .addCase(logoutUser.fulfilled, (state) => {
       state.status = "succeeded";
       state.user = null;
+      state.userData = null;
+      state.fetching = false;
+    })
+    .addCase(createUserProfile.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.user = action?.payload?.user;
+      state.userData = action?.payload?.userData;
       state.fetching = false;
     })
 
@@ -68,6 +85,13 @@ const authReducer = createReducer(initialState, (builder) => {
     .addCase(logoutUser.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.payload as string;
+      state.fetching = false;
+    })
+    .addCase(createUserProfile.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload as string;
+      state.user = null;
+      state.userData = null;
       state.fetching = false;
     });
 });

@@ -3,11 +3,14 @@ import { Button } from "@/components/ui/button";
 import { RootState } from "@/redux/store/store";
 import { SquarePen } from "lucide-react";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
 
 const ProfilePage = () => {
   const { user, userData } = useSelector((state: RootState) => state.auth);
+  if (!user) return redirect("/");
+  
   return (
     <main className="flex flex-col sm:flex-row justify-center h-screen gap-4 mx-auto max-w-8xl mt-4 md:mt-6 px-4 md:px-12">
       <section className="flex flex-1 flex-col gap-2 items-end w-full">

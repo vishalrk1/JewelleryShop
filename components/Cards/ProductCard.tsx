@@ -81,8 +81,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
     }
   };
   return (
-    <Link href={`/jewellery/${product?.id}`}>
-      <div className="bg-background group cursor-pointer rounded-xl border p-3 space-y-2 h-full">
+    <div className="bg-background group cursor-pointer rounded-xl border p-3 space-y-2 h-full">
+      <Link href={`/jewellery/${product?.id}`}>
         <div className="aspect-square rounded-xl bg-gray-100 relative">
           <Image
             src={product.prod_image_url}
@@ -92,55 +92,55 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
             className="aspect-square object-cover rounded-md"
           />
         </div>
-        <div className="flex justify-between items-start">
-          <div className="flex items-center justify-start w-full">
-            <p className="text-xs md:text-base font-semibold line-clamp-2">
-              {product.prod_title}
-            </p>
-          </div>
-          <div className="flex items-center justify-end w-1/5">
-            <Heart
-              className={twMerge("w-5 md:w-6 h-5 md:h-6 border-none")}
-              fill={isWishlist ? "red" : "none"}
-              color={isWishlist ? "red" : "black"}
-              onClick={() => {
-                user && wishlist
-                  ? isWishlist
-                    ? handelRemoveSavedItem({
-                        id: item?.id,
-                        wishlist_id: wishlist.id.toString(),
-                        product_id: product.id.toString(),
-                      })
-                    : handelAddToWishlist({
-                        wishlist_id: wishlist?.id.toString(),
-                        product_id: product.id.toString(),
-                      })
-                  : showErrorToast("Please login");
-              }}
-            />
-          </div>
+      </Link>
+      <div className="flex justify-between items-start">
+        <div className="flex items-center justify-start w-full">
+          <p className="text-xs md:text-base font-semibold line-clamp-2">
+            {product.prod_title}
+          </p>
         </div>
-        {/* <div className="hidden md:block min-h-max">
+        <div className="flex items-center justify-end w-1/5">
+          <Heart
+            className={twMerge("w-5 md:w-6 h-5 md:h-6 border-none")}
+            fill={isWishlist ? "red" : "none"}
+            color={isWishlist ? "red" : "black"}
+            onClick={() => {
+              user && wishlist
+                ? isWishlist
+                  ? handelRemoveSavedItem({
+                      id: item?.id,
+                      wishlist_id: wishlist.id.toString(),
+                      product_id: product.id.toString(),
+                    })
+                  : handelAddToWishlist({
+                      wishlist_id: wishlist?.id.toString(),
+                      product_id: product.id.toString(),
+                    })
+                : showErrorToast("Please login");
+            }}
+          />
+        </div>
+      </div>
+      {/* <div className="hidden md:block min-h-max">
         <p className="text-sm text-gray-500 line-clamp-2">
         {product.prod_desc}
         </p>
       </div> */}
-        <div className="flex flex-col items-start justify-end">
-          <p className="text-sm md:text-base">{`Rs. ${product.prod_price}`}</p>
-          <Button
-            className="w-full my-2 text-xs md:text-base px-4"
-            onClick={() =>
-              handelAddToCart({
-                cart_id: Number(cart?.id),
-                product_id: Number(product.id),
-              })
-            }
-          >
-            Add to Cart
-          </Button>
-        </div>
+      <div className="flex flex-col items-start justify-end">
+        <p className="text-sm md:text-base">{`Rs. ${product.prod_price}`}</p>
+        <Button
+          className="w-full my-2 text-xs md:text-base px-4"
+          onClick={() =>
+            handelAddToCart({
+              cart_id: Number(cart?.id),
+              product_id: Number(product.id),
+            })
+          }
+        >
+          Add to Cart
+        </Button>
       </div>
-    </Link>
+    </div>
   );
 };
 

@@ -3,19 +3,6 @@
 import CartItamCard from "@/components/Cards/CartItemCard";
 import CheckoutCard from "@/components/Cards/CheckoutCard";
 import Loader from "@/components/Loader";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import Container from "@/components/ui/Container";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import { getCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
 import { redirect } from "next/navigation";
@@ -49,7 +36,7 @@ const CartPage = () => {
           {user && (
             <>
               {!fetching ? (
-                <div className="h-[500px] w-full flex flex-col overflow-y-scroll no-scrollbar md:p-3 border-slate-50">
+                <div className="cmd:h-[500px] w-full flex flex-col overflow-y-scroll no-scrollbar md:p-3 border-slate-50">
                   {cartItems?.length === 0 ? (
                     <div className="flex justify-center items-center overflow-hidden h-[40rem]">
                       <div className="text-gray-600 md:text-2xl mt-5">

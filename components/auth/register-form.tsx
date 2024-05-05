@@ -33,7 +33,7 @@ const RegisterForm = () => {
   const [success, setSuccess] = React.useState<string | undefined>("");
 
   if (user) {
-    redirect("/");
+    redirect("/updateProfile");
   }
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -47,7 +47,7 @@ const RegisterForm = () => {
   const handleSubmit = (values: z.infer<typeof RegisterSchema>) => {
     const email = values.email;
     const password = values.password;
-    const name = values.name;
+    const name = values.username;
     dispatch(registerUser({ email, password, name }));
   };
 
@@ -63,13 +63,13 @@ const RegisterForm = () => {
           <div className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="username"
               disabled={isPending}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Enter your name" />
+                    <Input {...field} placeholder="Enter your Username" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

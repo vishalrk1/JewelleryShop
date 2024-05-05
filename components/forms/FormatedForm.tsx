@@ -45,7 +45,7 @@ const FormatedForm: React.FC<Props> = ({ form, schema }) => {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select you gender" />
+                            <SelectValue placeholder={item.placeholder} />
                             <SelectContent>
                               {item.options.map((option: any) => {
                                 return (

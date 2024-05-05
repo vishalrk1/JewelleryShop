@@ -1,3 +1,4 @@
+"use client"
 import { RootState } from "@/redux/store/store";
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -57,6 +58,7 @@ const CheckoutCard = () => {
   }, [userData]);
 
   const handelCheckout = async () => {
+    console.log("clicked")
     try {
       setLoading(true);
       const orderId = uuidv4();
@@ -85,8 +87,6 @@ const CheckoutCard = () => {
     }
   };
 
-  console.log(userData);
-
   return (
     <div className="space-y-6">
       <Card>
@@ -94,7 +94,7 @@ const CheckoutCard = () => {
           <CardTitle>User Details</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Name</Label>
               <Input
@@ -182,7 +182,7 @@ const CheckoutCard = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" onSubmit={handelCheckout} className="w-full">
+          <Button type="button" onSubmit={() => handelCheckout()} className="w-full">
             Proceed to Checkout
           </Button>
         </CardFooter>

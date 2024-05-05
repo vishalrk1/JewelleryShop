@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
     const user = await prisma?.auth_user.findUnique({
       where: {
         username: username,
-        // password: password,
+        password: password,
       },
       include: {
         main_userprofile: {

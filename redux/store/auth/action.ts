@@ -3,27 +3,32 @@ import { supabase } from "@/redux/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { redirect } from "next/navigation";
 import axios from "axios";
-import { z } from "zod";
-import { UserDetailsFormSchema } from "@/schemas";
+import { date, z } from "zod";
+import { AddressDetailsSchema, UserDetailsFormSchema } from "@/schemas";
+import { showSucessToast } from "@/utils/toasts";
+import persistStore from "redux-persist/lib/persistStore";
+import { persistor } from "../store";
 
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async ({ email, password, name }: any, thunkAPI) => {
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
+      const res = await axios.post(
+        "http://localhost:3000/api/auth/register",
+        {},
+        {
+          params: {
+            email: email,
+            password: password,
             name: name,
           },
-          emailRedirectTo: "http://localhost:3000/",
-        },
-      });
-      if (error) {
-        return thunkAPI.rejectWithValue(error.message);
+        }
+      );
+      if (res.status == 200) {
+        console.log(res.data);
+        return res.data;
       } else {
-        return data;
+        throw new Error("Registration failed");
       }
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
@@ -57,7 +62,7 @@ export const logoutUser = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const { error } = await supabase.auth.signOut();
-      localStorage.removeItem("persist:root");
+      // await persistor.flush();
       if (error) {
         return thunkAPI.rejectWithValue(error.message);
       }
@@ -67,12 +72,114 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-export const updateUserProfile = createAsyncThunk(
-  "user/updateUserProfile",
-  async (userProfile: z.infer<typeof UserDetailsFormSchema>, thunkAPI) => {
-    console.log(userProfile);
+export const createUserProfile = createAsyncThunk(
+  "auth/createUserProfile",
+  async (
+    {
+      userProfile,
+      userAddress,
+      userId,
+    }: {
+      userProfile: z.infer<typeof UserDetailsFormSchema>;
+      userAddress: z.infer<typeof AddressDetailsSchema>;
+      userId: string;
+    },
+    thunkAPI
+  ) => {
+    try {
+      const req = await axios.post(
+        `http://localhost:3000/api/auth/${userId}/create`,
+        {},
+        {
+          params: {
+            ...userProfile,
+            ...userAddress,
+          },
+        }
+      );
+      if (req.status == 200) {
+        showSucessToast("Profile created successfully 😎");
+        return req.data;
+      } else {
+        throw new Error("Registration failed");
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
 );
+
+// export const updateUserProfile = createAsyncThunk(
+//   "user/updateUserProfile",
+//   async (
+//     {
+//       userProfile,
+//       userAddress,
+//       userId,
+//     }: {
+//       userProfile: z.infer<typeof UserDetailsFormSchema>;
+//       userAddress: z.infer<typeof AddressDetailsSchema>;
+//       userId: string;
+//     },
+//     thunkAPI
+//   ) => {
+//     try {
+//       const req = await axios.post(
+//         `http://localhost:3000/api/auth/${userId}/update`,
+//         {},
+//         {
+//           params: {
+//             ...userProfile,
+//             ...userAddress,
+//           },
+//         }
+//       );
+//       if (req.status == 200) {
+//         return req.data;
+//       } else {
+//         throw new Error("Registration failed");
+//       }
+//     } catch (error: any) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+// );
+
+// export const fetchUserProfile = createAsyncThunk(
+//   "user/fetchUserProfile",
+//   async (userId: string, thunkAPI) => {
+//     try {
+//       const res = await axios.get(
+//         `http://localhost:3000/api/auth/${userId}/profile`
+//       );
+//       if (res.status == 200) {
+//         return res.data;
+//       } else {
+//         throw new Error("Registration failed");
+//       }
+//     } catch (error: any) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+// );
+
+// export const fetchUserAddresses = createAsyncThunk(
+//   "user/fetchUserAddresses",
+//   async (userId: string, thunkAPI) => {
+//     try {
+//       const res = await axios.get(
+//         `http://localhost:3000/api/auth/${userId}/addresses`
+//       );
+//       if (res.status == 200) {
+//         return res.data;
+//       } else {
+//         throw new Error("Registration failed");
+//       }
+//     } catch (error: any) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+// );
 
 // export const fetchUserProfile = createAsyncThunk(
 //   "user/fetchUserProfile",

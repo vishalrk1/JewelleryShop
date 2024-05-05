@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { updateUserProfile } from "@/redux/store/auth/action";
+import { createUserProfile } from "@/redux/store/auth/action";
 import { RootState } from "@/redux/store/store";
 import { supabase } from "@/redux/supabase";
 import {
@@ -99,11 +99,17 @@ const UpdateProfileDetailsPage = () => {
     setActiveTab("profileDetails");
   }, []);
 
-  // useEffect(() => {
-  //   if (!fetching) {
-  //     if (!user) return redirect("/register");
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (!fetching) {
+      if (!user) return redirect("/register");
+    }
+
+    // if (!fetching && user && userData) {
+    //   redirect("/");
+    // }
+  }, [user, userData, fetching]);
+
+  console.log(userData)
 
   if (!isHidrate) return null;
 
@@ -112,22 +118,26 @@ const UpdateProfileDetailsPage = () => {
     addressDetails: z.infer<typeof AddressDetailsSchema>
   ) => {
     if (profileImag && userPfpFile) {
-      // const { data, error } = await supabase.storage
-      //   .from("Images")
-      //   .upload(
-      //     `user_pfp/${userPfpFile.name}_${user?.id}_${Date.now()}`,
-      //     userPfpFile
-      //   );
-      // if (error) {
-      //   console.log(error);
-      //   showSucessToast("Cant upload image please try again ");
-      //   return;
-      // }
-      // userDetails.user_pfp_url = `https://cdztpolwphkawmvkmrei.supabase.co/storage/v1/object/public/Images/${data.path}`;
+      const { data, error } = await supabase.storage
+        .from("Images")
+        .upload(
+          `user_pfp/${userPfpFile.name}_${user?.id}_${Date.now()}`,
+          userPfpFile
+        );
+      if (error) {
+        console.log(error);
+        showSucessToast("Cant upload image please try again ");
+        return;
+      }
+      userDetails.user_pfp_url = `https://cdztpolwphkawmvkmrei.supabase.co/storage/v1/object/public/Images/${data.path}`;
     }
-    // console.log(userDetails);
-    // console.log(addressDetails);
-    dispatch(updateUserProfile(userDetails));
+    dispatch(
+      createUserProfile({
+        userProfile: userDetails,
+        userAddress: addressDetails,
+        userId: user?.id,
+      })
+    );
   };
 
   const handelImageInput = (e: any) => {
@@ -208,7 +218,7 @@ const UpdateProfileDetailsPage = () => {
               </TabsContent>
             </CardContent>
             <CardFooter className="flex justify-end items-center gap-2">
-              {activeTab === "pfpImage" && (
+              {activeTab === "pfpImage" && profileImag !== null && (
                 <Button
                   onClick={() => setProfileImage(null)}
                   className="w-1/4 text-base"
@@ -223,7 +233,14 @@ const UpdateProfileDetailsPage = () => {
                     handelSubmit(form.getValues(), addressForm.getValues());
                   }}
                   className="w-1/4 text-base"
+                  disabled={fetching}
                 >
+                  {fetching && (
+                    <Loader
+                      className="w-4 h-4 border-2"
+                      color="border-gray-100"
+                    />
+                  )}
                   Submit
                 </Button>
               )}
