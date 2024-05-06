@@ -41,7 +41,7 @@ import {
   UserDetailsFormSchema,
 } from "@/schemas";
 import { ProfileFormsCardTitle } from "@/utils/titlesData";
-import { showSucessToast } from "@/utils/toasts";
+import { showErrorToast, showSucessToast } from "@/utils/toasts";
 import { userDetailTabsData } from "@/utils/userDetailTabs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "@radix-ui/react-avatar";
@@ -55,8 +55,9 @@ import * as z from "zod";
 
 const UpdateProfileDetailsPage = () => {
   const dispatch = useDispatch<any>();
-  const [activeTab, setActiveTab] = React.useState("profileDetails");
-  const [isHidrate, setIsHidrate] = React.useState(false);
+  const [activeTab, setActiveTab] = useState("profileDetails");
+  const [isHidrate, setIsHidrate] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [profileImag, setProfileImage] = useState<string | ArrayBuffer | null>(
     null
@@ -77,7 +78,7 @@ const UpdateProfileDetailsPage = () => {
       user_gender: userData?.user_gender ? userData?.user_gender : "",
       user_pfp_url: userData?.user_pfp_url
         ? userData?.user_pfp_url
-        : process.env.NEXT_DEFAULT_PFP_IMAGE,
+        : "https://cdztpolwphkawmvkmrei.supabase.co/storage/v1/object/public/Images/user_pfp/_744764ec-4726-41c4-8374-ffedf7fd8676.jpg",
       user_phone: userData?.user_phone ? userData?.user_phone : "",
       address_type: "",
       address_line1: "",
@@ -117,26 +118,35 @@ const UpdateProfileDetailsPage = () => {
   const handelSubmit = async (
     formData: z.infer<typeof NewUserDetailsSchema>
   ) => {
-    if (profileImag && userPfpFile) {
-      const { data, error } = await supabase.storage
-        .from("Images")
-        .upload(
-          `user_pfp/${userPfpFile.name}_${user?.id}_${Date.now()}`,
-          userPfpFile
-        );
-      if (error) {
-        console.log(error);
-        showSucessToast("Cant upload image please try again ");
-        return;
+    setIsSubmitting(true);
+    console.log(formData);
+    try {
+      if (profileImag && userPfpFile) {
+        const { data, error } = await supabase.storage
+          .from("Images")
+          .upload(
+            `user_pfp/${userPfpFile.name}_${user?.id}_${Date.now()}`,
+            userPfpFile
+          );
+        if (error) {
+          console.log(error);
+          showSucessToast("Cant upload image please try again ");
+          return;
+        }
+        formData.user_pfp_url = `${process.env.NEXT_PUBLIC_STORAGE_BUCKET}/Images/${data.path}`;
       }
-      formData.user_pfp_url = `${process.env.NEXT_STORAGE_BUCKET}/Images/${data.path}`;
+      console.log("Dispatching data");
+      dispatch(
+        createUserProfile({
+          userData: formData,
+          userId: user?.id,
+        })
+      );
+    } catch (error) {
+      showErrorToast("Cant upload image please try again ");
+      console.log(error);
     }
-    dispatch(
-      createUserProfile({
-        userData: formData,
-        userId: user?.id,
-      })
-    );
+    setIsSubmitting(false);
   };
 
   const handelImageInput = (e: any) => {
@@ -234,6 +244,7 @@ const UpdateProfileDetailsPage = () => {
                       className="w-1/4 text-base"
                       disabled={fetching}
                       type="submit"
+                      onSubmit={form.handleSubmit(handelSubmit)}
                     >
                       {fetching && (
                         <Loader

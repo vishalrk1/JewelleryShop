@@ -88,6 +88,8 @@ export const createUserProfile = createAsyncThunk(
     },
     thunkAPI
   ) => {
+    console.log("userData:", userData);
+    console.log("userId:", userId);
     try {
       const req = await axios.post(
         `http://localhost:3000/api/auth/${userId}/create`,
