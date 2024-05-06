@@ -8,7 +8,7 @@ const UserProfileFormLayout: React.FC<UserProfileFormLayoutProps> = ({
     children
 }) => {
   return (
-    <div className="flex flex-col h-screen items-center justify-start bg-background my-8">
+    <div className="flex flex-col w-full h-screen items-center justify-start bg-background my-8 p-8">
       {children}
     </div>
   )

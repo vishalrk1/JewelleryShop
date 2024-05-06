@@ -4,7 +4,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { redirect } from "next/navigation";
 import axios from "axios";
 import { date, z } from "zod";
-import { AddressDetailsSchema, UserDetailsFormSchema } from "@/schemas";
+import {
+  AddressDetailsSchema,
+  NewUserDetailsSchema,
+  UserDetailsFormSchema,
+} from "@/schemas";
 import { showSucessToast } from "@/utils/toasts";
 import persistStore from "redux-persist/lib/persistStore";
 import { persistor } from "../store";
@@ -76,12 +80,10 @@ export const createUserProfile = createAsyncThunk(
   "auth/createUserProfile",
   async (
     {
-      userProfile,
-      userAddress,
+      userData,
       userId,
     }: {
-      userProfile: z.infer<typeof UserDetailsFormSchema>;
-      userAddress: z.infer<typeof AddressDetailsSchema>;
+      userData: z.infer<typeof NewUserDetailsSchema>;
       userId: string;
     },
     thunkAPI
@@ -92,8 +94,7 @@ export const createUserProfile = createAsyncThunk(
         {},
         {
           params: {
-            ...userProfile,
-            ...userAddress,
+            ...userData,
           },
         }
       );

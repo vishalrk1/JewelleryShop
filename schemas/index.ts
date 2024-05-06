@@ -25,6 +25,26 @@ export const RegisterSchema = z.object({
   password: z.string().min(1, { message: "Password is required" }),
 });
 
+export const NewUserDetailsSchema = z.object({
+  // user details fields
+  username: z.string().min(1, { message: "Username is requires" }),
+  email: z.string().email({ message: "Invalid email" }),
+  first_name: z.string().min(1, { message: "First name is required" }),
+  last_name: z.string().min(1, { message: "Last name is required" }),
+  user_gender: z.string().min(1, { message: "Gender is required" }),
+  user_phone: z.string().min(1, { message: "Phone is required" }),
+  user_pfp_url: z.string().min(1, { message: "Image is required" }),
+
+  // address fields
+  address_type: z.string().min(1, { message: "Address type is required" }),
+  address_line1: z.string().min(1, { message: "Address line 1 is required" }),
+  address_line2: z.string().min(1, { message: "Address line 2 is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  state: z.string().min(1, { message: "State is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  postal_code: z.string().min(1, { message: "Postal code is required" }),
+})
+
 export const UserDetailsFormSchema = z.object({
   username: z.string().min(1, { message: "Username is requires" }),
   email: z.string().email({ message: "Invalid email" }),

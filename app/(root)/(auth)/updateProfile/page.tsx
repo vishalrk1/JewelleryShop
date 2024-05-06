@@ -35,6 +35,7 @@ import { RootState } from "@/redux/store/store";
 import { supabase } from "@/redux/supabase";
 import {
   AddressDetailsSchema,
+  NewUserDetailsSchema,
   UserAddressFormFields,
   UserDetailsFormFields,
   UserDetailsFormSchema,
@@ -66,8 +67,8 @@ const UpdateProfileDetailsPage = () => {
     (state: RootState) => state.auth
   );
 
-  const form = useForm<z.infer<typeof UserDetailsFormSchema>>({
-    resolver: zodResolver(UserDetailsFormSchema),
+  const form = useForm<z.infer<typeof NewUserDetailsSchema>>({
+    resolver: zodResolver(NewUserDetailsSchema),
     defaultValues: {
       username: user?.username,
       email: user?.email,
@@ -78,12 +79,6 @@ const UpdateProfileDetailsPage = () => {
         ? userData?.user_pfp_url
         : process.env.NEXT_DEFAULT_PFP_IMAGE,
       user_phone: userData?.user_phone ? userData?.user_phone : "",
-    },
-  });
-
-  const addressForm = useForm<z.infer<typeof AddressDetailsSchema>>({
-    resolver: zodResolver(AddressDetailsSchema),
-    defaultValues: {
       address_type: "",
       address_line1: "",
       address_line2: "",
@@ -94,6 +89,19 @@ const UpdateProfileDetailsPage = () => {
     },
   });
 
+  // const addressForm = useForm<z.infer<typeof AddressDetailsSchema>>({
+  //   resolver: zodResolver(AddressDetailsSchema),
+  //   defaultValues: {
+  //     address_type: "",
+  //     address_line1: "",
+  //     address_line2: "",
+  //     city: "",
+  //     state: "",
+  //     country: "",
+  //     postal_code: "",
+  //   },
+  // });
+
   useEffect(() => {
     setIsHidrate(true);
     setActiveTab("profileDetails");
@@ -103,19 +111,11 @@ const UpdateProfileDetailsPage = () => {
     if (!fetching) {
       if (!user) return redirect("/register");
     }
-
-    // if (!fetching && user && userData) {
-    //   redirect("/");
-    // }
   }, [user, userData, fetching]);
-
-  console.log(userData);
-
   if (!isHidrate) return null;
 
   const handelSubmit = async (
-    userDetails: z.infer<typeof UserDetailsFormSchema>,
-    addressDetails: z.infer<typeof AddressDetailsSchema>
+    formData: z.infer<typeof NewUserDetailsSchema>
   ) => {
     if (profileImag && userPfpFile) {
       const { data, error } = await supabase.storage
@@ -129,12 +129,11 @@ const UpdateProfileDetailsPage = () => {
         showSucessToast("Cant upload image please try again ");
         return;
       }
-      userDetails.user_pfp_url = `${process.env.NEXT_STORAGE_BUCKET}/Images/${data.path}`;
+      formData.user_pfp_url = `${process.env.NEXT_STORAGE_BUCKET}/Images/${data.path}`;
     }
     dispatch(
       createUserProfile({
-        userProfile: userDetails,
-        userAddress: addressDetails,
+        userData: formData,
         userId: user?.id,
       })
     );
@@ -153,7 +152,11 @@ const UpdateProfileDetailsPage = () => {
   };
 
   return (
-    <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="m-4">
+    <Tabs
+      defaultValue={activeTab}
+      onValueChange={setActiveTab}
+      className="w-full items-center justify-center"
+    >
       <TabsList>
         {userDetailTabsData.map((item, index) => (
           <TabsTrigger key={index} value={item.value}>
@@ -163,89 +166,88 @@ const UpdateProfileDetailsPage = () => {
       </TabsList>
       {!fetching ? (
         <div className="w-full flex items-start my-4">
-          <Card className="md:w-full max-w-screen-2xl">
-            <CardHeader>
-              <CardTitle>{ProfileFormsCardTitle[activeTab]}</CardTitle>
-              <CardDescription>
-                Update your profile details here.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <TabsContent value="profileDetails">
-                <FormatedForm form={form} schema={UserDetailsFormFields} />
-              </TabsContent>
-              <TabsContent value="pfpImage">
-                <div className="w-full mx-auto">
-                  {!profileImag && (
-                    <div className="items-center justify-center w-full">
-                      <label
-                        htmlFor="dropzone-file"
-                        className="flex items-center gap-2 p-1 w-full h-24 border-2 border-gray-300 border-dashed rounded-lg text-center cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                      >
-                        <div className="flex flex-col items-center justify-center w-full text-center pt-5 pb-6">
-                          <UploadCloud className="w-8 h-8 mb-1 text-gray-400" />
-                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                            <span className="font-semibold">
-                              Click to upload
-                            </span>{" "}
-                            or drag and drop
-                          </p>
-                        </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handelSubmit)} className="w-full">
+              <Card>
+                <CardHeader>
+                  <CardTitle>{ProfileFormsCardTitle[activeTab]}</CardTitle>
+                  <CardDescription>
+                    Update your profile details here.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <TabsContent value="pfpImage">
+                    <div className="md:w-1/2 mx-auto">
+                      {!profileImag && (
+                        <div className="items-center justify-center w-full">
+                          <label
+                            htmlFor="dropzone-file"
+                            className="flex items-center gap-2 p-1 w-full h-24 border-2 border-gray-300 border-dashed rounded-lg text-center cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                          >
+                            <div className="flex flex-col items-center justify-center w-full text-center pt-5 pb-6">
+                              <UploadCloud className="w-8 h-8 mb-1 text-gray-400" />
+                              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                <span className="font-semibold">
+                                  Click to upload
+                                </span>{" "}
+                                or drag and drop
+                              </p>
+                            </div>
 
-                        <input
-                          id="dropzone-file"
-                          type="file"
-                          className="hidden"
-                          onChange={handelImageInput}
-                          required
+                            <input
+                              id="dropzone-file"
+                              type="file"
+                              className="hidden"
+                              onChange={handelImageInput}
+                              required
+                            />
+                          </label>
+                        </div>
+                      )}
+                      <Avatar className="flex items-center justify-center w-full h-full">
+                        <AvatarImage
+                          src={profileImag as string}
+                          className="rounded-full h-1/2 w-1/2 object-cover"
                         />
-                      </label>
+                      </Avatar>
                     </div>
+                  </TabsContent>
+                  <TabsContent value="profileDetails">
+                    <FormatedForm form={form} schema={UserDetailsFormFields} />
+                  </TabsContent>
+                  <TabsContent value="userAddress">
+                    <FormatedForm form={form} schema={UserAddressFormFields} />
+                  </TabsContent>
+                </CardContent>
+                <CardFooter className="flex justify-end items-center gap-2">
+                  {activeTab === "pfpImage" && profileImag !== null && (
+                    <Button
+                      onClick={() => setProfileImage(null)}
+                      className="w-1/4 text-base"
+                    >
+                      <Edit className="mr-4" />
+                      Edit
+                    </Button>
                   )}
-                  <Avatar className="flex items-center justify-center w-full h-full">
-                    <AvatarImage
-                      src={profileImag as string}
-                      className="rounded-full h-1/2 w-1/2 object-cover"
-                    />
-                  </Avatar>
-                </div>
-              </TabsContent>
-              <TabsContent value="userAddress">
-                <FormatedForm
-                  form={addressForm}
-                  schema={UserAddressFormFields}
-                />
-              </TabsContent>
-            </CardContent>
-            <CardFooter className="flex justify-end items-center gap-2">
-              {activeTab === "pfpImage" && profileImag !== null && (
-                <Button
-                  onClick={() => setProfileImage(null)}
-                  className="w-1/4 text-base"
-                >
-                  <Edit className="mr-4" />
-                  Edit
-                </Button>
-              )}
-              {activeTab === "userAddress" && (
-                <Button
-                  onClick={() => {
-                    handelSubmit(form.getValues(), addressForm.getValues());
-                  }}
-                  className="w-1/4 text-base"
-                  disabled={fetching}
-                >
-                  {fetching && (
-                    <Loader
-                      className="w-4 h-4 border-2"
-                      color="border-gray-100"
-                    />
+                  {activeTab === "userAddress" && (
+                    <Button
+                      className="w-1/4 text-base"
+                      disabled={fetching}
+                      type="submit"
+                    >
+                      {fetching && (
+                        <Loader
+                          className="w-4 h-4 border-2"
+                          color="border-gray-100"
+                        />
+                      )}
+                      Submit
+                    </Button>
                   )}
-                  Submit
-                </Button>
-              )}
-            </CardFooter>
-          </Card>
+                </CardFooter>
+              </Card>
+            </form>
+          </Form>
         </div>
       ) : (
         <div className="flex items-center justify-center">

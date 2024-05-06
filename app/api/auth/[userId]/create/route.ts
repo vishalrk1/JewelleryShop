@@ -17,9 +17,6 @@ export async function POST(
   const addressDetails = Object.fromEntries(searchParam) as z.infer<
     typeof AddressDetailsSchema
   >;
-  console.log(userDetails);
-  console.log(addressDetails);
-
   try {
     // getting unique user
     const user = await prismadb.auth_user.update({
