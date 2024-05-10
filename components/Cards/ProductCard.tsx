@@ -81,64 +81,71 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
     }
   };
   return (
-    <div className="bg-background group cursor-pointer rounded-xl border p-3 space-y-2 h-full">
-      <Link href={`/jewellery/${product?.id}`}>
-        <div className="aspect-square rounded-xl bg-gray-100 relative">
+    <div className="bg-gray-50 rounded-xl overflow-hidden p-3">
+      <div className="w-full overflow-hidden rounded-lg bg-gray-200">
+        <Link href={`/jewellery/${product?.id}`}>
           <Image
-            src={product.prod_image_url}
-            alt={product.prod_title}
-            fill
-            objectFit="cover"
-            className="aspect-square object-cover rounded-md"
-          />
-        </div>
-      </Link>
-      <div className="flex justify-between items-start">
-        <div className="flex items-center justify-start w-full">
-          <p className="text-xs md:text-base font-semibold line-clamp-2">
-            {product.prod_title}
-          </p>
-        </div>
-        <div className="flex items-center justify-end w-1/5">
-          <Heart
-            className={twMerge("w-5 md:w-6 h-5 md:h-6 border-none")}
-            fill={isWishlist ? "red" : "none"}
-            color={isWishlist ? "red" : "black"}
-            onClick={() => {
-              user && wishlist
-                ? isWishlist
-                  ? handelRemoveSavedItem({
-                      id: item?.id,
-                      wishlist_id: wishlist.id.toString(),
-                      product_id: product.id.toString(),
-                    })
-                  : handelAddToWishlist({
-                      wishlist_id: wishlist?.id.toString(),
-                      product_id: product.id.toString(),
-                    })
-                : showErrorToast("Please login");
+            alt="Earrings"
+            className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out"
+            height={400}
+            src={item.prod_image_url}
+            style={{
+              aspectRatio: "400/400",
+              objectFit: "cover",
             }}
+            width={400}
           />
-        </div>
+        </Link>
       </div>
-      {/* <div className="hidden md:block min-h-max">
-        <p className="text-sm text-gray-500 line-clamp-2">
-        {product.prod_desc}
-        </p>
-      </div> */}
-      <div className="flex flex-col items-start justify-end">
-        <p className="text-sm md:text-base">{`Rs. ${product.prod_price}`}</p>
-        <Button
-          className="w-full my-2 text-xs md:text-base px-4"
-          onClick={() =>
-            handelAddToCart({
-              cart_id: Number(cart?.id),
-              product_id: Number(product.id),
-            })
-          }
-        >
-          Add to Cart
-        </Button>
+      <div className="mt-4 flex justify-between w-full">
+        <div className="w-full">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-medium text-gray-900 line-clamp-1">
+              {item.prod_title}
+            </h3>
+            <Button
+              variant="outline"
+              className="w-max h-max"
+              onClick={() => {
+                user && wishlist
+                  ? isWishlist
+                    ? handelRemoveSavedItem({
+                        id: item?.id,
+                        wishlist_id: wishlist.id.toString(),
+                        product_id: product.id.toString(),
+                      })
+                    : handelAddToWishlist({
+                        wishlist_id: wishlist?.id.toString(),
+                        product_id: product.id.toString(),
+                      })
+                  : showErrorToast("Please login");
+              }}
+            >
+              <Heart
+                className={twMerge("w-5 md:w-6 h-5 md:h-6 border-none")}
+                fill={isWishlist ? "red" : "none"}
+                color={isWishlist ? "red" : "black"}
+              />
+            </Button>
+          </div>
+          <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+            {item.prod_desc}
+          </p>
+          <div className="flex items-center justify-between mt-2">
+            <span className="text-gray-900 font-medium">{`RS. ${item.prod_price}`}</span>
+          </div>
+          <Button
+            className="w-full mt-2"
+            onClick={() =>
+              handelAddToCart({
+                cart_id: Number(cart?.id),
+                product_id: Number(product.id),
+              })
+            }
+          >
+            Add to Cart
+          </Button>
+        </div>
       </div>
     </div>
   );
