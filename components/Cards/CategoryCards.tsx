@@ -10,7 +10,6 @@ const CategoryCards = () => {
   const { categories, fetching } = useSelector(
     (state: RootState) => state.categories
   );
-  console.log(categories);
   return (
     <>
       {categories?.map((category, index) => {

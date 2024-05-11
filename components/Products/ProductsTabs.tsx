@@ -34,13 +34,12 @@ const ProductsTabs: React.FC<Props> = ({
           </TabsTrigger>
         </TabsList>
       </div>
-      {isLoading ? (
-        <div className="w-full h-screen flex justify-center items-center">
-          <Loader />
-        </div>
-      ) : (
-        <ProductList productsData={productsData} currentTab={currentTab} />
-      )}
+
+      <ProductList
+        productsData={productsData}
+        currentTab={currentTab}
+        isLoadings={isLoading}
+      />
     </Tabs>
   );
 };

@@ -13,6 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { twMerge } from "tailwind-merge";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import {
+  handelAddToCart,
+  handelAddToWishlist,
+  handelRemoveSavedItem,
+} from "@/utils/ProductsFunction";
 
 interface ProductCardProps {
   item: any;
@@ -29,57 +34,59 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
     ? (item?.product as products_product)
     : (item as products_product);
 
-  const handelAddToCart = ({
-    cart_id,
-    product_id,
-  }: {
-    cart_id: number;
-    product_id: number;
-  }) => {
-    console.log(!user);
-    if (!user) {
-      showErrorToast("Please login to add items to cart");
-    } else {
-      dispatch(addItemTOCart({ cart_id, product_id }));
-    }
-  };
+  console.log(product);
 
-  const handelRemoveSavedItem = ({
-    id,
-    wishlist_id,
-    product_id,
-  }: {
-    id: string;
-    wishlist_id: string;
-    product_id: string;
-  }) => {
-    dispatch(
-      deleteWishlistItem({
-        id,
-        wishlist_id,
-        product_id,
-      })
-    );
-  };
+  // const handelAddToCart = ({
+  //   cart_id,
+  //   product_id,
+  // }: {
+  //   cart_id: number;
+  //   product_id: number;
+  // }) => {
+  //   console.log(!user);
+  //   if (!user) {
+  //     showErrorToast("Please login to add items to cart");
+  //   } else {
+  //     dispatch(addItemTOCart({ cart_id, product_id }));
+  //   }
+  // };
 
-  const handelAddToWishlist = ({
-    wishlist_id,
-    product_id,
-  }: {
-    wishlist_id: string;
-    product_id: string;
-  }) => {
-    if (!user) {
-      showErrorToast("Please login to add items to wishlist");
-    } else {
-      dispatch(
-        addItemToWishlist({
-          wishlist_id,
-          product_id,
-        })
-      );
-    }
-  };
+  // const handelRemoveSavedItem = ({
+  //   id,
+  //   wishlist_id,
+  //   product_id,
+  // }: {
+  //   id: string;
+  //   wishlist_id: string;
+  //   product_id: string;
+  // }) => {
+  //   dispatch(
+  //     deleteWishlistItem({
+  //       id,
+  //       wishlist_id,
+  //       product_id,
+  //     })
+  //   );
+  // };
+
+  // const handelAddToWishlist = ({
+  //   wishlist_id,
+  //   product_id,
+  // }: {
+  //   wishlist_id: string;
+  //   product_id: string;
+  // }) => {
+  //   if (!user) {
+  //     showErrorToast("Please login to add items to wishlist");
+  //   } else {
+  //     dispatch(
+  //       addItemToWishlist({
+  //         wishlist_id,
+  //         product_id,
+  //       })
+  //     );
+  //   }
+  // };
   return (
     <div className="bg-gray-50 rounded-xl overflow-hidden p-3">
       <div className="w-full overflow-hidden rounded-lg bg-gray-200">
@@ -88,7 +95,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
             alt="Earrings"
             className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out"
             height={400}
-            src={item.prod_image_url}
+            src={product.prod_image_url}
             style={{
               aspectRatio: "400/400",
               objectFit: "cover",
@@ -101,11 +108,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
         <div className="w-full">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium text-gray-900 line-clamp-1">
-              {item.prod_title}
+              {product.prod_title}
             </h3>
-            <Button
-              variant="outline"
-              className="w-max h-max"
+
+            <Heart
+              className={twMerge(
+                "w-5 md:w-6 h-5 md:h-6 border-none cursor-pointer"
+              )}
               onClick={() => {
                 user && wishlist
                   ? isWishlist
@@ -113,26 +122,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
                         id: item?.id,
                         wishlist_id: wishlist.id.toString(),
                         product_id: product.id.toString(),
+                        dispatch: dispatch,
                       })
                     : handelAddToWishlist({
                         wishlist_id: wishlist?.id.toString(),
                         product_id: product.id.toString(),
+                        user: user,
+                        dispatch: dispatch,
                       })
                   : showErrorToast("Please login");
               }}
-            >
-              <Heart
-                className={twMerge("w-5 md:w-6 h-5 md:h-6 border-none")}
-                fill={isWishlist ? "red" : "none"}
-                color={isWishlist ? "red" : "black"}
-              />
-            </Button>
+              fill={isWishlist ? "red" : "none"}
+              color={isWishlist ? "red" : "black"}
+            />
           </div>
-          <p className="mt-1 text-sm text-gray-500 line-clamp-2">
-            {item.prod_desc}
+          <p className="hidden md:block mt-1 h-8 text-xs text-gray-500 line-clamp-2">
+            {product.prod_desc}
           </p>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-gray-900 font-medium">{`RS. ${item.prod_price}`}</span>
+            <span className="text-gray-900 font-medium">{`RS. ${product.prod_price}`}</span>
           </div>
           <Button
             className="w-full mt-2"
@@ -140,6 +148,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
               handelAddToCart({
                 cart_id: Number(cart?.id),
                 product_id: Number(product.id),
+                user: user,
+                dispatch: dispatch,
               })
             }
           >
