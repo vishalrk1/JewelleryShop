@@ -64,6 +64,7 @@ model auth_user {
   main_userprofile           main_userprofile?
   order_order                order_order[]
   products_wishlist          products_wishlist?
+  UserFeedbacks              UserFeedbacks?
 
   @@index([username], map: "auth_user_username_6821ab7c_like")
 }
@@ -316,4 +317,14 @@ model StripeCustomer {
 
   createdAt  DateTime @default(now())
   updateddAt DateTime @updatedAt
+}
+
+model UserFeedbacks {
+  id      String @id @default(uuid())
+  message String
+  userId  Int    @unique
+
+  user       auth_user @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt  DateTime  @default(now())
+  updateddAt DateTime  @updatedAt
 }

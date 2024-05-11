@@ -4,6 +4,7 @@ import CategoryCards from "@/components/Cards/CategoryCards";
 import ProductCardSkeleton from "@/components/Skeletons/ProductCardSkeleton";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getUserFeedbacks } from "@/redux/store/feedbacks/action";
 import { RootState } from "@/redux/store/store";
 import { getAllFeaturedProducts } from "@/utils/getFunction/getFeaturedProducts";
 import { handelAddToCart } from "@/utils/ProductsFunction";
@@ -13,11 +14,16 @@ import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { it } from "node:test";
 import { use, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
+  const dispatch = useDispatch<any>();
   const { user } = useSelector((state: RootState) => state.auth);
+  const { feedbacks, fetching: feedbacksLoading } = useSelector(
+    (state: RootState) => state.feedbacks
+  );
   const [loading, setLoading] = useState(false);
   const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
 
@@ -36,12 +42,15 @@ export default function Home() {
     };
 
     getAllFeaturedProducts();
+    dispatch(getUserFeedbacks());
   }, []);
+
+  console.log(feedbacks);
 
   return (
     <main className="flex flex-col">
-      <section className="relative h-[24vh] md:h-[70vh] w-full overflow-hidden">
-        <img
+      <section className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden">
+        <Image
           alt="Jewelry Shop Hero"
           className="h-full w-full object-cover object-center"
           height={1080}
@@ -100,11 +109,11 @@ export default function Home() {
                     <div className="mt-4 flex justify-between">
                       <div>
                         <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-medium text-gray-900 line-clamp-1">
+                          <h3 className="text-base md:text-lg font-medium text-gray-900 line-clamp-2 md:line-clamp-1">
                             {item.prod_title}
                           </h3>
                         </div>
-                        <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+                        <p className="hidden md:block mt-1 text-sm text-gray-500 line-clamp-2">
                           {item.prod_desc}
                         </p>
                         <div className="flex items-center justify-between mt-2">
@@ -124,6 +133,46 @@ export default function Home() {
                   </div>
                 ))
               : [...Array(3)].map((_, index) => <ProductCardSkeleton />)}
+          </div>
+        </div>
+      </section>
+      <section className="bg-gray-100 py-12 sm:py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              What Our Customers Say
+            </h2>
+            <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+              Hear from our satisfied customers about their experience with our
+              jewelry.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+            {feedbacks?.map((item, index) => (
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <Image
+                      alt="Customer 1"
+                      className="h-12 w-12 rounded-full"
+                      height={48}
+                      src={item?.user?.main_userprofile?.user_pfp_url}
+                      style={{
+                        aspectRatio: "48/48",
+                        objectFit: "cover",
+                      }}
+                      width={48}
+                    />
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {item?.user?.first_name} {item?.user?.last_name}
+                    </h3>
+                    <p className="text-base text-gray-500">{item.message}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

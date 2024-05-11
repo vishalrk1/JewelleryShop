@@ -34,59 +34,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
     ? (item?.product as products_product)
     : (item as products_product);
 
-  console.log(product);
-
-  // const handelAddToCart = ({
-  //   cart_id,
-  //   product_id,
-  // }: {
-  //   cart_id: number;
-  //   product_id: number;
-  // }) => {
-  //   console.log(!user);
-  //   if (!user) {
-  //     showErrorToast("Please login to add items to cart");
-  //   } else {
-  //     dispatch(addItemTOCart({ cart_id, product_id }));
-  //   }
-  // };
-
-  // const handelRemoveSavedItem = ({
-  //   id,
-  //   wishlist_id,
-  //   product_id,
-  // }: {
-  //   id: string;
-  //   wishlist_id: string;
-  //   product_id: string;
-  // }) => {
-  //   dispatch(
-  //     deleteWishlistItem({
-  //       id,
-  //       wishlist_id,
-  //       product_id,
-  //     })
-  //   );
-  // };
-
-  // const handelAddToWishlist = ({
-  //   wishlist_id,
-  //   product_id,
-  // }: {
-  //   wishlist_id: string;
-  //   product_id: string;
-  // }) => {
-  //   if (!user) {
-  //     showErrorToast("Please login to add items to wishlist");
-  //   } else {
-  //     dispatch(
-  //       addItemToWishlist({
-  //         wishlist_id,
-  //         product_id,
-  //       })
-  //     );
-  //   }
-  // };
   return (
     <div className="bg-gray-50 rounded-xl overflow-hidden p-3">
       <div className="w-full overflow-hidden rounded-lg bg-gray-200">
@@ -107,10 +54,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
       <div className="mt-4 flex justify-between w-full">
         <div className="w-full">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900 line-clamp-1">
+            <h3 className="text-sm md:text-lg font-medium text-gray-900 line-clamp-1">
               {product.prod_title}
             </h3>
-
             <Heart
               className={twMerge(
                 "w-5 md:w-6 h-5 md:h-6 border-none cursor-pointer"

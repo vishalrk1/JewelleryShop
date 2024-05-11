@@ -1,17 +1,9 @@
-import prismadb from "@/lib/prismadb";
 import { supabase } from "@/redux/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { redirect } from "next/navigation";
 import axios from "axios";
-import { date, z } from "zod";
-import {
-  AddressDetailsSchema,
-  NewUserDetailsSchema,
-  UserDetailsFormSchema,
-} from "@/schemas";
-import { showSucessToast } from "@/utils/toasts";
-import persistStore from "redux-persist/lib/persistStore";
-import { persistor } from "../store";
+import { z } from "zod";
+import { NewUserDetailsSchema } from "@/schemas";
+import { showErrorToast, showSucessToast } from "@/utils/toasts";
 
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
@@ -52,10 +44,12 @@ export const loginUser = createAsyncThunk(
         },
       });
       if (res.data) {
+        showSucessToast("Login successful 😎, Welcome back!!");
         return { user: res.data, userData: res.data.main_userprofile };
       }
       return null;
     } catch (error: any) {
+      showErrorToast(error.response.data);
       return thunkAPI.rejectWithValue(error.message);
     }
   }

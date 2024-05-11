@@ -42,7 +42,7 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
         },
       },
     });
-    if (!user) return new NextResponse("User not found", { status: 404 });
+    if (!user) return new NextResponse("Invalid username or password", { status: 404 });
 
     return NextResponse.json(user, { status: 200 });
   } catch (error) {

@@ -40,6 +40,8 @@ const CheckoutCard = () => {
   const [convenienceFee, setConvenienceFee] = useState(150);
   const [loading, setLoading] = useState(false);
 
+  console.log(uuidv4())
+
   useEffect(() => {
     if (cartItems?.length > 0) {
       let cartTotal = cartItems.reduce((acc, item) => {
@@ -141,7 +143,7 @@ const CheckoutCard = () => {
                   }
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full">
+              <DropdownMenuContent className="mx-2 md:w-full">
                 <DropdownMenuLabel>Choose Address</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup

@@ -13,6 +13,7 @@ import cartReducer from "./cart/reducer";
 import wishlistReducer from "./wishlist/reducer";
 import categoriesReducer from "./categories/reducer";
 import ordersReducer from "./orders/reducer";
+import feedbacksReducer from "./feedbacks/reducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   wishlist: wishlistReducer,
   orders: ordersReducer,
+  feedbacks: feedbacksReducer,
 });
 
 const persistConfig = {

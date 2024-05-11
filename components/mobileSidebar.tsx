@@ -26,7 +26,12 @@ export const MobileSidebar: React.FC<Props> = ({ pending = false, routes }) => {
         side="left"
         className="flex flex-col items-center p-2 w-[300px] sm:w-[440px]"
       >
-        <div className="flex items-center justify-center h-1/6 w-full bg-gray-100 rounded-lg">
+        <div
+          onClick={() => {
+            router.push("/");
+          }}
+          className="flex items-center justify-center h-1/6 w-full bg-gray-100 rounded-lg"
+        >
           <Image
             src={logo}
             alt="illusion-logo"
