@@ -3,7 +3,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -11,7 +10,6 @@ import {
 import { RootState } from "@/redux/store/store";
 import { Mail, Phone, SquarePen, User2Icon } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -19,8 +17,6 @@ import { useSelector } from "react-redux";
 const ProfilePage = () => {
   const { user, userData } = useSelector((state: RootState) => state.auth);
   if (!user) return redirect("/");
-
-  console.log(user);
 
   return (
     <main className="flex flex-col lg:flex-row justify-center lg:h-screen gap-4 mx-auto max-w-8xl mt-4 md:mt-6 px-4 md:px-12 mb-8">
@@ -115,38 +111,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
-// {
-//   "id": 118,
-//   "password": "123",
-//   "last_login": "2024-05-06T19:30:59.960Z",
-//   "is_superuser": false,
-//   "username": "eren",
-//   "first_name": "Eren",
-//   "last_name": "Yeager",
-//   "email": "erenyeager@gmail.com",
-//   "is_staff": false,
-//   "is_active": true,
-//   "date_joined": "2024-05-06T19:30:59.960Z",
-//   "main_userprofile": {
-//       "id": "85",
-//       "user_pfp": "",
-//       "user_gender": "M",
-//       "user_id": 118,
-//       "user_pfp_url": "https://cdztpolwphkawmvkmrei.supabase.co/storage/v1/object/public/Images/user_pfp/eren.jpg_118_1715025228104",
-//       "user_phone": "1234567891",
-//       "main_useraddress": [
-//           {
-//               "id": "32",
-//               "address_type": "Home",
-//               "address_line1": "Wall Maria, ghar no 3",
-//               "address_line2": "close to gate",
-//               "city": "Maria",
-//               "state": "Outer Wall",
-//               "country": "Paradis Island",
-//               "postal_code": "123456",
-//               "user_profile_id": "85"
-//           }
-//       ]
-//   }
-// }
