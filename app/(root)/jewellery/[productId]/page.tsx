@@ -58,7 +58,7 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
           <section className="flex-1 w-full">
             <Card className="overflow-hidden">
               <CardHeader>
-                <CardTitle className="text-xl">Product Image</CardTitle>
+                <CardTitle className="text-xl md:text-2xl font-semibold">Product Image</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-2 items-center justify-center">
