@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navBar";
 import { ReduxProvider } from "@/provider/redux-provider";
 import { ToasterProvider } from "@/provider/toast-provider";
+import Footer from "@/components/footer";
 
 const Poopins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
           <ToasterProvider />
           <Navbar />
           {children}
+          <Footer />
         </ReduxProvider>
       </body>
     </html>
