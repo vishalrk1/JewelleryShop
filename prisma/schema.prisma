@@ -320,9 +320,10 @@ model StripeCustomer {
 }
 
 model UserFeedbacks {
-  id      String @id @default(uuid())
-  message String
-  userId  Int    @unique
+  id         String  @id @default(uuid())
+  message    String
+  userId     Int     @unique
+  isFeatured Boolean @default(false)
 
   user       auth_user @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt  DateTime  @default(now())
