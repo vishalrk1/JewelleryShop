@@ -16,16 +16,18 @@ import { logoutUser } from "@/redux/store/auth/action";
 import { redirect, useRouter } from "next/navigation";
 
 interface Props {
+  user: any;
   userData: any;
   is_staff: boolean;
 }
 
-const UserDropdown: React.FC<Props> = ({ userData, is_staff }) => {
+const UserDropdown: React.FC<Props> = ({ user, userData, is_staff }) => {
   const dispatch = useDispatch<any>();
   const router = useRouter();
   const handelLogout = () => {
     dispatch(logoutUser());
   };
+  console.log(userData);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -50,7 +52,7 @@ const UserDropdown: React.FC<Props> = ({ userData, is_staff }) => {
           <>
             <DropdownMenuItem
               onClick={() => {
-                // router.push("/admin/dashboard");
+                router.push(`/${user?.id}/dashboard`);
               }}
             >
               Admin Dashboard

@@ -82,9 +82,13 @@ const Footer = () => {
             variant="outline"
             className="w-full bg-transparent text-white border-slate-600"
             onClick={() => {
-              !message || !user
-                ? showErrorToast("Login to submit feedback")
-                : handelFeedbackSubmit();
+              if (!message) {
+                showErrorToast("Please enter your feedback");
+              } else if (!user) {
+                showErrorToast("Please login to submit feedback");
+              } else {
+                handelFeedbackSubmit();
+              }
             }}
           >
             Submit

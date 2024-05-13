@@ -36,7 +36,11 @@ const AuthButtons = () => {
             className="hidden md:flex items-center"
           />
           {userData && (
-            <UserDropdown userData={userData} is_staff={user?.is_staff} />
+            <UserDropdown
+              user={user}
+              userData={userData}
+              is_staff={user?.is_staff}
+            />
           )}
         </div>
       ) : (

@@ -45,8 +45,6 @@ export default function Home() {
     dispatch(getUserFeedbacks());
   }, []);
 
-  console.log(feedbacks);
-
   return (
     <main className="flex flex-col">
       <section className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden">
