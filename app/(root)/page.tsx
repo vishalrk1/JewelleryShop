@@ -1,49 +1,37 @@
-"use client";
+"use server";
 
 import CategoryCards from "@/components/Cards/CategoryCards";
-import ProductCardSkeleton from "@/components/Skeletons/ProductCardSkeleton";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getUserFeedbacks } from "@/redux/store/feedbacks/action";
-import { RootState } from "@/redux/store/store";
-import { getAllFeaturedProducts } from "@/utils/getFunction/getFeaturedProducts";
-import { handelAddToCart } from "@/utils/ProductsFunction";
-import { products_product } from "@prisma/client";
-import axios from "axios";
-import { Heart } from "lucide-react";
+import prismadb from "@/lib/prismadb";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { it } from "node:test";
-import { use, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
-export default function Home() {
-  const dispatch = useDispatch<any>();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { feedbacks, fetching: feedbacksLoading } = useSelector(
-    (state: RootState) => state.feedbacks
-  );
-  const [loading, setLoading] = useState(false);
-  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
-
-  useEffect(() => {
-    const getAllFeaturedProducts = async () => {
-      setLoading(true);
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/featured`
-      );
-      if (response.status !== 200) {
-        setLoading(false);
-        throw new Error("Failed to fetch products");
-      }
-      setFeaturedProducts(response.data);
-      setLoading(false);
-    };
-
-    getAllFeaturedProducts();
-    dispatch(getUserFeedbacks());
-  }, []);
+export default async function Home() {
+  const categories = await prismadb.categories_category.findMany({
+    include: {
+      products_product: true,
+    },
+  });
+  const featuredProducts = await prismadb.products_product.findMany({
+    where: {
+      is_featured: true,
+    },
+    include: {
+      categories_category: true,
+    },
+  });
+  const feedbacks = await prismadb.userFeedbacks.findMany({
+    where: {
+      isFeatured: true,
+    },
+    include: {
+      user: {
+        include: {
+          main_userprofile: true,
+        },
+      },
+    },
+  });
 
   return (
     <main className="flex flex-col">
@@ -52,7 +40,7 @@ export default function Home() {
           alt="Jewelry Shop Hero"
           className="h-full w-full object-cover object-center"
           height={1080}
-          src="https://cdztpolwphkawmvkmrei.supabase.co/storage/v1/object/public/Images/product_images/test-category/earring-amazing.jpeg"
+          src={`${process.env.NEXT_PUBLIC_STORAGE_BUCKET}/Images/product_images/test-category/earring-amazing.jpeg`}
           style={{
             aspectRatio: "1920/1080",
             objectFit: "cover",
@@ -73,7 +61,7 @@ export default function Home() {
       <section className="bg-slate-50 py-12 sm:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
-            <CategoryCards />
+            <CategoryCards categories={categories} />
           </div>
         </div>
       </section>
@@ -88,49 +76,43 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
-            {!loading
-              ? featuredProducts?.map((item, index) => (
-                  <div className="bg-gray-50 rounded-xl overflow-hidden p-3">
-                    <div className="w-full overflow-hidden rounded-lg bg-gray-200">
-                      <Image
-                        alt="Earrings"
-                        className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out"
-                        height={400}
-                        src={item.prod_image_url}
-                        style={{
-                          aspectRatio: "400/400",
-                          objectFit: "cover",
-                        }}
-                        width={400}
-                      />
+            {featuredProducts?.map((item: any, index) => (
+              <div className="bg-gray-50 rounded-xl overflow-hidden p-3">
+                <div className="w-full overflow-hidden rounded-lg bg-gray-200">
+                  <Image
+                    alt="Earrings"
+                    className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out"
+                    height={400}
+                    src={item.prod_image_url}
+                    style={{
+                      aspectRatio: "400/400",
+                      objectFit: "cover",
+                    }}
+                    width={400}
+                  />
+                </div>
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-base md:text-lg font-medium text-gray-900 line-clamp-2 md:line-clamp-1">
+                        {item.prod_title}
+                      </h3>
                     </div>
-                    <div className="mt-4 flex justify-between">
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-base md:text-lg font-medium text-gray-900 line-clamp-2 md:line-clamp-1">
-                            {item.prod_title}
-                          </h3>
-                        </div>
-                        <p className="hidden md:block mt-1 text-sm text-gray-500 line-clamp-2">
-                          {item.prod_desc}
-                        </p>
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-gray-900 font-medium">{`RS. ${item.prod_price}`}</span>
-                        </div>
-                        <Link
-                          href={
-                            !user
-                              ? "/login"
-                              : `product/${item.categories_category.cat_id}/${item.categories_category.id}`
-                          }
-                        >
-                          <Button className="w-full mt-2">Shop Now</Button>
-                        </Link>
-                      </div>
+                    <p className="hidden md:block mt-1 text-sm text-gray-500 line-clamp-2">
+                      {item.prod_desc}
+                    </p>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-gray-900 font-medium">{`RS. ${item.prod_price}`}</span>
                     </div>
+                    <Link
+                      href={`product/${item.categories_category.cat_id}/${item.categories_category.id}`}
+                    >
+                      <Button className="w-full mt-2">Shop Now</Button>
+                    </Link>
                   </div>
-                ))
-              : [...Array(3)].map((_, index) => <ProductCardSkeleton />)}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -146,15 +128,15 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
-            {feedbacks?.map((item, index) => (
-              <div className="bg-white rounded-lg shadow-lg p-6">
+            {feedbacks?.map((item: any, index: number) => (
+              <div key={index} className="bg-white rounded-lg shadow-lg p-6">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
                     <Image
-                      alt="Customer 1"
+                      src={item?.user?.main_userprofile?.user_pfp_url}
+                      alt={item?.user?.username}
                       className="h-12 w-12 rounded-full"
                       height={48}
-                      src={item?.user?.main_userprofile?.user_pfp_url}
                       style={{
                         aspectRatio: "48/48",
                         objectFit: "cover",

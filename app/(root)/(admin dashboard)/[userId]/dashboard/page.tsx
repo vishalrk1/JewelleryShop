@@ -1,10 +1,5 @@
-
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import prismadb from "@/lib/prismadb";
 import Link from "next/link";
@@ -23,7 +18,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = async ({ params }) => {
       main_userprofile: true,
     },
   });
-  const products = await prismadb.products_product.findMany({});
 
   const data = [
     {

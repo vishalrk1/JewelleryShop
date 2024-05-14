@@ -6,10 +6,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import Image from "next/image";
 
-const CategoryCards = () => {
-  const { categories, fetching } = useSelector(
-    (state: RootState) => state.categories
-  );
+interface CategoryCardsProps {
+  categories: categories_category[];
+}
+
+const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   return (
     <>
       {categories?.map((category, index) => {
@@ -34,7 +35,7 @@ const CategoryCards = () => {
                   {category.cat_title}
                 </h3>
                 <p className="mt-1 mr-2 text-sm text-gray-500">
-                  Elevate your look with our stunning earring collection.
+                  {`Elevate your look with our stunning ${category.cat_title} collection.`}
                 </p>
               </div>
               <Link href={`product/${category.cat_id}/${category.id}`}>

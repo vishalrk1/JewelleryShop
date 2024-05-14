@@ -1,6 +1,8 @@
+import prismadb from "@/lib/prismadb";
 import React from "react";
 
-const InventoryPage = () => {
+const InventoryPage = async () => {
+  const products = await prismadb.products_product.findMany({});
   return (
     <main className="h-screen flex flex-col p-10">
       <section>
