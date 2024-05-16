@@ -1,13 +1,26 @@
+"use server";
 import prismadb from "@/lib/prismadb";
 import React from "react";
+import ProductsColumnsClient from "./components/client";
+import { ProductsColumn } from "./components/columns";
 
 const InventoryPage = async () => {
-  const products = await prismadb.products_product.findMany({});
+  const products = await prismadb.products_product.findMany({
+    include: {
+      categories_category: true,
+    },
+  });
+  const formattedProducts = products.map((product) => ({
+    id: Number(product.id).toString(),
+    label: product.prod_title,
+    price: Number(product.prod_price),
+    inStock: product.prod_instock,
+    category: product.categories_category?.cat_title,
+  })) as ProductsColumn[];
+
   return (
     <main className="h-screen flex flex-col p-10">
-      <section>
-        <h1 className="text-2xl font-semibold">Product Inventory</h1>
-      </section>
+      <ProductsColumnsClient data={formattedProducts} />
     </main>
   );
 };

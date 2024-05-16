@@ -27,7 +27,7 @@ const UserDropdown: React.FC<Props> = ({ user, userData, is_staff }) => {
   const handelLogout = () => {
     dispatch(logoutUser());
   };
-  console.log(userData);
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
