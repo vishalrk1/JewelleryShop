@@ -74,7 +74,7 @@ export const AddressDetailsSchema = z.object({
 
 export const productFormSchema = z.object({
   prod_title: z.string().min(1, "Name is required"),
-  prod_image_url: z.string().min(1, "Image is required"),
+  prod_image_url: z.string().min(0, "Image is required"),
   prod_desc: z.string().min(1, "Description is required"),
   prod_price: z.number().min(1, "Price is required"),
   prod_old_price: z.number().min(1, "Old price is required"),

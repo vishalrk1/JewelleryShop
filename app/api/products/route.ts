@@ -1,9 +1,10 @@
 import prismadb from "@/lib/prismadb";
-import { productFormSchema } from "@/schemas";
+import { apiErrorResponse } from "@/utils/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse, NextRequest } from "next/server";
 
 import { z } from "zod";
+import { v4 as uuidv4 } from "uuid";
 
 // Extend the global BigInt object with a toJSON method
 declare global {
@@ -54,6 +55,89 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
       });
     }
     return NextResponse.json(productsData);
+  } catch (error) {
+    console.log(error);
+    return new NextResponse("Interal server error, failed to get products", {
+      status: 404,
+    });
+  }
+}
+
+export async function POST(
+  req: Request,
+  { params }: { params: { productId: string } }
+) {
+  try {
+    const body = await req.json();
+    const {
+      prod_title,
+      prod_image_url,
+      prod_desc,
+      prod_price,
+      prod_old_price,
+      prod_specs,
+      prod_instock,
+      is_featured,
+      category_id,
+      userId,
+    } = body;
+
+    console.log(body);
+
+    if (
+      !prod_title ||
+      !prod_image_url ||
+      !prod_desc ||
+      !prod_price ||
+      !category_id ||
+      !userId ||
+      !prod_old_price ||
+      !prod_specs
+    ) {
+      console.log("Missing required fields");
+      return apiErrorResponse();
+    }
+
+    const user = await prismadb.auth_user.findUnique({
+      where: {
+        id: parseInt(userId),
+      },
+    });
+
+    if (!user || !user.is_staff) {
+      return new NextResponse("Unauthorized User", {
+        status: 401,
+      });
+    }
+
+    const updatedProduct = await prismadb.products_product.create({
+      data: {
+        prod_id: uuidv4(),
+        prod_title: prod_title,
+        prod_image_url: prod_image_url,
+        prod_desc: prod_desc,
+        prod_price: prod_price,
+        prod_old_price: prod_old_price,
+        prod_specs: prod_specs,
+        prod_instock: prod_instock,
+        is_featured: is_featured,
+        prod_date_updated: new Date(),
+        prod_date_added: new Date(),
+        prod_image_file: "",
+        categories_category: {
+          connect: {
+            cat_id: category_id,
+          },
+        },
+      },
+    });
+    return NextResponse.json(
+      {
+        message: "Product updated successfully",
+        productData: updatedProduct,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
     return new NextResponse("Interal server error, failed to get products", {

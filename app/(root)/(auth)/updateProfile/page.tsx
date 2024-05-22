@@ -135,7 +135,6 @@ const UpdateProfileDetailsPage = () => {
         }
         formData.user_pfp_url = `${process.env.NEXT_PUBLIC_STORAGE_BUCKET}/Images/${data.path}`;
       }
-      console.log("Dispatching data");
       dispatch(
         createUserProfile({
           userData: formData,

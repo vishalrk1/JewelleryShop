@@ -23,7 +23,7 @@ const ProductsPage: React.FC<Props> = ({ params }) => {
   }, [categoryId, currentTab]);
 
   return (
-    <main className="p-4 sm:px-6 sm:py-0 md:gap-8 my-6 md:h-screen">
+    <main className="p-4 sm:px-6 sm:py-0 md:gap-8 my-6 min-h-screen">
       <ProductsTabs
         productsData={products as products_product[]}
         currentTab={currentTab}

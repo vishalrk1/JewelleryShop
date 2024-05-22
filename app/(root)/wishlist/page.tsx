@@ -47,6 +47,7 @@ const WislistPage = () => {
                   currentTab="all"
                   productsData={wishlistItems ? wishlistItems : []}
                   isWishlist={true}
+                  isLoadings={fetching}
                 />
               )}
             </>

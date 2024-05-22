@@ -19,7 +19,7 @@ const InventoryPage = async () => {
   })) as ProductsColumn[];
 
   return (
-    <main className="h-screen flex flex-col p-10">
+    <main className="min-h-screen flex flex-col p-10">
       <ProductsColumnsClient data={formattedProducts} />
     </main>
   );

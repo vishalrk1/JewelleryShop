@@ -34,6 +34,9 @@ import { productFormSchema } from "@/schemas";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/redux/supabase";
+import { showErrorToast, showSucessToast } from "@/utils/toasts";
+import Loader from "@/components/Loader";
 
 interface ProductFormProps {
   initialData: products_product | null;
@@ -100,10 +103,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
   };
 
   const onSubmit = async (data: z.infer<typeof productFormSchema>) => {
-    console.log(data);
+    console.log("Initial Data: ", initialData);
     try {
       setLoading(true);
-
       if (initialData) {
         const req = await axios.patch(
           `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/${initialData.id}`,
@@ -117,20 +119,77 @@ const ProductForm: React.FC<ProductFormProps> = ({
           });
         }
       } else {
+        console.log("Starting aupload product", data);
+        try {
+          if (userPfpFile && productImage) {
+            const catName = categories.find(
+              (cat) => cat.cat_id === data.category_id
+            )?.cat_title;
+            console.log(catName);
+            const { data: imgData, error } = await supabase.storage
+              .from("Images")
+              .upload(
+                `product_images/${catName}/${catName}_${new Date().getTime()}`,
+                userPfpFile
+              );
+            data.prod_image_url = `${process.env.NEXT_PUBLIC_STORAGE_BUCKET}/Images/${imgData?.path}`;
+            if (error) {
+              setLoading(false);
+              showErrorToast("Cant upload image please try again ");
+              return;
+            }
+          } else {
+            throw new Error("Image is required");
+          }
+        } catch (error) {
+          setLoading(false);
+          toast.error("Failed to upload Image", {
+            position: "top-right",
+          });
+        }
+
+        const req = await axios.post(
+          `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products`,
+          { ...data, userId: userId }
+        );
+        setLoading(false);
+        router.push(`/${userId}/dashboard/inventory`);
+        toast.success("Product Added Sucessfully", {
+          position: "top-right",
+        });
       }
     } catch (error) {
+      setLoading(false);
+      showErrorToast("Failed to create product");
       console.log(error);
     }
   };
 
-  console.log(initialData);
+  const onDelete = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/${initialData?.id}`
+      );
+      if (res.status === 200) {
+        router.push(`/${userId}/dashboard/inventory`);
+        toast.success("Product Deleted Sucessfully", {
+          position: "top-right",
+        });
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      showErrorToast("Failed to delete product");
+    }
+  };
 
   return (
     <>
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onConfirm={() => {}}
+        onConfirm={onDelete}
         loading={loading}
       />
       <div className="flex items-center justify-between">
@@ -379,8 +438,15 @@ const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
           </div>
-          <Button className="ml-auto" type="submit">
+          <Button
+            className="ml-auto"
+            type="submit"
+            disabled={loading}
+          >
             {action}
+            {loading && (
+              <Loader className="w-4 h-4 border-2 mx-4" color="border-gray-100" />
+            )}
           </Button>
         </form>
       </Form>

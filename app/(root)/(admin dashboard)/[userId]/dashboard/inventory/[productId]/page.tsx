@@ -28,7 +28,7 @@ const ProductPage = async ({
         })) as any);
 
   return (
-    <main className="lg:h-screen flex flex-col p-10">
+    <main className="min-h-screen flex flex-col p-10">
       <ProductForm
         initialData={productData}
         categories={categories}

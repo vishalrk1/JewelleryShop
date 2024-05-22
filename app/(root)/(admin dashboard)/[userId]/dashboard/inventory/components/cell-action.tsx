@@ -11,6 +11,9 @@ import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { ProductsColumn } from "./columns";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { showErrorToast } from "@/utils/toasts";
 
 interface CellActionProps {
   data: ProductsColumn;
@@ -24,6 +27,22 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const onDelete = async () => {
     setLoading(true);
+    try {
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/${data?.id}`
+      );
+      if (res.status === 200) {
+        setOpen(false);
+        router.refresh();
+        toast.success("Product Deleted Sucessfully", {
+          position: "top-right",
+        });
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      showErrorToast("Failed to delete product");
+    }
   };
 
   return (

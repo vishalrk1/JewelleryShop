@@ -111,3 +111,24 @@ export async function PATCH(
     });
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { productId: string } }
+) {
+  try {
+    await prismadb.products_product.delete({
+      where: {
+        id: Number(params?.productId),
+      },
+    });
+    return NextResponse.json(
+      {
+        message: "Product deleted successfully",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return apiErrorResponse();
+  }
+}
