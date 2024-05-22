@@ -22,10 +22,19 @@ const ProductPage = async ({
           where: {
             id: parseInt(params?.productId),
           },
-        })) as products_product);
+          include: {
+            categories_category: true,
+          },
+        })) as any);
+
   return (
-    <main className="h-screen flex flex-col p-10">
-      <ProductForm initialData={productData} categories={categories} />
+    <main className="lg:h-screen flex flex-col p-10">
+      <ProductForm
+        initialData={productData}
+        categories={categories}
+        cat_id={productData?.categories_category.cat_id}
+        userId={params?.userId}
+      />
     </main>
   );
 };

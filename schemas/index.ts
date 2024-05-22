@@ -43,7 +43,7 @@ export const NewUserDetailsSchema = z.object({
   state: z.string().min(1, { message: "State is required" }),
   country: z.string().min(1, { message: "Country is required" }),
   postal_code: z.string().min(1, { message: "Postal code is required" }),
-})
+});
 
 export const UserDetailsFormSchema = z.object({
   username: z.string().min(1, { message: "Username is requires" }),
@@ -70,6 +70,18 @@ export const AddressDetailsSchema = z.object({
   state: z.string().min(1, { message: "State is required" }),
   country: z.string().min(1, { message: "Country is required" }),
   postal_code: z.string().min(1, { message: "Postal code is required" }),
+});
+
+export const productFormSchema = z.object({
+  prod_title: z.string().min(1, "Name is required"),
+  prod_image_url: z.string().min(1, "Image is required"),
+  prod_desc: z.string().min(1, "Description is required"),
+  prod_price: z.number().min(1, "Price is required"),
+  prod_old_price: z.number().min(1, "Old price is required"),
+  prod_specs: z.string().min(1, "Specification is required"),
+  prod_instock: z.boolean().default(true),
+  is_featured: z.boolean().default(false),
+  category_id: z.string().min(1, "Category is required"),
 });
 
 export const UserDetailsFormFields = [

@@ -9,7 +9,6 @@ export async function POST(
   { params }: { params: { userId: string } }
 ) {
   const searchParam = req.nextUrl.searchParams;
-  console.log(params.userId);
 
   const userDetails = Object.fromEntries(searchParam) as z.infer<
     typeof UserDetailsFormSchema

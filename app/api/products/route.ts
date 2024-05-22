@@ -1,6 +1,9 @@
 import prismadb from "@/lib/prismadb";
+import { productFormSchema } from "@/schemas";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse, NextRequest } from "next/server";
+
+import { z } from "zod";
 
 // Extend the global BigInt object with a toJSON method
 declare global {
@@ -58,4 +61,3 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
     });
   }
 }
-
