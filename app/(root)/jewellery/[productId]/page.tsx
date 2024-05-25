@@ -66,7 +66,7 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
                     <Image
                       src={product.prod_image_url}
                       alt=""
-                      className="rounded-md object-cover"
+                      className="rounded-md object-cover pointer-events-none"
                       height={400}
                       width={400}
                     />

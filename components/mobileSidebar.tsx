@@ -35,7 +35,7 @@ export const MobileSidebar: React.FC<Props> = ({ pending = false, routes }) => {
           <Image
             src={logo}
             alt="illusion-logo"
-            className="h-24 w-24 object-contain p-4 relative"
+            className="h-24 w-24 object-contain p-4 relative pointer-events-none"
           />
         </div>
         {pending && "Loading..."}

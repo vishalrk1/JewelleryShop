@@ -38,7 +38,7 @@ export default async function Home() {
       <section className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden">
         <Image
           alt="Jewelry Shop Hero"
-          className="h-full w-full object-cover object-center"
+          className="h-full w-full object-cover object-center pointer-events-none"
           height={1080}
           src={`${process.env.NEXT_PUBLIC_STORAGE_BUCKET}/Images/product_images/test-category/earring-amazing.jpeg`}
           style={{
@@ -81,7 +81,7 @@ export default async function Home() {
                 <div className="w-full overflow-hidden rounded-lg bg-gray-200">
                   <Image
                     alt="Earrings"
-                    className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out"
+                    className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out pointer-events-none"
                     height={400}
                     src={item.prod_image_url}
                     style={{

@@ -250,7 +250,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                     </div>
                     <Image
                       fill
-                      className="object-cover"
+                      className="object-cover pointer-events-none"
                       alt="Image"
                       src={productImage as string}
                     />

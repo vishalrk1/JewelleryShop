@@ -40,7 +40,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
         <Link href={`/jewellery/${product?.id}`}>
           <Image
             alt="Earrings"
-            className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out"
+            className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out pointer-events-none"
             height={400}
             src={product.prod_image_url}
             style={{

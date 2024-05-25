@@ -204,7 +204,7 @@ const UpdateProfileDetailsPage = () => {
                       <Avatar className="flex items-center justify-center w-full h-full">
                         <AvatarImage
                           src={profileImag as string}
-                          className="rounded-full h-1/2 w-1/2 object-cover"
+                          className="rounded-full h-1/2 w-1/2 object-cover pointer-events-none"
                         />
                       </Avatar>
                     </div>

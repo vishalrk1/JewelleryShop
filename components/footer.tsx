@@ -64,7 +64,7 @@ const Footer = () => {
             src={logo}
             width={70}
             height={70}
-            className="object-cover"
+            className="object-cover pointer-events-none"
           />
           <p className="text-white">
             Discover our exquisite collection of handcrafted jewelry.

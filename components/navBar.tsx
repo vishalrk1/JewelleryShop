@@ -48,7 +48,7 @@ const Navbar = () => {
               src={logo}
               title="illusion"
               alt="illusion-logo"
-              className="object-cover"
+              className="object-cover pointer-events-none"
               width={32}
               height={32}
             />

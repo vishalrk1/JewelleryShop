@@ -19,7 +19,7 @@ const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
             <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
               <Image
                 alt="Earrings"
-                className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out"
+                className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out pointer-events-none"
                 height={400}
                 src={category.cat_image_url}
                 style={{
