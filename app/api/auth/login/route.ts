@@ -17,6 +17,7 @@ BigInt.prototype.toJSON = function (): string {
 export async function GET(req: NextRequest, res: NextApiResponse) {
   try {
     const username = req.nextUrl.searchParams.get("username");
+    const email = req.nextUrl.searchParams.get("email");
     const password = req.nextUrl.searchParams.get("password");
 
     if (!username)
@@ -24,14 +25,22 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
         "Username is required please provide a username",
         { status: 400 }
       );
+    
+      if (!email)
+        return new NextResponse(
+          "email is required please provide a email",
+          { status: 400 }
+        );
+
     if (!password)
       return new NextResponse(
         "Password is required please provide a password",
         { status: 400 }
       );
-    const user = await prisma?.auth_user.findUnique({
+    const user = await prisma?.auth_user.findFirst({
       where: {
-        username: username,
+        // username: username,
+        email: email,
         password: password,
       },
       include: {

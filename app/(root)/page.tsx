@@ -34,7 +34,7 @@ export default async function Home() {
   });
 
   return (
-    <main className="flex flex-col">
+    <main className="min-h-screen flex flex-col">
       <section className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden">
         <Image
           alt="Jewelry Shop Hero"

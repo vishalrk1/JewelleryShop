@@ -52,7 +52,7 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
   }, []);
 
   return (
-    <main className="flex flex-col md:flex-row items-start gap-2 p-3">
+    <main className="min-h-screen flex flex-col md:flex-row items-start gap-2 p-3">
       {!isLoading ? (
         <>
           <section className="flex-1 w-full">

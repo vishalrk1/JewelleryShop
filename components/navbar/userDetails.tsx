@@ -27,7 +27,7 @@ const UserDropdown: React.FC<Props> = ({ user, userData, is_staff }) => {
   const handelLogout = () => {
     dispatch(logoutUser());
   };
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -38,10 +38,10 @@ const UserDropdown: React.FC<Props> = ({ user, userData, is_staff }) => {
         >
           <Image
             src={userData?.user_pfp_url}
-            width={36}
-            height={36}
+            width={40}
+            height={40}
             alt="Avatar"
-            className="overflow-hidden rounded-full"
+            className="overflow-hidden rounded-full object-cover"
           />
         </Button>
       </DropdownMenuTrigger>
@@ -81,7 +81,13 @@ const UserDropdown: React.FC<Props> = ({ user, userData, is_staff }) => {
         >
           My Orders
         </DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            router.push("/contact");
+          }}
+        >
+          Support
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handelLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>

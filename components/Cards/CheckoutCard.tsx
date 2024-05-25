@@ -40,7 +40,7 @@ const CheckoutCard = () => {
   const [convenienceFee, setConvenienceFee] = useState(150);
   const [loading, setLoading] = useState(false);
 
-  console.log(uuidv4())
+  console.log(uuidv4());
 
   useEffect(() => {
     if (cartItems?.length > 0) {
@@ -186,12 +186,21 @@ const CheckoutCard = () => {
         <CardFooter>
           <Button
             type="button"
-            onClick={() => handelCheckout()}
+            // onClick={() => handelCheckout()}
+            onClick={() => {
+              showErrorToast(
+                "Cant proceed order right now, please try again later",
+                true
+              );
+            }}
             className="w-full"
             disabled={loading}
           >
             {loading && (
-              <Loader className="w-4 h-4 border-2 mx-2" color="border-gray-100" />
+              <Loader
+                className="w-4 h-4 border-2 mx-2"
+                color="border-gray-100"
+              />
             )}
             Proceed to Checkout
           </Button>
