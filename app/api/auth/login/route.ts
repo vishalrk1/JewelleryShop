@@ -16,21 +16,13 @@ BigInt.prototype.toJSON = function (): string {
 
 export async function GET(req: NextRequest, res: NextApiResponse) {
   try {
-    const username = req.nextUrl.searchParams.get("username");
     const email = req.nextUrl.searchParams.get("email");
     const password = req.nextUrl.searchParams.get("password");
 
-    if (!username)
-      return new NextResponse(
-        "Username is required please provide a username",
-        { status: 400 }
-      );
-    
-      if (!email)
-        return new NextResponse(
-          "email is required please provide a email",
-          { status: 400 }
-        );
+    if (!email)
+      return new NextResponse("email is required please provide a email", {
+        status: 400,
+      });
 
     if (!password)
       return new NextResponse(
@@ -51,8 +43,11 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
         },
       },
     });
-    if (!user) return new NextResponse("Invalid username or password", { status: 404 });
 
+    if (!user)
+      return new NextResponse("Invalid username or password", { status: 404 });
+
+    user.password = "";
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
     return apiErrorResponse();

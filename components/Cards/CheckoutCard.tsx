@@ -90,7 +90,7 @@ const CheckoutCard = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <section className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>User Details</CardTitle>
@@ -206,7 +206,7 @@ const CheckoutCard = () => {
           </Button>
         </CardFooter>
       </Card>
-    </div>
+    </section>
   );
 };
 

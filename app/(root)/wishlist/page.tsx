@@ -25,7 +25,7 @@ const WislistPage = () => {
   }, []);
 
   return (
-    <main className="h-screen">
+    <main className="min-h-screen">
       <section className="p-4">
         <Tabs defaultValue="all">
           <TabsList>

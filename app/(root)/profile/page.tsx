@@ -27,7 +27,7 @@ const ProfilePage = () => {
             alt={`${user.username}'s profile picture}`}
             fill
             objectFit="cover"
-            className="aspect-square rounded-2xl p-2"
+            className="aspect-square rounded-2xl p-2 pointer-events-none"
           />
         </div>
         {/* <Link href="/updateProfile" className="w-full"> */}

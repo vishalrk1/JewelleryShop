@@ -33,16 +33,16 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async ({ username, password }: any, thunkAPI) => {
-    console.log("Details:", username, password);
+  async ({ email, password }: any, thunkAPI) => {
     try {
       const res = await axios.get("http://localhost:3000/api/auth/login", {
         params: {
-          username: username,
+          email: email,
           password: password,
         },
       });
       if (res.data) {
+        delete res?.data?.password;
         showSucessToast("Login successful 😎, Welcome back!!");
         return { user: res.data, userData: res.data.main_userprofile };
       }

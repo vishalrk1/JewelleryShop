@@ -28,8 +28,8 @@ const CartPage = () => {
   }, [user]);
 
   return (
-    <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 py-12">
-      <div className="space-y-6">
+    <main className="container min-h-screen mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 py-12">
+      <section className="space-y-6">
         <div className="p-5 text-sm md:text-xl font-bold text-center border-b ">
           Your Cart
         </div>
@@ -63,9 +63,9 @@ const CartPage = () => {
             </>
           )}
         </div>
-      </div>
+      </section>
       <CheckoutCard />
-    </div>
+    </main>
   );
 };
 
