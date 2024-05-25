@@ -31,7 +31,7 @@ export const deleteCartItem = createAsyncThunk(
   ) => {
     try {
       const req = await axios.delete(
-        `http://localhost:3000/api/cart/${cart_id}`,
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/cart/${cart_id}`,
         {
           params: {
             cart_item_id: cart_item_id,
@@ -59,7 +59,7 @@ export const addItemTOCart = createAsyncThunk(
   ) => {
     try {
       const req = await axios.post(
-        "http://localhost:3000/api/cart",
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/cart`,
         {},
         {
           params: {
@@ -93,7 +93,7 @@ export const updateCartItem = createAsyncThunk(
   ) => {
     try {
       const req = await axios.patch(
-        `http://localhost:3000/api/cart/${cart_id}`,
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/cart/${cart_id}`,
         {},
         {
           params: {

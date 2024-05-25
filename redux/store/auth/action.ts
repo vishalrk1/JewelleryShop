@@ -10,7 +10,7 @@ export const registerUser = createAsyncThunk(
   async ({ email, password, name }: any, thunkAPI) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/register",
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/auth/register`,
         {},
         {
           params: {
@@ -85,7 +85,7 @@ export const createUserProfile = createAsyncThunk(
     console.log("userId:", userId);
     try {
       const req = await axios.post(
-        `http://localhost:3000/api/auth/${userId}/create`,
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/auth/${userId}/create`,
         {},
         {
           params: {

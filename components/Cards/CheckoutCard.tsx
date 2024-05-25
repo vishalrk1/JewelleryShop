@@ -65,7 +65,7 @@ const CheckoutCard = () => {
       setLoading(true);
       const orderId = uuidv4();
       const res = await axios.post(
-        `http://localhost:3000/api/orders/${orderId}/checkout`,
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/orders/${orderId}/checkout`,
         {},
         {
           params: {

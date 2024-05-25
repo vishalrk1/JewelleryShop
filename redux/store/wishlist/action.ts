@@ -32,7 +32,7 @@ export const addItemToWishlist = createAsyncThunk(
   }) => {
     try {
       const req = await axios.post(
-        `http://localhost:3000/api/wishlist/${wishlist_id}`,
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/wishlist/${wishlist_id}`,
         {},
         {
           params: {
@@ -65,7 +65,7 @@ export const deleteWishlistItem = createAsyncThunk(
   }) => {
     try {
       const req = await axios.delete(
-        `http://localhost:3000/api/wishlist/${wishlist_id}`,
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/wishlist/${wishlist_id}`,
         {
           params: {
             id,
