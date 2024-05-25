@@ -15,7 +15,7 @@ const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
     <>
       {categories?.map((category, index) => {
         return (
-          <div className="bg-gray-50 rounded-xl overflow-hidden p-3 aspect-w-1 aspect-h-1">
+          <div key={index} className="bg-gray-50 rounded-xl overflow-hidden p-3 aspect-w-1 aspect-h-1">
             <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
               <Image
                 alt="Earrings"

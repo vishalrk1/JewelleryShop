@@ -41,8 +41,8 @@ export const MobileSidebar: React.FC<Props> = ({ pending = false, routes }) => {
         {pending && "Loading..."}
         <div className="flex flex-col gap-1 w-full">
           <p className="py-0 text-left mb-1">Categories</p>
-          {routes?.map((route) => (
-            <SheetClose asChild>
+          {routes?.map((route, index) => (
+            <SheetClose asChild key={index}>
               <Button
                 className="w-full p-2"
                 variant="secondary"

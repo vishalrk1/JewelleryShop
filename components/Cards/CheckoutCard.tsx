@@ -150,14 +150,17 @@ const CheckoutCard = () => {
                   value={addressId}
                   onValueChange={setAddressId}
                 >
-                  {userData?.main_useraddress.map((address: any) => (
-                    <DropdownMenuRadioItem
-                      value={address.id}
-                      className="hover:cursor-pointer"
-                    >
-                      {`${address.address_type} - ${address.address_line1}`}
-                    </DropdownMenuRadioItem>
-                  ))}
+                  {userData?.main_useraddress.map(
+                    (address: any, index: number) => (
+                      <DropdownMenuRadioItem
+                        value={address.id}
+                        key={index}
+                        className="hover:cursor-pointer"
+                      >
+                        {`${address.address_type} - ${address.address_line1}`}
+                      </DropdownMenuRadioItem>
+                    )
+                  )}
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>

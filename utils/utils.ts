@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 
 export function apiErrorResponse() {
-  return new NextResponse(
-    { message: "Someting went wrong please try again later" },
-    {
-      status: 404,
-    }
-  );
+  const message = "Someting went wrong please try again later";
+  return new NextResponse(message, {
+    status: 404,
+  });
 }
 
 export function apiResponse({
@@ -16,12 +14,7 @@ export function apiResponse({
   message: string;
   status: number;
 }) {
-  return NextResponse.json(
-    {
-      message: message,
-    },
-    {
-      status: status,
-    }
-  );
+  return NextResponse.json(message, {
+    status: status,
+  });
 }

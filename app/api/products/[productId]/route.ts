@@ -3,14 +3,15 @@ import { apiErrorResponse } from "@/utils/utils";
 import { NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
-export function getRouteId(url: string) {
-  var regex = /\/products\/(\d+)/;
-  const match = url.match(regex);
-  return match;
-}
+// export function getRouteId(url: string) {
+//   var regex = /\/products\/(\d+)/;
+//   const match: RegExpMatchArray | null = url?.match(regex);
+//   return match;
+// }
 
 export async function GET(req: NextRequest, res: NextApiResponse) {
-  const match = getRouteId(req.nextUrl.pathname);
+  var regex = /\/products\/(\d+)/;
+  const match = req.nextUrl.pathname.match(regex);
   if (!match) {
     return new NextResponse(
       "Failed to delete saveed item, item Id is required",
@@ -21,6 +22,7 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
   }
 
   const prodId = match[1];
+  console.log(prodId);
   try {
     const productData = await prismadb.products_product.findUnique({
       where: {

@@ -120,7 +120,7 @@ export async function POST(req: Request) {
       });
       return new NextResponse("Webhook success", { status: 200 });
     case "checkout.session.async_payment_failed":
-      return null;
+      return new NextResponse("Webhook failed", { status: 400 });
     default:
       return new NextResponse("Webhook error unhandled error type", {
         status: 200,

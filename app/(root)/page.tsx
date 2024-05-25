@@ -77,7 +77,7 @@ export default async function Home() {
           </div>
           <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
             {featuredProducts?.map((item: any, index) => (
-              <div className="bg-gray-50 rounded-xl overflow-hidden p-3">
+              <div key={index} className="bg-gray-50 rounded-xl overflow-hidden p-3">
                 <div className="w-full overflow-hidden rounded-lg bg-gray-200">
                   <Image
                     alt="Earrings"

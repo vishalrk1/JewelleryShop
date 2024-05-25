@@ -23,7 +23,7 @@ const ProductList: React.FC<Props> = ({
       className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
     >
       {isLoadings
-        ? [...Array(10)].map((_, index) => <ProductCardSkeleton />)
+        ? [...Array(10)].map((_, index) => <ProductCardSkeleton key={index}/>)
         : productsData?.map((item) => {
             return (
               <ProductCard item={item} isWishlist={isWishlist} key={item.id} />

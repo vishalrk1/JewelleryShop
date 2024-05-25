@@ -47,9 +47,9 @@ const FormatedForm: React.FC<Props> = ({ form, schema }) => {
                         <SelectTrigger>
                           <SelectValue placeholder={item.placeholder} />
                           <SelectContent>
-                            {item.options.map((option: any) => {
+                            {item.options.map((option: any, index: number) => {
                               return (
-                                <SelectItem value={option.value}>
+                                <SelectItem value={option.value} key={index}>
                                   {option.label}
                                 </SelectItem>
                               );

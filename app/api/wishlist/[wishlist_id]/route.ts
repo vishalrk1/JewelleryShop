@@ -3,14 +3,15 @@ import { apiErrorResponse } from "@/utils/utils";
 import { NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
-export function getRouteId(url: string) {
-  var regex = /\/wishlist\/(\d+)/;
-  const match = url.match(regex);
-  return match;
-}
+// export function getRouteId(url: string) {
+//   var regex = /\/wishlist\/(\d+)/;
+//   const match = url.match(regex);
+//   return match;
+// }
 
 export async function DELETE(req: NextRequest, res: NextApiResponse) {
-  const match = getRouteId(req.nextUrl.pathname);
+  var regex = /\/wishlist\/(\d+)/;
+  const match = req.nextUrl.pathname.match(regex);
   if (!match) {
     return new NextResponse(
       "Failed to delete saveed item, item Id is required",
@@ -69,7 +70,8 @@ export async function DELETE(req: NextRequest, res: NextApiResponse) {
 }
 
 export async function POST(req: NextRequest, res: NextApiResponse) {
-  const match = getRouteId(req.nextUrl.pathname);
+  var regex = /\/wishlist\/(\d+)/;
+  const match = req.nextUrl.pathname.match(regex);
   if (!match) {
     return new NextResponse(
       "Failed to delete saveed item, item Id is required",
@@ -96,7 +98,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
       return NextResponse.json(
         { message: "Item already exists in wishlist" },
         {
-          status: 409, 
+          status: 409,
         }
       );
     } else {

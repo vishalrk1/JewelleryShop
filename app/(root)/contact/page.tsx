@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import FaqCollapsible from "@/components/Collapsible/FaqCollapsible";
 import { FAQQuestions } from "@/utils/dateUtils";
+import Image from "next/image";
 
 const ContactPage = () => {
   return (
@@ -36,7 +37,7 @@ const ContactPage = () => {
                 </p>
               </div>
             </div>
-            <img
+            <Image
               alt="Hero"
               className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
               height="310"
