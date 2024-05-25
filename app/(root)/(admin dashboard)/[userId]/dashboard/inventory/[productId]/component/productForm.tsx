@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import * as z from "zod";
 
-import { products_product } from "@prisma/client";
+// import { products_product } from "@prisma/client";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Router, Trash, UploadCloud } from "lucide-react";
@@ -39,7 +39,7 @@ import { showErrorToast, showSucessToast } from "@/utils/toasts";
 import Loader from "@/components/Loader";
 
 interface ProductFormProps {
-  initialData: products_product | null;
+  initialData: any | null;
   categories: any[];
   cat_id: string;
   userId: string;
