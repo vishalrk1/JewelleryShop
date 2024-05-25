@@ -2,7 +2,7 @@ import { Heading } from "@/components/ui/heading";
 import prismadb from "@/lib/prismadb";
 import React from "react";
 import ProductForm from "./component/productForm";
-import { categories_category, products_product } from "@prisma/client";
+// import { categories_category, products_product } from "@prisma/client";
 
 const ProductPage = async ({
   params,
@@ -14,7 +14,7 @@ const ProductPage = async ({
 }) => {
   const categories = (await prismadb.categories_category.findMany(
     {}
-  )) as categories_category[];
+  )) as any[];
   const productData =
     params.productId === "new"
       ? null
