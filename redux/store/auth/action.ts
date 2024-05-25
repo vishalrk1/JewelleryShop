@@ -21,13 +21,12 @@ export const registerUser = createAsyncThunk(
         }
       );
       if (res.status == 200) {
-        console.log(res.data);
+        showSucessToast("Registration successful 😎");
         return res.data;
-      } else {
-        throw new Error("Registration failed");
       }
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+      showErrorToast(error.response.data, true);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -50,7 +49,7 @@ export const loginUser = createAsyncThunk(
       return null;
     } catch (error: any) {
       showErrorToast(error.response.data);
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -101,7 +100,8 @@ export const createUserProfile = createAsyncThunk(
         throw new Error("Registration failed");
       }
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+      showErrorToast(error.response.data, true);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );

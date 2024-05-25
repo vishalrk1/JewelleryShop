@@ -10,12 +10,26 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
   const password = req.nextUrl.searchParams.get("password");
   const name = req.nextUrl.searchParams.get("name");
 
-  console.log(email, password, name);
   try {
     if (!email || !password || !name) {
       return new NextResponse("Failed to register user, try again later", {
         status: 404,
       });
+    }
+
+    const emailCnt = await prismadb.auth_user.count({
+      where: {
+        email: email,
+      },
+    });
+
+    if (emailCnt > 0) {
+      return new NextResponse(
+        "This email is already used try again with different Email",
+        {
+          status: 404,
+        }
+      );
     }
 
     const user = await prismadb.auth_user

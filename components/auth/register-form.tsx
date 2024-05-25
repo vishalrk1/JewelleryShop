@@ -42,6 +42,7 @@ const RegisterForm = () => {
       email: "",
       password: "",
     },
+    mode: "onChange"
   });
 
   const handleSubmit = (values: z.infer<typeof RegisterSchema>) => {

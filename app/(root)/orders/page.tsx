@@ -9,12 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 const OrdersPage = () => {
   const dispatch = useDispatch<any>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, userData } = useSelector((state: RootState) => state.auth);
   const { orders, fetching } = useSelector((state: RootState) => state.orders);
 
   if (!user) {
     redirect("/");
   }
+  if (!userData) redirect("/updateProfile");
 
   useEffect(() => {
     if (user) {

@@ -88,20 +88,8 @@ const UpdateProfileDetailsPage = () => {
       country: "",
       postal_code: "",
     },
+    mode: "onChange",
   });
-
-  // const addressForm = useForm<z.infer<typeof AddressDetailsSchema>>({
-  //   resolver: zodResolver(AddressDetailsSchema),
-  //   defaultValues: {
-  //     address_type: "",
-  //     address_line1: "",
-  //     address_line2: "",
-  //     city: "",
-  //     state: "",
-  //     country: "",
-  //     postal_code: "",
-  //   },
-  // });
 
   useEffect(() => {
     setIsHidrate(true);

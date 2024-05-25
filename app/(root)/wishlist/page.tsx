@@ -10,12 +10,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 const WislistPage = () => {
   const dispatch = useDispatch<any>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, userData } = useSelector((state: RootState) => state.auth);
   const { wishlistItems, fetching } = useSelector(
     (state: RootState) => state.wishlist
   );
 
   if (!user) return redirect("/");
+  if (!userData) redirect("/updateProfile");
 
   useEffect(() => {
     if (user) {

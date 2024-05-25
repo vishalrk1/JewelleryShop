@@ -17,6 +17,7 @@ const CartPage = () => {
   );
 
   if (!user) redirect("/login");
+  if (!userData) redirect("/updateProfile");
 
   useEffect(() => {
     if (user) {

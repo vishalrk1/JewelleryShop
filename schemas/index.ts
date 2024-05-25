@@ -22,7 +22,9 @@ export const LoginSchema = z.object({
 export const RegisterSchema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
   email: z.string().email({ message: "Invalid email" }),
-  password: z.string().min(1, { message: "Password is required" }),
+  password: z
+    .string()
+    .min(3, { message: "Password should be at least 3 characters long" }),
 });
 
 export const NewUserDetailsSchema = z.object({
@@ -32,7 +34,7 @@ export const NewUserDetailsSchema = z.object({
   first_name: z.string().min(1, { message: "First name is required" }),
   last_name: z.string().min(1, { message: "Last name is required" }),
   user_gender: z.string().min(1, { message: "Gender is required" }),
-  user_phone: z.string().min(1, { message: "Phone is required" }),
+  user_phone: z.string().min(10, { message: "Valid Phone is required" }),
   user_pfp_url: z.string().min(1, { message: "Image is required" }),
 
   // address fields
