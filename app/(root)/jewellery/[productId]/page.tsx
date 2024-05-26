@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import axios from "axios";
-import { products_product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import {
   Card,
   CardContent,
@@ -23,9 +23,11 @@ interface Props {
   params: { productId: string };
 }
 
+type Product = Prisma.products_productGetPayload<{}>;
+
 const IndividualProductPage: React.FC<Props> = ({ params }) => {
   const prodId = params.productId;
-  const [product, setProduct] = React.useState<products_product | null>(null);
+  const [product, setProduct] = React.useState<Product | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const { user } = useSelector((state: RootState) => state.auth);
   const { cart, fetching: cartLoading } = useSelector(
@@ -39,7 +41,7 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
   const getProductData = async (prodId: string) => {
     const res = await axios.get(`http://localhost:3000/api/products/${prodId}`);
     if (res.status === 200) {
-      setProduct(res?.data?.data as products_product);
+      setProduct(res?.data?.data as Product);
       setIsLoading(false);
     } else {
       setIsLoading(false);
@@ -58,7 +60,9 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
           <section className="flex-1 w-full">
             <Card className="overflow-hidden">
               <CardHeader>
-                <CardTitle className="text-xl md:text-2xl font-semibold">Product Image</CardTitle>
+                <CardTitle className="text-xl md:text-2xl font-semibold">
+                  Product Image
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-2 items-center justify-center">
