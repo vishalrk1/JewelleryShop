@@ -35,7 +35,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }: any, thunkAPI) => {
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/api/auth/login`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/auth/login`, {
         params: {
           email: email,
           password: password,
