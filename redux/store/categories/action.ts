@@ -5,7 +5,7 @@ export const getCategories = createAsyncThunk(
   "categories/getCategories",
   async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/categories");
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/categories`);
       if (res.status === 200) {
         return res.data;
       } else {

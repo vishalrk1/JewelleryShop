@@ -6,7 +6,7 @@ export const getWishlist = createAsyncThunk(
   "wishlist/getWishlist",
   async ({ user_id }: { user_id: string }) => {
     try {
-      const req = await axios.get("http://localhost:3000/api/wishlist", {
+      const req = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/wishlist`, {
         params: {
           id: user_id,
         },

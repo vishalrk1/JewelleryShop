@@ -5,7 +5,7 @@ export const getOrders = createAsyncThunk(
   "orders/getOrders",
   async ({ user_id }: { user_id: string }) => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/orders`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/orders`, {
         params: {
           id: user_id,
         },

@@ -7,7 +7,7 @@ export const getProducts = createAsyncThunk(
   async ({ categoryId, isFeatured }: any, thunkAPI) => {
     console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL);
     try {
-      const res = await axios.get("http://localhost:3000/api/products", {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products`, {
         params: {
           catId: categoryId,
           isFeatured: isFeatured,

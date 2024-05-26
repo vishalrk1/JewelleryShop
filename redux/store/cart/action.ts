@@ -6,7 +6,7 @@ export const getCart = createAsyncThunk(
   "cart/getCart",
   async ({ id, email }: { id: string; email: string }, thunkAPI) => {
     try {
-      const res = await axios.get("http://localhost:3000/api/cart", {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/cart`, {
         params: {
           id: id,
           email: email,

@@ -37,7 +37,7 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
   const dispatch = useDispatch();
 
   const getProductData = async (prodId: string) => {
-    const res = await axios.get(`http://localhost:3000/api/products/${prodId}`);
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/${prodId}`);
     if (res.status === 200) {
       setProduct(res?.data?.data);
       setIsLoading(false);
