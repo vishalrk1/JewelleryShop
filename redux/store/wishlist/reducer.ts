@@ -1,11 +1,6 @@
-import {
-  products_wishlist_products,
-  Wishlist,
-  WishlistItem,
-} from "@prisma/client";
 import { createReducer } from "@reduxjs/toolkit";
 import { addItemToWishlist, deleteWishlistItem, getWishlist } from "./action";
-import { addItemTOCart } from "../cart/action";
+import { Wishlist, WishlistItem } from "@/prisma/generated/client";
 
 interface wishlistState {
   wishlist: Wishlist | null;

@@ -6,7 +6,7 @@ import Loader from "@/components/Loader";
 import { getCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
 import { redirect } from "next/navigation";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const CartPage = () => {

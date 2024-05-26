@@ -35,7 +35,7 @@ export async function POST(
     }
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
-      cart_products.map((item) => ({
+      cart_products.map((item: any) => ({
         quantity: item.quantity,
         price_data: {
           currency: "INR",

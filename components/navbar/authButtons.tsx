@@ -4,7 +4,6 @@ import { RootState } from "@/redux/store/store";
 import React, { use, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../ui/button";
-import { logoutUser } from "@/redux/store/auth/action";
 import Link from "next/link";
 import UserDropdown from "./userDetails";
 import { Heart, ShoppingCart } from "lucide-react";

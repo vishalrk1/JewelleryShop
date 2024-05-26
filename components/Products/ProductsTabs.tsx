@@ -1,10 +1,7 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import { Button } from "../ui/button";
-import { ShoppingCart } from "lucide-react";
 import ProductList from "./ProductList";
-import { products_product } from "@prisma/client";
-import Loader from "../Loader";
+import { products_product } from "@/prisma/generated/client";
 
 interface Props {
   productsData: products_product[];

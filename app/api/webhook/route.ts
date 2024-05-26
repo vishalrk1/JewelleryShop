@@ -94,7 +94,7 @@ export async function POST(req: Request) {
         },
       });
 
-      cart_products?.forEach(async (item) => {
+      cart_products?.forEach(async (item: any) => {
         const order_item = await prismadb.order_orderitem.create({
           data: {
             quantity: item.quantity,

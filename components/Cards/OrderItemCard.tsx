@@ -1,4 +1,3 @@
-import { order_orderitem } from "@prisma/client";
 import React from "react";
 
 interface OrderItemCardProps {

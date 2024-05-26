@@ -1,6 +1,6 @@
-import { categories_category } from "@prisma/client";
 import { createReducer } from "@reduxjs/toolkit";
 import { getCategories } from "./action";
+import { categories_category } from "@/prisma/generated/client";
 
 interface CategoriesState {
   categories: categories_category[] | null;

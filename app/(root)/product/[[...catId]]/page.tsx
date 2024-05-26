@@ -1,9 +1,8 @@
 "use client";
-import ProductList from "@/components/Products/ProductList";
 import ProductsTabs from "@/components/Products/ProductsTabs";
+import { products_product } from "@/prisma/generated/client";
 import { getProducts } from "@/redux/store/products/action";
 import { RootState } from "@/redux/store/store";
-import { products_product } from "@prisma/client";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 

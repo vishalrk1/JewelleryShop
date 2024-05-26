@@ -1,11 +1,5 @@
-import { addItemTOCart } from "@/redux/store/cart/action";
 import { RootState } from "@/redux/store/store";
-import {
-  addItemToWishlist,
-  deleteWishlistItem,
-} from "@/redux/store/wishlist/action";
 import { showErrorToast } from "@/utils/toasts";
-import { products_product } from "@prisma/client";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -18,6 +12,7 @@ import {
   handelAddToWishlist,
   handelRemoveSavedItem,
 } from "@/utils/ProductsFunction";
+import { products_product } from "@/prisma/generated/client";
 
 interface ProductCardProps {
   item: any;

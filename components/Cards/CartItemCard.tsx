@@ -1,9 +1,9 @@
 "use client";
 import React, { useContext, useState } from "react";
 import { Trash } from "lucide-react";
-import { cart_cartitem, products_product } from "@prisma/client";
 import { useDispatch } from "react-redux";
 import { deleteCartItem, updateCartItem } from "@/redux/store/cart/action";
+import { cart_cartitem, products_product } from "@/prisma/generated/client";
 
 interface Props {
   cartProduct: cart_cartitem;

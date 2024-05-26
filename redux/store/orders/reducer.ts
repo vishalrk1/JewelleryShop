@@ -1,6 +1,6 @@
-import { order_order } from "@prisma/client";
 import { createReducer } from "@reduxjs/toolkit";
 import { getOrders } from "./action";
+import { order_order } from "@/prisma/generated/client";
 
 interface OrdersState {
   orders: order_order[];

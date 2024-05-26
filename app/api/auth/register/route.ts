@@ -1,4 +1,5 @@
 import prismadb from "@/lib/prismadb";
+import { PrismaClientKnownRequestError } from "@/prisma/generated/client/runtime/library";
 import { Prisma } from "@prisma/client";
 import { NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
@@ -57,7 +58,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
           },
         },
       })
-      .catch((e: Prisma.PrismaClientKnownRequestError) => {
+      .catch((e: PrismaClientKnownRequestError) => {
         if (e.code === "P2002") {
           return NextResponse.json(
             { message: "User already exists" },

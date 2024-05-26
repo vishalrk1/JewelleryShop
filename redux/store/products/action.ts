@@ -1,4 +1,4 @@
-import { products_product } from "@prisma/client";
+import { products_product } from "@/prisma/generated/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 

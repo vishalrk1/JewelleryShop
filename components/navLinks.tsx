@@ -1,9 +1,7 @@
 "use client";
-import prismadb from "@/lib/prismadb";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 interface Props {
   className?: string;

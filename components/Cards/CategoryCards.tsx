@@ -1,10 +1,8 @@
-import { categories_category } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store/store";
 import Image from "next/image";
+import { categories_category } from "@/prisma/generated/client";
 
 interface CategoryCardsProps {
   categories: categories_category[];

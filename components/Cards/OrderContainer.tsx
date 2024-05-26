@@ -2,7 +2,6 @@ import React from "react";
 import { convertDate } from "../../utils/dateUtils";
 import { twMerge } from "tailwind-merge";
 import OrderItamCard from "../../components/Cards/OrderItemCard";
-import { order_order } from "@prisma/client";
 
 interface Props {
   orderData: any;

@@ -3,10 +3,9 @@ import Loader from "@/components/Loader";
 import ProductList from "@/components/Products/ProductList";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RootState } from "@/redux/store/store";
-import { getWishlist } from "@/redux/store/wishlist/action";
 import { redirect } from "next/navigation";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 
 const WislistPage = () => {
   const { user, userData } = useSelector((state: RootState) => state.auth);

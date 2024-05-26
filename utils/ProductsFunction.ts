@@ -1,4 +1,4 @@
-import { auth_user } from "@prisma/client";
+import { auth_user } from "@/prisma/generated/client";
 import { showErrorToast } from "./toasts";
 import { addItemTOCart } from "@/redux/store/cart/action";
 import {

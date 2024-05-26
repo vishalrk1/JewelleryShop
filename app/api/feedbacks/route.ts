@@ -1,6 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { apiErrorResponse } from "@/utils/utils";
 import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
           updateddAt: new Date(),
         },
       })
-      .catch((e: Prisma.PrismaClientKnownRequestError) => {
+      .catch((e: PrismaClientKnownRequestError) => {
         if (e.code === "P2002") {
           throw new Error("Feedback already exists");
         }

@@ -1,4 +1,3 @@
-import { cart_cart, cart_cartitem } from "@prisma/client";
 import { createReducer } from "@reduxjs/toolkit";
 import {
   addItemTOCart,
@@ -7,6 +6,7 @@ import {
   updateCartItem,
 } from "./action";
 import { string } from "zod";
+import { cart_cart } from "@/prisma/generated/client";
 
 interface cartState {
   cart: cart_cart | null;

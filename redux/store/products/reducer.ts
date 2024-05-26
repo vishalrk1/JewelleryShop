@@ -1,6 +1,6 @@
-import { products_product } from "@prisma/client";
 import { createReducer } from "@reduxjs/toolkit";
 import { getProducts } from "./action";
+import { products_product } from "@/prisma/generated/client";
 
 interface ProducstsState {
   products: products_product[] | null;
