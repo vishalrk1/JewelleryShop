@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
 import axios from "axios";
-import { Prisma, products_product } from "@prisma/client";
 import {
   Card,
   CardContent,
@@ -18,6 +17,7 @@ import Loader from "@/components/Loader";
 import { handelAddToCart, handelAddToWishlist } from "@/utils/ProductsFunction";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
+import { products_product } from "@/prisma/generated/client";
 
 interface Props {
   params: { productId: string };
@@ -39,7 +39,7 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
   const getProductData = async (prodId: string) => {
     const res = await axios.get(`http://localhost:3000/api/products/${prodId}`);
     if (res.status === 200) {
-      setProduct(res?.data?.data as products_product);
+      setProduct(res?.data?.data);
       setIsLoading(false);
     } else {
       setIsLoading(false);
