@@ -40,7 +40,7 @@ const Navbar = () => {
 
   return (
     <nav className="border-b bg-background dark:bg-secondary">
-      <div className="flex h-16 items-center px-8">
+      <div className="flex h-16 items-center px-4 md:px-8">
         <MobileSidebar routes={routes} />
         <Link href="/">
           <div className="hidden md:flex items-center justify-center aspect-square rounded-xl relative">

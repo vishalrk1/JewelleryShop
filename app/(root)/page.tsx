@@ -53,8 +53,8 @@ export default async function Home() {
             Elevate Your Style
           </h1>
           <p className="mt-3 max-w-3xl text-xs md:text-lg sm:mt-5 sm:text-xl">
-            Discover our exquisite collection of handcrafted jewelry, designed
-            to complement your unique style.
+            Discover our exquisite collection of handcrafted jewellery, designed
+            to complement your unique style
           </p>
         </div>
       </section>
@@ -68,14 +68,14 @@ export default async function Home() {
       <section className="bg-white py-10 sm:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 md:text-5xl">
               Featured Products
             </h2>
-            <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
-              Discover our latest and greatest jewelry pieces.
+            <p className="mt-3 max-w-2xl mx-auto text-lg md:text-xl text-gray-500 sm:mt-4">
+              Discover our latest and greatest jewellery pieces
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+          <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 gap-x-3 lg:grid-cols-3 xl:gap-x-8">
             {featuredProducts?.map((item: any, index: number) => (
               <div
                 key={index}
@@ -97,7 +97,7 @@ export default async function Home() {
                 <div className="mt-4 flex justify-between">
                   <div>
                     <div className="flex items-center justify-between">
-                      <h3 className="text-base md:text-lg font-medium text-gray-900 line-clamp-2 md:line-clamp-1">
+                      <h3 className="text-base md:text-lg font-bold text-gray-900 line-clamp-2 md:line-clamp-1">
                         {item.prod_title}
                       </h3>
                     </div>
@@ -122,15 +122,15 @@ export default async function Home() {
       <section className="bg-gray-100 py-12 sm:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 md:text-5xl">
               What Our Customers Say
             </h2>
-            <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+            <p className="mt-3 max-w-2xl mx-auto text-lg md:text-xl text-gray-500 sm:mt-4">
               Hear from our satisfied customers about their experience with our
-              jewelry.
+              jewellery.
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+          <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
             {feedbacks?.map((item: any, index: number) => (
               <div key={index} className="bg-white rounded-lg shadow-lg p-6">
                 <div className="flex items-start">
