@@ -53,7 +53,8 @@ const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Welcom Back"
+      headerLabel="We're excited to see you again. Please log in to continue."
+      headerTitle="✨Welcome Back!✨"
       backButtonHref="/register"
       backButtonLbel="Don't have an account?"
       showSocials={false}

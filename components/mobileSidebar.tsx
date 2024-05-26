@@ -24,13 +24,13 @@ export const MobileSidebar: React.FC<Props> = ({ pending = false, routes }) => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="flex flex-col items-center p-2 w-[300px] sm:w-[440px]"
+        className="text-white flex flex-col items-center p-2 w-[300px] sm:w-[440px]"
       >
         <div
           onClick={() => {
             router.push("/");
           }}
-          className="flex items-center justify-center h-1/6 w-full bg-gray-100 rounded-lg"
+          className="flex items-center justify-center h-1/6 w-full bg-black rounded-lg"
         >
           <Image
             src={logo}
@@ -40,11 +40,11 @@ export const MobileSidebar: React.FC<Props> = ({ pending = false, routes }) => {
         </div>
         {pending && "Loading..."}
         <div className="flex flex-col gap-1 w-full">
-          <p className="py-0 text-left mb-1">Categories</p>
+          <p className="py-0 text-center mb-1 font-bold text-black">Explore Categories</p>
           {routes?.map((route, index) => (
             <SheetClose asChild key={index}>
               <Button
-                className="w-full p-2"
+                className="w-full p-2 bg-gray-50 font-normal"
                 variant="secondary"
                 onClick={() => {
                   router.push(route.href);

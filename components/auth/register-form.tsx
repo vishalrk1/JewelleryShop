@@ -54,7 +54,8 @@ const RegisterForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Create an account"
+      headerTitle="🎉Join Us!🎉"
+      headerLabel="We’re excited to have you here!"
       backButtonHref="/login"
       backButtonLbel="Already have an account?"
       showSocials={false}

@@ -6,6 +6,7 @@ import { Socials } from "./socials";
 interface CardWrapperProps {
   children: React.ReactNode;
   headerLabel: string;
+  headerTitle: string;
   backButtonLbel: string;
   backButtonHref: string;
   showSocials?: boolean;
@@ -16,6 +17,7 @@ interface CardWrapperProps {
 export const CardWrapper = ({
   children,
   headerLabel,
+  headerTitle,
   backButtonLbel,
   backButtonHref,
   showSocials = false,
@@ -26,7 +28,7 @@ export const CardWrapper = ({
     <Card className="w-[300px] md:w-[400px] shadow-md pt-4">
       {showHeader && (
         <CardHeader>
-          <Header label={headerLabel} />
+          <Header label={headerLabel} headerTitle={headerTitle} />
         </CardHeader>
       )}
       <CardContent>{children}</CardContent>

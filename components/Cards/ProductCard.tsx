@@ -49,12 +49,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
       <div className="mt-4 flex justify-between w-full">
         <div className="w-full">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm md:text-lg font-medium text-gray-900 line-clamp-1">
+            <h3 className="text-sm md:text-lg font-bold text-gray-900 line-clamp-1">
               {product.prod_title}
             </h3>
             <Heart
               className={twMerge(
-                "w-5 md:w-6 h-5 md:h-6 border-none cursor-pointer"
+                "w-14 md:w-16 h-6 border-none cursor-pointer"
               )}
               onClick={() => {
                 user && wishlist
