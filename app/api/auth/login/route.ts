@@ -2,6 +2,7 @@ import { apiErrorResponse } from "@/utils/utils";
 import { NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import prismadb from "@/lib/prismadb";
 
 declare global {
   interface BigInt {
@@ -30,7 +31,7 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
         { status: 400 }
       );
 
-    const user = await prisma?.auth_user.findFirst({
+    const user = await prismadb.auth_user.findFirst({
       where: {
         // username: username,
         email: email,
