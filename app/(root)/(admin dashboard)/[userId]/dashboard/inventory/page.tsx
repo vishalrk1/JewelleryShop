@@ -10,7 +10,7 @@ const InventoryPage = async () => {
       categories_category: true,
     },
   });
-  const formattedProducts = products.map((product) => ({
+  const formattedProducts = products.map((product: any) => ({
     id: Number(product.id).toString(),
     label: product.prod_title,
     price: Number(product.prod_price),
