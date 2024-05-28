@@ -39,7 +39,7 @@ const CartPage = () => {
               {!fetching ? (
                 <div className="cmd:h-[500px] w-full flex flex-col overflow-y-scroll no-scrollbar md:p-3 border-slate-50">
                   {cartItems?.length === 0 ? (
-                    <div className="flex justify-center items-center overflow-hidden h-[40rem]">
+                    <div className="flex justify-center items-center overflow-hidden h-max-content">
                       <div className="text-gray-600 md:text-2xl mt-5">
                         No products in cart 🫠
                       </div>
