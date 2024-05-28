@@ -43,9 +43,15 @@ const AuthButtons = () => {
               />
             </>
           ) : (
-            <Link href="/updateProfile">
-              <Button className="text-xs md:text-base">Finish Profile</Button>
-            </Link>
+            <>
+              <Link href="/updateProfile">
+                <Button className="text-xs md:text-base">Logout</Button>
+              </Link>
+
+              <Link href="/updateProfile">
+                <Button className="text-xs md:text-base">Finish Profile</Button>
+              </Link>
+            </>
           )}
         </div>
       ) : (
@@ -53,6 +59,7 @@ const AuthButtons = () => {
           <Link href="/login">
             <Button className="text-xs md:text-base">Login</Button>
           </Link>
+          
           <Link href="/register">
             <Button className="text-xs md:text-base">Register</Button>
           </Link>
