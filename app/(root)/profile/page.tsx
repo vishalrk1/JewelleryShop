@@ -20,8 +20,8 @@ const ProfilePage = () => {
 
   return (
     <main className="flex flex-col lg:flex-row justify-center lg:h-screen gap-4 mx-auto max-w-8xl mt-4 md:mt-6 px-4 md:px-12 mb-8">
-      <section className="flex flex-1 flex-col gap-2 items-end w-full">
-        <div className="w-full sm:h-1/2 aspect-square rounded-xl bg-gray-100 relative">
+      <section className="flex flex-col gap-2 items-center w-full">
+        <div className="w-1/2 h-1/2 aspect-square rounded-xl bg-gray-100 relative">
           <Image
             src={userData?.user_pfp_url}
             alt={`${user.username}'s profile picture}`}
@@ -31,7 +31,7 @@ const ProfilePage = () => {
           />
         </div>
         {/* <Link href="/updateProfile" className="w-full"> */}
-        <Button variant="default" className="flex gap-3 w-full">
+        <Button variant="default" className="flex gap-3 w-1/2">
           <SquarePen className="w-4 h-4" />
           Edit Profile
         </Button>
