@@ -38,37 +38,37 @@ const ProfilePage = () => {
         {/* </Link> */}
       </section>
       <section className="flex-2 w-full gap-4">
-        <h1 className="text-2xl font-semibold p-4">Personal Information</h1>
+        <h1 className="md:text-2xl font-semibold p-4">Personal Information</h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card className="">
             <CardHeader>
-              <CardTitle className="text-xl items-center flex gap-2 font-medium">
+              <CardTitle className="text-base md:text-xl items-center flex gap-2 font-medium">
                 <User2Icon />
                 Username
               </CardTitle>
-              <CardDescription className="text-xl font-normal overflow-clip">
+              <CardDescription className="text-base md:text-xl font-normal overflow-clip">
                 {user?.username}
               </CardDescription>
             </CardHeader>
           </Card>
           <Card className="">
             <CardHeader>
-              <CardTitle className="text-xl items-center flex gap-2 font-medium">
+              <CardTitle className="text-base md:text-xl items-center flex gap-2 font-medium">
                 <Mail />
                 Email
               </CardTitle>
-              <CardDescription className="text-lg font-normal overflow-clip line-clamp-1">
+              <CardDescription className="text-base md:text-xl font-normal overflow-clip line-clamp-1">
                 {user?.email}
               </CardDescription>
             </CardHeader>
           </Card>
           <Card className="">
             <CardHeader>
-              <CardTitle className="text-xl items-center flex gap-2 font-medium">
+              <CardTitle className="text-base md:text-xl items-center flex gap-2 font-medium">
                 <Phone />
                 Contact Number
               </CardTitle>
-              <CardDescription className="text-lg font-normal overflow-clip line-clamp-1">
+              <CardDescription className="text-base md:text-xl font-normal overflow-clip line-clamp-1">
                 {userData?.user_phone}
               </CardDescription>
             </CardHeader>
@@ -94,7 +94,7 @@ const ProfilePage = () => {
           {userData?.main_useraddress.map((item: any, index: number) => (
             <Card key={index}>
               <CardHeader>
-                <CardTitle className="text-lg items-center flex gap-2 font-medium">
+                <CardTitle className="text-base md:text-xl items-center flex gap-2 font-medium">
                   {item.address_type}
                 </CardTitle>
                 <CardDescription className="items-center">

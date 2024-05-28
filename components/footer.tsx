@@ -44,31 +44,28 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-slate-900 p-4 flex flex-col gap-2">
-      <section className="flex flex-wrap gap-4 md:gap-8 justify-center items-center px-4 py-6">
+    <footer className="bg-black p-4 flex flex-col gap-2">
+      <section className="flex flex-wrap gap-4 md:gap-8 justify-center items-center px-4">
         {footerNavLinks.map((item, index) => (
           <Link
             key={index}
             href={item.href}
-            className="text-slate-500 hover:text-white font-light text-lg"
+            className="text-gray-500 hover:text-white font-light text-lg"
           >
             {item.label}
           </Link>
         ))}
       </section>
-      <Separator className="bg-slate-500 mb-6" />
-      <section className="flex justify-between items-center">
-        <div className="flex md:flex-col items-center md:items-start gap-4 p-6 md:w-1/2">
+      <Separator className="bg-gray-500 mb-6" />
+      <section className="flex justify-center items-center">
+      <div className="flex items-center md:justify-center gap-4 px-8 md:w-1/2">
           <Image
             alt="illusion-logo"
             src={logo}
-            width={70}
-            height={70}
+            width={150}
+            height={150}
             className="object-cover pointer-events-none"
           />
-          <p className="text-white">
-            Discover our exquisite collection of handcrafted jewelry.
-          </p>
         </div>
         <div className="hidden md:flex flex-col items-start justify-center gap-2 w-1/2">
           <p className="text-white font-semibold">{`Share Your Feedback`}</p>
@@ -94,6 +91,8 @@ const Footer = () => {
             Submit
           </Button>
         </div>
+
+        
       </section>
     </footer>
   );
