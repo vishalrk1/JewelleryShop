@@ -1,36 +1,10 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Illusion Store
 
-## Getting Started
+## Screenshots
+![screenshot/img-1.png](https://github.com/user-attachments/assets/f68835e2-ff91-4417-ae1b-2ce4512a4ae5)
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<img width="1280" alt="img-2" src="https://github.com/user-attachments/assets/65730ede-e480-40f6-843b-7336b4fa81d9">
+<img width="1280" alt="img-3" src="https://github.com/user-attachments/assets/2b8a063c-b333-4ee2-a146-437ff3289674">
+<img width="1280" alt="img-4" src="https://github.com/user-attachments/assets/35a0a5c5-25f0-4a74-b4ad-2e571884432a">
+<img width="1280" alt="img-5" src="https://github.com/user-attachments/assets/9af01a8b-e69e-4a1f-999d-62c7c0a4130a">
+<img width="1280" alt="img-6" src="https://github.com/user-attachments/assets/bda95840-6dba-48e3-a736-066e1a79d7af">
