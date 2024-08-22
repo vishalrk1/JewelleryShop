@@ -1,46 +1,34 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
-// import { ModeToggle } from "./Theme/toggle-theme";
+"use server";
+import React from "react";
 import NavLinks from "./navLinks";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store/store";
-import prismadb from "@/lib/prismadb";
 import AuthButtons from "./navbar/authButtons";
 import Link from "next/link";
-import { getCategories } from "@/redux/store/categories/action";
 import { MobileSidebar } from "./mobileSidebar";
 import Image from "next/image";
 
 import logo from "@/public/assets/LogoBlack.png";
+import { ICategory } from "@/lib/types";
+import { getCategoriesSvr } from "@/utils/getFunction/getCategories";
 
-const Navbar = () => {
-  const [routes, setRoutes] = useState<any[]>([]);
-  const dispatch = useDispatch<any>();
-  const { categories, fetching } = useSelector(
-    (state: RootState) => state.categories
-  );
+const Navbar = async () => {
+  let catDb: ICategory[] = [];
+  let routes = [] as any[];
 
-  useEffect(() => {
-    if (!categories) {
-      dispatch(getCategories());
-    }
-  }, [categories]);
-
-  useEffect(() => {
-    const newRoutes = [] as any[];
-    categories?.forEach((category) => {
-      newRoutes.push({
-        href: `/product/${category.cat_id}/${category.id}`,
-        label: category.cat_title,
+  try {
+    catDb = await getCategoriesSvr();
+    catDb?.forEach((category) => {
+      routes.push({
+        href: `/product/${category._id}`,
+        label: category.title,
       });
     });
-    setRoutes(newRoutes);
-  }, [categories]);
+  } catch (error) {
+    error = (error as Error).message;
+  }
 
   return (
     <nav className="border-b bg-background dark:bg-secondary">
-      <div className="flex h-16 items-center px-4 md:px-8">
+      <div className="flex h-16 items-center px-8">
         <MobileSidebar routes={routes} />
         <Link href="/">
           <div className="hidden md:flex items-center justify-center aspect-square rounded-xl relative">

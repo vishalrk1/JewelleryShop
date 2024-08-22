@@ -1,16 +1,11 @@
-import { IProduct } from "@/lib/types";
+import { ErrorResponse, ICategory } from "@/lib/types";
 import axios from "axios";
 
 // function to get categories
-export async function getFeaturedProducts(): Promise<IProduct[]> {
+export async function getCategoriesSvr(): Promise<ICategory[]> {
   try {
-    const res = await axios.get<{ message: string; data: IProduct[] }>(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products`,
-      {
-        params: {
-          isFeatured: true,
-        },
-      }
+    const res = await axios.get<{ message: string; data: ICategory[] }>(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`
     );
 
     if (res.status === 200) {

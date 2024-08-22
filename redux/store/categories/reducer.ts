@@ -1,15 +1,15 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { getCategories } from "./action";
-import { categories_category } from "@/prisma/generated/client";
+import { ICategory } from "@/lib/types";
 
 interface CategoriesState {
-  categories: categories_category[] | null;
+  categories: ICategory[] | null;
   fetching: boolean;
   error: string | null;
 }
 
 const initialState: CategoriesState = {
-  categories: null,
+  categories: [],
   fetching: false,
   error: null,
 } as CategoriesState;
@@ -21,7 +21,7 @@ const categoriesReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getCategories.fulfilled, (state, action) => {
       state.fetching = false;
-      state.categories = action.payload?.categories;
+      state.categories = action.payload;
     })
     .addCase(getCategories.rejected, (state, action) => {
       state.fetching = false;

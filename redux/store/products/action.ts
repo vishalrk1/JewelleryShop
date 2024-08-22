@@ -1,24 +1,29 @@
-import { products_product } from "@/prisma/generated/client";
+import { IProduct } from "@/lib/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const getProducts = createAsyncThunk(
   "products/getProducts",
-  async ({ categoryId, isFeatured }: any, thunkAPI) => {
-    console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL);
+  async ({ categoryId, isFeatured }: any, thunkAPI): Promise<IProduct[]> => {
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products`, {
-        params: {
-          catId: categoryId,
-          isFeatured: isFeatured,
-        },
-      });
+      const res = await axios.get<{ message: string; data: IProduct[] }>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/products/${categoryId}`,
+        {
+          params: {
+            isFeatured: isFeatured,
+          },
+        }
+      );
       if (res.data) {
-        return res.data as products_product[];
+        return res.data.data;
+      } else {
+        throw new Error(res.data);
       }
-      return null;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.message);
+      }
+      throw new Error("An unknown error occurred");
     }
   }
 );

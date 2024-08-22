@@ -1,10 +1,10 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import ProductList from "./ProductList";
-import { products_product } from "@/prisma/generated/client";
+import { IProduct } from "@/lib/types";
 
 interface Props {
-  productsData: products_product[];
+  productsData: IProduct[];
   isLoading: boolean;
   currentTab: string;
   setCurrentTab: React.Dispatch<React.SetStateAction<string>>;

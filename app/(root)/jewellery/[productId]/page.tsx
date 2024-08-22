@@ -18,6 +18,7 @@ import { handelAddToCart, handelAddToWishlist } from "@/utils/ProductsFunction";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { products_product } from "@/prisma/generated/client";
+import { getCategories } from "@/redux/store/categories/action";
 
 interface Props {
   params: { productId: string };
@@ -28,16 +29,19 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
   const [product, setProduct] = React.useState<products_product | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const { user } = useSelector((state: RootState) => state.auth);
+  const { categories } = useSelector((state: RootState) => state.categories);
   const { cart, fetching: cartLoading } = useSelector(
     (state: RootState) => state.cart
   );
   const { wishlist, fetching: wishlistLoading } = useSelector(
     (state: RootState) => state.wishlist
   );
-  const dispatch = useDispatch();
+  const dispatch = useDispatch() as any;
 
   const getProductData = async (prodId: string) => {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/${prodId}`);
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/${prodId}`
+    );
     if (res.status === 200) {
       setProduct(res?.data?.data);
       setIsLoading(false);
@@ -47,9 +51,12 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    getProductData(prodId);
-  }, []);
+    // setIsLoading(true);
+    // getProductData(prodId);
+    dispatch(getCategories());
+  }, [dispatch]);
+
+  console.log(categories)
 
   return (
     <main className="min-h-screen flex flex-col md:flex-row items-start gap-2 p-3">
@@ -58,7 +65,9 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
           <section className="flex-1 w-full">
             <Card className="overflow-hidden">
               <CardHeader>
-                <CardTitle className="text-xl md:text-2xl font-semibold">Product Image</CardTitle>
+                <CardTitle className="text-xl md:text-2xl font-semibold">
+                  Product Image
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-2 items-center justify-center">

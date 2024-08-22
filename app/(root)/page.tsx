@@ -3,23 +3,24 @@
 import CategoryCards from "@/components/Cards/CategoryCards";
 import { Button } from "@/components/ui/button";
 import prismadb from "@/lib/prismadb";
+import { ICategory, IProduct } from "@/lib/types";
+import { getCategoriesSvr } from "@/utils/getFunction/getCategories";
+import { getFeaturedProducts } from "@/utils/getFunction/getFeaturedProducts";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-  const categories = await prismadb.categories_category.findMany({
-    include: {
-      products_product: true,
-    },
-  });
-  const featuredProducts = await prismadb.products_product.findMany({
-    where: {
-      is_featured: true,
-    },
-    include: {
-      categories_category: true,
-    },
-  });
+  let categories: ICategory[] = [];
+  let featuredProducts: IProduct[] = [];
+  let error: string | null = null;
+
+  try {
+    categories = await getCategoriesSvr();
+    featuredProducts = await getFeaturedProducts();
+  } catch (error) {
+    error = (error as Error).message;
+  }
+
   const feedbacks = await prismadb.userFeedbacks.findMany({
     where: {
       isFeatured: true,
@@ -53,8 +54,8 @@ export default async function Home() {
             Elevate Your Style
           </h1>
           <p className="mt-3 max-w-3xl text-xs md:text-lg sm:mt-5 sm:text-xl">
-            Discover our exquisite collection of handcrafted jewellery, designed
-            to complement your unique style
+            Discover our exquisite collection of handcrafted jewelry, designed
+            to complement your unique style.
           </p>
         </div>
       </section>
@@ -68,15 +69,15 @@ export default async function Home() {
       <section className="bg-white py-10 sm:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900 md:text-5xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               Featured Products
             </h2>
-            <p className="mt-3 max-w-2xl mx-auto text-lg md:text-xl text-gray-500 sm:mt-4">
-              Discover our latest and greatest jewellery pieces
+            <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+              Discover our latest and greatest jewelry pieces.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 gap-x-3 lg:grid-cols-3 xl:gap-x-8">
-            {featuredProducts?.map((item: any, index: number) => (
+          <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+            {featuredProducts?.map((item: IProduct, index: number) => (
               <div
                 key={index}
                 className="bg-gray-50 rounded-xl overflow-hidden p-3"
@@ -86,7 +87,7 @@ export default async function Home() {
                     alt="Earrings"
                     className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out pointer-events-none"
                     height={400}
-                    src={item.prod_image_url}
+                    src={item.images[0]}
                     style={{
                       aspectRatio: "400/400",
                       objectFit: "cover",
@@ -97,21 +98,21 @@ export default async function Home() {
                 <div className="mt-4 flex justify-between">
                   <div>
                     <div className="flex items-center justify-between">
-                      <h3 className="text-base md:text-lg font-bold text-gray-900 line-clamp-2 md:line-clamp-1">
-                        {item.prod_title}
+                      <h3 className="text-base md:text-lg font-medium text-gray-900 line-clamp-2 md:line-clamp-1">
+                        {item.title}
                       </h3>
                     </div>
                     <p className="hidden md:block mt-1 text-sm text-gray-500 line-clamp-2">
-                      {item.prod_desc}
+                      {item.description}
                     </p>
                     <div className="flex items-center justify-between mt-2">
-                      <span className="text-gray-900 font-medium">{`RS. ${item.prod_price}`}</span>
+                      <span className="text-gray-900 font-medium">{`RS. ${item.price}`}</span>
                     </div>
-                    <Link
-                      href={`product/${item.categories_category.cat_id}/${item.categories_category.id}`}
-                    >
-                      <Button className="w-full mt-2">Shop Now</Button>
-                    </Link>
+                    {typeof item.category !== "string" && (
+                      <Link href={`product/${item.category._id}`}>
+                        <Button className="w-full mt-2">Shop Now</Button>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
@@ -122,15 +123,15 @@ export default async function Home() {
       <section className="bg-gray-100 py-12 sm:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900 md:text-5xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               What Our Customers Say
             </h2>
-            <p className="mt-3 max-w-2xl mx-auto text-lg md:text-xl text-gray-500 sm:mt-4">
+            <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
               Hear from our satisfied customers about their experience with our
-              jewellery.
+              jewelry.
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+          <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
             {feedbacks?.map((item: any, index: number) => (
               <div key={index} className="bg-white rounded-lg shadow-lg p-6">
                 <div className="flex items-start">

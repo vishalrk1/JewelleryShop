@@ -1,6 +1,5 @@
 "use client";
 import ProductsTabs from "@/components/Products/ProductsTabs";
-import { products_product } from "@/prisma/generated/client";
 import { getProducts } from "@/redux/store/products/action";
 import { RootState } from "@/redux/store/store";
 import React, { useEffect } from "react";
@@ -11,20 +10,20 @@ interface Props {
 }
 
 const ProductsPage: React.FC<Props> = ({ params }) => {
-  const categoryId = parseInt(params.catId[1], 10);
+  const categoryId = params.catId[0];
   const dispatch = useDispatch<any>();
-  const [currentTab, setCurrentTab] = React.useState("all");
   const { products, fetching } = useSelector((state: RootState) => state.products);
 
+  const [currentTab, setCurrentTab] = React.useState("all");
   useEffect(() => {
     const isFeatured = currentTab !== "all";
     dispatch(getProducts({ categoryId, isFeatured }));
-  }, [categoryId, currentTab]);
+  }, [categoryId, currentTab, dispatch]);
 
   return (
     <main className="p-4 sm:px-6 sm:py-0 md:gap-8 my-6 min-h-screen">
       <ProductsTabs
-        productsData={products as products_product[]}
+        productsData={products}
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
         isLoading={fetching}

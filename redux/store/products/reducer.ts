@@ -1,15 +1,16 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { getProducts } from "./action";
 import { products_product } from "@/prisma/generated/client";
+import { IProduct } from "@/lib/types";
 
 interface ProducstsState {
-  products: products_product[] | null;
+  products: IProduct[] | [];
   fetching: boolean;
   error: string | null;
 }
 
 const initialState = {
-  products: null,
+  products: [],
   fetching: false,
   error: null,
 } as ProducstsState;

@@ -13,9 +13,10 @@ import {
   handelRemoveSavedItem,
 } from "@/utils/ProductsFunction";
 import { products_product } from "@/prisma/generated/client";
+import { IProduct } from "@/lib/types";
 
 interface ProductCardProps {
-  item: any;
+  item: IProduct;
   isWishlist: boolean;
 }
 
@@ -25,19 +26,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
   const { cart } = useSelector((state: RootState) => state.cart);
   const { wishlist } = useSelector((state: RootState) => state.wishlist);
 
-  const product = isWishlist
-    ? (item?.product as products_product)
-    : (item as products_product);
+  // const product = isWishlist
+  //   ? (item?.product as products_product)
+  //   : (item as products_product);
+  const product = item;
 
   return (
     <div className="bg-gray-50 rounded-xl overflow-hidden p-3">
       <div className="w-full overflow-hidden rounded-lg bg-gray-200">
-        <Link href={`/jewellery/${product?.id}`}>
+        <Link href={`/jewellery/${product?._id}`}>
           <Image
             alt="Earrings"
             className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out pointer-events-none"
             height={400}
-            src={product.prod_image_url}
+            src={product.images[0]}
             style={{
               aspectRatio: "400/400",
               objectFit: "cover",
@@ -50,24 +52,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
         <div className="w-full">
           <div className="flex items-center justify-between">
             <h3 className="text-sm md:text-lg font-bold text-gray-900 line-clamp-1">
-              {product.prod_title}
+              {product.title}
             </h3>
             <Heart
-              className={twMerge(
-                "w-14 md:w-16 h-6 border-none cursor-pointer"
-              )}
+              className={twMerge("w-14 md:w-16 h-6 border-none cursor-pointer")}
               onClick={() => {
                 user && wishlist
                   ? isWishlist
                     ? handelRemoveSavedItem({
-                        id: item?.id,
+                        id: item?._id,
                         wishlist_id: wishlist.id.toString(),
-                        product_id: product.id.toString(),
+                        product_id: product._id.toString(),
                         dispatch: dispatch,
                       })
                     : handelAddToWishlist({
                         wishlist_id: wishlist?.id.toString(),
-                        product_id: product.id.toString(),
+                        product_id: product._id.toString(),
                         user: user,
                         dispatch: dispatch,
                       })
@@ -78,17 +78,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
             />
           </div>
           <p className="hidden md:block mt-1 h-8 text-xs text-gray-500 line-clamp-2">
-            {product.prod_desc}
+            {product.description}
           </p>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-gray-900 font-medium">{`RS. ${product.prod_price}`}</span>
+            <span className="text-gray-900 font-medium">{`RS. ${product.price}`}</span>
           </div>
           <Button
             className="w-full mt-2"
             onClick={() =>
               handelAddToCart({
                 cart_id: Number(cart?.id),
-                product_id: Number(product.id),
+                product_id: Number(product._id),
                 user: user,
                 dispatch: dispatch,
               })
