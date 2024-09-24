@@ -10,10 +10,9 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
-import { logoutUser } from "@/redux/store/auth/action";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/lib/types";
+import useAuthStore from "@/hooks/useAuthStore";
 
 interface Props {
   user: IUser;
@@ -21,11 +20,8 @@ interface Props {
 }
 
 const UserDropdown: React.FC<Props> = ({ user, is_staff }) => {
-  const dispatch = useDispatch<any>();
   const router = useRouter();
-  const handelLogout = () => {
-    dispatch(logoutUser());
-  };
+  const { logoutUser } = useAuthStore();
 
   return (
     <DropdownMenu>
@@ -88,7 +84,7 @@ const UserDropdown: React.FC<Props> = ({ user, is_staff }) => {
           Support
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handelLogout}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={logoutUser}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

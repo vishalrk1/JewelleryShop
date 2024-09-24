@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React from "react";
 import * as z from "zod";
 
 import { CardWrapper } from "./card-wrapper";
@@ -20,20 +20,14 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormError } from "./form-error";
 import { FormSucess } from "./form-sucess";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store/store";
 import { redirect } from "next/navigation";
-import { loginUser } from "@/redux/store/auth/action";
 import Loader from "../Loader";
 import useAuthStore from "@/hooks/useAuthStore";
+import useUserStore from "@/hooks/useUserStore";
 
 const LoginForm = () => {
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = React.useState<string | undefined>("");
-  const [success, setSuccess] = React.useState<string | undefined>("");
-  // const { user, fetching } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch<any>();
-  const { loginUser, user, fetching } = useAuthStore();
+  const { loginUser, fetching, error } = useAuthStore();
+  const { user } = useUserStore();
 
   if (user) {
     redirect("/");
@@ -65,7 +59,7 @@ const LoginForm = () => {
             <FormField
               control={form.control}
               name="phone"
-              disabled={isPending}
+              disabled={fetching}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
@@ -83,7 +77,7 @@ const LoginForm = () => {
             <FormField
               control={form.control}
               name="password"
-              disabled={isPending}
+              disabled={fetching}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
@@ -95,8 +89,8 @@ const LoginForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
-          <FormSucess message={success} />
+          {error && <FormError message={error} />}
+          {user && !error && <FormSucess message={"Logged in sucessfully"} />}
           <Button
             className="w-full flex gap-2"
             type="submit"

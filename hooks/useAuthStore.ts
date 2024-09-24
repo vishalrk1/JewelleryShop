@@ -46,13 +46,15 @@ const useAuthStore = create<AuthState>(
         try {
           const res = await axios.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`,
-            {},
             {
-              params: { email, phone, password, name },
+              email,
+              phone,
+              password,
+              first_name: name,
             }
           );
 
-          if (res.status === 200) {
+          if (res.status === 201) {
             delete res.data.password; // Ensure password is not stored
             useUserStore.getState().setUser(res.data.user as IUser);
             set({
@@ -63,12 +65,13 @@ const useAuthStore = create<AuthState>(
             showSucessToast("Registration successful 😎");
           }
         } catch (error: any) {
+          console.log(error);
           set({
             status: "failed",
-            error: error.response?.data || "Registration failed",
+            error: error?.response?.data || "Registration failed",
             fetching: false,
           });
-          showErrorToast(error.response?.data, true);
+          showErrorToast(error?.data, true);
         }
       },
       loginUser: async (phone: string, password: string) => {
@@ -103,6 +106,7 @@ const useAuthStore = create<AuthState>(
         }
       },
       logoutUser: () => {
+        useUserStore.getState().setUser(null);
         set({
           token: null,
           phone: null,

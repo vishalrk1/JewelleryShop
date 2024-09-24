@@ -7,15 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { RootState } from "@/redux/store/store";
+import useAddressStore from "@/hooks/useAddressStore";
+import useUserStore from "@/hooks/useUserStore";
 import { Mail, Phone, SquarePen, User2Icon } from "lucide-react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import React from "react";
-import { useSelector } from "react-redux";
 
 const ProfilePage = () => {
-  const { user, userData } = useSelector((state: RootState) => state.auth);
+  // const { user, userData } = useSelector((state: RootState) => state.auth);
+  const { user } = useUserStore();
+  const { addresses } = useAddressStore();
   if (!user) return redirect("/");
 
   return (
@@ -23,8 +25,8 @@ const ProfilePage = () => {
       <section className="flex flex-1 flex-col gap-2 items-end w-full">
         <div className="w-full sm:h-1/2 aspect-square rounded-xl bg-gray-100 relative">
           <Image
-            src={userData?.user_pfp_url}
-            alt={`${user.username}'s profile picture}`}
+            src={user?.image}
+            alt={`${user.first_name}'s profile picture}`}
             fill
             objectFit="cover"
             className="aspect-square rounded-2xl p-2 pointer-events-none"
@@ -47,7 +49,7 @@ const ProfilePage = () => {
                 Username
               </CardTitle>
               <CardDescription className="text-base md:text-xl font-normal overflow-clip">
-                {user?.username}
+                {user?.first_name} {user?.last_name}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -69,11 +71,11 @@ const ProfilePage = () => {
                 Contact Number
               </CardTitle>
               <CardDescription className="text-base md:text-xl font-normal overflow-clip line-clamp-1">
-                {userData?.user_phone}
+                {user?.phone}
               </CardDescription>
             </CardHeader>
           </Card>
-          {user?.is_staff && (
+          {/* {user?.is_staff && (
             <Card className="">
               <CardHeader>
                 <CardTitle className="text-xl items-center flex gap-2 font-medium">
@@ -85,13 +87,13 @@ const ProfilePage = () => {
                 </CardDescription>
               </CardHeader>
             </Card>
-          )}
+          )} */}
         </div>
         <div className="flex items-center p-4 mt-4">
           <h1 className="text-2xl font-semibold">Your Addresses</h1>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
-          {userData?.main_useraddress.map((item: any, index: number) => (
+          {addresses?.map((item: any, index: number) => (
             <Card key={index}>
               <CardHeader>
                 <CardTitle className="text-base md:text-xl items-center flex gap-2 font-medium">

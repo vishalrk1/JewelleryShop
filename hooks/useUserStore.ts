@@ -9,7 +9,7 @@ interface UserState {
   fetching: boolean;
   error: string | null;
   getUser: (token: string) => Promise<void>;
-  setUser: (user: IUser) => void;
+  setUser: (user: IUser | null) => void;
 }
 
 const useUserStore = create<UserState>((set, get) => ({
@@ -38,9 +38,9 @@ const useUserStore = create<UserState>((set, get) => ({
     }
   },
   // update user
-  setUser: (user: IUser) => {
+  setUser: (user: IUser | null) => {
     set({ user, fetching: false, error: null });
-    useAddressStore.getState().setAddresses(user?.addresses);
+    useAddressStore.getState().setAddresses(user?.addresses || []);
   },
 }));
 

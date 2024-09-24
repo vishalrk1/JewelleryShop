@@ -19,18 +19,14 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormError } from "./form-error";
 import { FormSucess } from "./form-sucess";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser, registerUser } from "@/redux/store/auth/action";
-import { RootState } from "@/redux/store/store";
 import { redirect } from "next/navigation";
 import Loader from "../Loader";
+import useUserStore from "@/hooks/useUserStore";
+import useAuthStore from "@/hooks/useAuthStore";
 
 const RegisterForm = () => {
-  const dispatch = useDispatch<any>();
-  const { user, fetching } = useSelector((state: RootState) => state.auth);
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = React.useState<string | undefined>("");
-  const [success, setSuccess] = React.useState<string | undefined>("");
+  const { registerUser, fetching, error } = useAuthStore();
+  const { user } = useUserStore();
 
   if (user) {
     redirect("/updateProfile");
@@ -39,17 +35,16 @@ const RegisterForm = () => {
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
+      username: "",
+      phone: "",
       email: "",
       password: "",
     },
-    mode: "onChange"
+    mode: "onChange",
   });
 
   const handleSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    const email = values.email;
-    const password = values.password;
-    const name = values.username;
-    dispatch(registerUser({ email, password, name }));
+    registerUser(values.username, values.phone, values.email, values.password);
   };
 
   return (
@@ -66,7 +61,7 @@ const RegisterForm = () => {
             <FormField
               control={form.control}
               name="username"
-              disabled={isPending}
+              disabled={fetching}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>
@@ -79,8 +74,27 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
+              name="phone"
+              disabled={fetching}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone number</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="tel"
+                      placeholder="Enter your phone number"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="email"
-              disabled={isPending}
+              disabled={fetching}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
@@ -98,7 +112,7 @@ const RegisterForm = () => {
             <FormField
               control={form.control}
               name="password"
-              disabled={isPending}
+              disabled={fetching}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
@@ -110,8 +124,8 @@ const RegisterForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
-          <FormSucess message={success} />
+          {error && <FormError message={error} />}
+          {user && !error && <FormSucess message={"Registered in sucessfully, Enjoy shopping"} />}
           <Button
             className="w-full flex gap-2"
             type="submit"
