@@ -1,9 +1,7 @@
 "use client";
 import ProductsTabs from "@/components/Products/ProductsTabs";
-import { getProducts } from "@/redux/store/products/action";
-import { RootState } from "@/redux/store/store";
+import useProductStore from "@/hooks/useProductStore";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
   params: { catId: string[] };
@@ -11,14 +9,12 @@ interface Props {
 
 const ProductsPage: React.FC<Props> = ({ params }) => {
   const categoryId = params.catId[0];
-  const dispatch = useDispatch<any>();
-  const { products, fetching } = useSelector((state: RootState) => state.products);
-
+  const {products, getProducts, fetching} = useProductStore()
   const [currentTab, setCurrentTab] = React.useState("all");
-  useEffect(() => {
-    const isFeatured = currentTab !== "all";
-    dispatch(getProducts({ categoryId, isFeatured }));
-  }, [categoryId, currentTab, dispatch]);
+
+  useEffect(()=>{
+    getProducts(categoryId, currentTab !== "all")
+  }, [currentTab])
 
   return (
     <main className="p-4 sm:px-6 sm:py-0 md:gap-8 my-6 min-h-screen">

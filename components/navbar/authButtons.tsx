@@ -1,19 +1,20 @@
 "use client";
 
-import { RootState } from "@/redux/store/store";
-import React, { use, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import UserDropdown from "./userDetails";
 import { Heart, ShoppingCart } from "lucide-react";
 import IconButton from "../buttons/IconButton";
+import useAuthStore from "@/hooks/useAuthStore";
+import useUserStore from "@/hooks/useUserStore";
 
 const AuthButtons = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
-  const { user, userData } = useSelector((state: RootState) => state.auth);
-
+  const { checkAuth } = useAuthStore();
+  const { user } = useUserStore();
   useEffect(() => {
+    checkAuth();
     setIsMounted(true);
   }, []);
 
@@ -22,7 +23,7 @@ const AuthButtons = () => {
     <div className="flex items-center justify-center">
       {user ? (
         <div className="flex items-center justify-center gap-4">
-          {userData ? (
+          {user.isProfileComplete ? (
             <>
               <IconButton
                 href="/cart"
@@ -36,11 +37,7 @@ const AuthButtons = () => {
                 label="Your wishlist"
                 className="hidden md:flex items-center"
               />
-              <UserDropdown
-                user={user}
-                userData={userData}
-                is_staff={user?.is_staff}
-              />
+              <UserDropdown user={user} is_staff={false} />
             </>
           ) : (
             <Link href="/updateProfile">

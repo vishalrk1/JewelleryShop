@@ -18,7 +18,7 @@ import { handelAddToCart, handelAddToWishlist } from "@/utils/ProductsFunction";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { products_product } from "@/prisma/generated/client";
-import { getCategories } from "@/redux/store/categories/action";
+import { IProduct } from "@/lib/types";
 
 interface Props {
   params: { productId: string };
@@ -26,10 +26,9 @@ interface Props {
 
 const IndividualProductPage: React.FC<Props> = ({ params }) => {
   const prodId = params.productId;
-  const [product, setProduct] = React.useState<products_product | null>(null);
+  const [product, setProduct] = React.useState<IProduct | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const { user } = useSelector((state: RootState) => state.auth);
-  const { categories } = useSelector((state: RootState) => state.categories);
   const { cart, fetching: cartLoading } = useSelector(
     (state: RootState) => state.cart
   );
@@ -37,26 +36,29 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
     (state: RootState) => state.wishlist
   );
   const dispatch = useDispatch() as any;
-
-  const getProductData = async (prodId: string) => {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/${prodId}`
-    );
-    if (res.status === 200) {
-      setProduct(res?.data?.data);
-      setIsLoading(false);
-    } else {
-      setIsLoading(false);
-    }
-  };
+  let prod_instock: boolean = product ? product?.stockQuantity > 1 : false;
 
   useEffect(() => {
-    // setIsLoading(true);
-    // getProductData(prodId);
-    dispatch(getCategories());
-  }, [dispatch]);
+    async function getIndividualProduct(productId: string): Promise<void> {
+      try {
+        const res = await axios.get<{ message: string; data: IProduct }>(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/${productId}`
+        );
 
-  console.log(categories)
+        if (res.status === 200) {
+          setProduct(res.data.data);
+        } else {
+          throw new Error(res.data.message);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          throw new Error(error.message);
+        }
+        throw new Error("An unknown error occurred");
+      }
+    }
+    getIndividualProduct(prodId);
+  }, [prodId]);
 
   return (
     <main className="min-h-screen flex flex-col md:flex-row items-start gap-2 p-3">
@@ -73,7 +75,7 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
                 <div className="grid gap-2 items-center justify-center">
                   {product && (
                     <Image
-                      src={product.prod_image_url}
+                      src={product.images[0]}
                       alt=""
                       className="rounded-md object-cover pointer-events-none"
                       height={400}
@@ -88,10 +90,10 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="text-xl md:text-2xl font-semibold">
-                  {product?.prod_title}
+                  {product?.title}
                 </CardTitle>
                 <CardDescription className="text-sm">
-                  {product?.prod_desc}
+                  {product?.description}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -99,13 +101,13 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
                   <Badge
                     className={twMerge(
                       "rounded-md",
-                      product?.prod_instock && "bg-green-500"
+                      prod_instock && "bg-green-500"
                     )}
-                    variant={product?.prod_instock ? "default" : "secondary"}
+                    variant={prod_instock ? "default" : "secondary"}
                   >
-                    {product?.prod_instock ? "Available" : "Out of stock"}
+                    {prod_instock ? "Available" : "Out of stock"}
                   </Badge>
-                  <p className="text-lg">{`Price: ${product?.prod_price}`}</p>
+                  <p className="text-lg">{`Price: ${product?.price}`}</p>
                 </div>
               </CardContent>
             </Card>
@@ -116,7 +118,7 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
                   !cartLoading &&
                   handelAddToCart({
                     cart_id: Number(cart?.id),
-                    product_id: Number(product?.id),
+                    product_id: Number(product?._id),
                     user: user,
                     dispatch: dispatch,
                   })
@@ -139,7 +141,7 @@ const IndividualProductPage: React.FC<Props> = ({ params }) => {
                   product && wishlist && !wishlistLoading
                     ? handelAddToWishlist({
                         wishlist_id: wishlist.id.toString(),
-                        product_id: product.id.toString(),
+                        product_id: product._id.toString(),
                         user: user,
                         dispatch: dispatch,
                       })

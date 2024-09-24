@@ -73,8 +73,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
                       })
                   : showErrorToast("Please login");
               }}
-              fill={isWishlist ? "red" : "none"}
-              color={isWishlist ? "red" : "black"}
+              fill={product.isWishlisted ? "red" : "none"}
+              color={product.isWishlisted ? "red" : "black"}
             />
           </div>
           <p className="hidden md:block mt-1 h-8 text-xs text-gray-500 line-clamp-2">

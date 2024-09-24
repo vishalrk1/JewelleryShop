@@ -9,6 +9,10 @@ export const getProducts = createAsyncThunk(
       const res = await axios.get<{ message: string; data: IProduct[] }>(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/products/${categoryId}`,
         {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_USER_TOKEN}`,
+            "Content-Type": "application/json",
+          },
           params: {
             isFeatured: isFeatured,
           },

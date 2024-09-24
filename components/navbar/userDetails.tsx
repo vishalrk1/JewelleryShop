@@ -12,15 +12,15 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "@/redux/store/auth/action";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { IUser } from "@/lib/types";
 
 interface Props {
-  user: any;
-  userData: any;
+  user: IUser;
   is_staff: boolean;
 }
 
-const UserDropdown: React.FC<Props> = ({ user, userData, is_staff }) => {
+const UserDropdown: React.FC<Props> = ({ user, is_staff }) => {
   const dispatch = useDispatch<any>();
   const router = useRouter();
   const handelLogout = () => {
@@ -36,7 +36,7 @@ const UserDropdown: React.FC<Props> = ({ user, userData, is_staff }) => {
           className="overflow-hidden rounded-full"
         >
           <Image
-            src={userData?.user_pfp_url}
+            src={user?.image}
             width={40}
             height={40}
             alt="Avatar"
@@ -47,18 +47,18 @@ const UserDropdown: React.FC<Props> = ({ user, userData, is_staff }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {is_staff && (
+        {/* {is_staff && (
           <>
             <DropdownMenuItem
               onClick={() => {
-                router.push(`/${user?.id}/dashboard`);
+                router.push(`/${user?._id}/dashboard`);
               }}
             >
               Admin Dashboard
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </>
-        )}
+        )} */}
         <DropdownMenuItem
           onClick={() => {
             router.push("/profile");

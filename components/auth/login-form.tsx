@@ -25,13 +25,15 @@ import { RootState } from "@/redux/store/store";
 import { redirect } from "next/navigation";
 import { loginUser } from "@/redux/store/auth/action";
 import Loader from "../Loader";
+import useAuthStore from "@/hooks/useAuthStore";
 
 const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = React.useState<string | undefined>("");
   const [success, setSuccess] = React.useState<string | undefined>("");
-  const { user, fetching } = useSelector((state: RootState) => state.auth);
+  // const { user, fetching } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<any>();
+  const { loginUser, user, fetching } = useAuthStore();
 
   if (user) {
     redirect("/");
@@ -40,15 +42,13 @@ const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      email: "",
+      phone: "",
       password: "",
     },
   });
 
   const handleSubmit = (values: z.infer<typeof LoginSchema>) => {
-    const password = values.password;
-    const email = values.email;
-    dispatch(loginUser({ email, password }));
+    loginUser(values.phone, values.password);
   };
 
   return (
@@ -64,16 +64,16 @@ const LoginForm = () => {
           <div className="space-y-4">
             <FormField
               control={form.control}
-              name="email"
+              name="phone"
               disabled={isPending}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Phone</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      type="text"
-                      placeholder="Enter your Email"
+                      type="tel"
+                      placeholder="Enter your phone number"
                     />
                   </FormControl>
                   <FormMessage />

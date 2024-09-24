@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default async function Home() {
   let categories: ICategory[] = [];
-  let featuredProducts: IProduct[] = [];
+  let featuredProducts: IProduct[] = await getFeaturedProducts();
   let error: string | null = null;
 
   try {
@@ -76,48 +76,50 @@ export default async function Home() {
               Discover our latest and greatest jewelry pieces.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
-            {featuredProducts?.map((item: IProduct, index: number) => (
-              <div
-                key={index}
-                className="bg-gray-50 rounded-xl overflow-hidden p-3"
-              >
-                <div className="w-full overflow-hidden rounded-lg bg-gray-200">
-                  <Image
-                    alt="Earrings"
-                    className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out pointer-events-none"
-                    height={400}
-                    src={item.images[0]}
-                    style={{
-                      aspectRatio: "400/400",
-                      objectFit: "cover",
-                    }}
-                    width={400}
-                  />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-base md:text-lg font-medium text-gray-900 line-clamp-2 md:line-clamp-1">
-                        {item.title}
-                      </h3>
+          {featuredProducts?.length > 0 && (
+            <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+              {featuredProducts?.map((item: IProduct, index: number) => (
+                <div
+                  key={index}
+                  className="bg-gray-50 rounded-xl overflow-hidden p-3"
+                >
+                  <div className="w-full overflow-hidden rounded-lg bg-gray-200">
+                    <Image
+                      alt="Earrings"
+                      className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out pointer-events-none"
+                      height={400}
+                      src={item.images[0]}
+                      style={{
+                        aspectRatio: "400/400",
+                        objectFit: "cover",
+                      }}
+                      width={400}
+                    />
+                  </div>
+                  <div className="mt-4 flex justify-between">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-base md:text-lg font-medium text-gray-900 line-clamp-2 md:line-clamp-1">
+                          {item.title}
+                        </h3>
+                      </div>
+                      <p className="hidden md:block mt-1 text-sm text-gray-500 line-clamp-2">
+                        {item.description}
+                      </p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-gray-900 font-medium">{`RS. ${item.price}`}</span>
+                      </div>
+                      {typeof item.category !== "string" && (
+                        <Link href={`product/${item.category._id}`}>
+                          <Button className="w-full mt-2">Shop Now</Button>
+                        </Link>
+                      )}
                     </div>
-                    <p className="hidden md:block mt-1 text-sm text-gray-500 line-clamp-2">
-                      {item.description}
-                    </p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-gray-900 font-medium">{`RS. ${item.price}`}</span>
-                    </div>
-                    {typeof item.category !== "string" && (
-                      <Link href={`product/${item.category._id}`}>
-                        <Button className="w-full mt-2">Shop Now</Button>
-                      </Link>
-                    )}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
       <section className="bg-gray-100 py-12 sm:py-16 lg:py-20">

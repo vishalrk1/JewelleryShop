@@ -5,8 +5,12 @@ import axios from "axios";
 export async function getFeaturedProducts(): Promise<IProduct[]> {
   try {
     const res = await axios.get<{ message: string; data: IProduct[] }>(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/featured`,
       {
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_USER_TOKEN}`,
+          "Content-Type": "application/json",
+        },
         params: {
           isFeatured: true,
         },
@@ -19,9 +23,6 @@ export async function getFeaturedProducts(): Promise<IProduct[]> {
       throw new Error(res.data.message);
     }
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.message);
-    }
-    throw new Error("An unknown error occurred");
+    return [];
   }
 }

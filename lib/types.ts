@@ -20,4 +20,30 @@ export interface IProduct {
   specifications: string[];
   isFeatured: boolean;
   category: string | ICategory;
+  isWishlisted: boolean;
+}
+
+export interface IAddress extends Document {
+  address_line1: string;
+  address_line2: string;
+  address_type: "Home" | "Work" | "Other";
+  city: string;
+  state: string;
+  country: string;
+  postal_code: string;
+  isDefault: boolean;
+}
+
+export interface IUser extends Document {
+  _id: string;
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  role: "user" | "admin";
+  image: string;
+  addresses: Array<IAddress>;
+  isProfileComplete: boolean;
+  lastLogin: Date;
 }

@@ -15,7 +15,7 @@ export interface FormSchemaType {
 }
 
 export const LoginSchema = z.object({
-  email: z.string().email({ message: "Invalid email" }),
+  phone: z.string().min(10, { message: "Invalid phone" }),
   password: z.string().min(1, { message: "Password is required" }),
 });
 
