@@ -1,6 +1,7 @@
 import { IProduct } from "@/lib/types";
 import axios from "axios";
 import { create } from "zustand";
+import useCartStore from "./useCartStore";
 
 interface ProductsState {
   products: IProduct[];

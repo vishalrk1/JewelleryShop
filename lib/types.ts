@@ -60,13 +60,13 @@ export interface IWishlist {
 }
 
 export interface ICart {
-  _id: string;
+  _id: string | undefined;
   user: string;
   items: ICartItem[];
 }
 
 export interface ICartItem {
-  _id: string;
+  _id: string | null;
   quantity: number;
   product: IProduct;
 }

@@ -10,6 +10,7 @@ import useWishlistStore from "@/hooks/useWishlistStore";
 import useUserStore from "@/hooks/useUserStore";
 import useAuthStore from "@/hooks/useAuthStore";
 import useCartStore from "@/hooks/useCartStore";
+import QuantityButton from "../buttons/QuantityButton";
 
 interface ProductCardProps {
   item: IProduct;
@@ -19,13 +20,14 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
   const { token } = useAuthStore();
   const { user } = useUserStore();
-  const { addItemToCart, isProductInCart } = useCartStore();
+  const { addItemToCart, isProductInCart, cart } = useCartStore();
   const { deleteWishlistItem, isProductInWishlist, addItemToWishlist } =
     useWishlistStore();
 
   const product = item;
   const isWishlisted = isProductInWishlist(item._id.toString());
   const isInCart = isProductInCart(item._id.toString());
+  const cartItem = cart?.items.find((item) => item.product._id === product._id);
 
   const handelBtnAction = (productId: string, token: string) => {
     // if user is not logged in show error toast
@@ -94,16 +96,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
           <div className="flex items-center justify-between mt-2">
             <span className="text-gray-900 font-medium">{`RS. ${product?.price}`}</span>
           </div>
-          <Button
-            className="w-full mt-2"
-            onClick={() =>
-              token
-                ? handelCartBtn(product._id, 1, token)
-                : showErrorToast("Please login to continue shopping")
-            }
-          >
-            Add to Cart
-          </Button>
+          {!isInCart ? (
+            <Button
+              className="w-full mt-2"
+              onClick={() =>
+                token
+                  ? handelCartBtn(product._id, 1, token)
+                  : showErrorToast("Please login to continue shopping")
+              }
+            >
+              Add to Cart
+            </Button>
+          ) : (
+            <div className="flex items-center justify-between mt-2 w-full p-1 border-2 border-solid border-gray-200 rounded-lg">
+              <QuantityButton item={cartItem} />
+            </div>
+          )}
         </div>
       </div>
     </div>

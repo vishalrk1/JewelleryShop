@@ -3,15 +3,14 @@
 import CartItamCard from "@/components/Cards/CartItemCard";
 import CheckoutCard from "@/components/Cards/CheckoutCard";
 import Loader from "@/components/Loader";
+
 import useCartStore from "@/hooks/useCartStore";
 import useUserStore from "@/hooks/useUserStore";
-import React, { useEffect } from "react";
+import React from "react";
 
 const CartPage = () => {
   const { user, fetching } = useUserStore();
   const { cart } = useCartStore();
-
-  console.log(cart)
   return (
     <main className="container min-h-screen mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 py-12">
       <section className="space-y-6">
@@ -31,11 +30,7 @@ const CartPage = () => {
                     </div>
                   ) : (
                     cart?.items?.map((item, index) => (
-                      <CartItamCard
-                        key={index}
-                        item={item}
-                        cartId={item?._id}
-                      />
+                      <CartItamCard key={item._id} item={item} />
                     ))
                   )}
                 </div>

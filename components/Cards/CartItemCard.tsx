@@ -1,67 +1,33 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Trash } from "lucide-react";
-import { useDispatch } from "react-redux";
 import { ICartItem } from "@/lib/types";
+import useAuthStore from "@/hooks/useAuthStore";
+import useCartStore from "@/hooks/useCartStore";
+import Image from "next/image";
+import { showErrorToast } from "@/utils/toasts";
+import QuantityButton from "../buttons/QuantityButton";
 
 interface Props {
   item: ICartItem;
-  cartId: string | undefined;
 }
 
-const CartItamCard: React.FC<Props> = ({ item, cartId }) => {
-  const dispatch = useDispatch<any>();
-  // const [quantity, setQuantity] = useState(cartProduct?.quantity);
-  //   const { removeProductFromCart, updateProductQuantity } =
-  //     useContext(CartContext);
-
-  const handleRemoveProductFromCart = () => {
-    // if (cartId) {
-    //   dispatch(
-    //     deleteCartItem({
-    //       cart_id: cartId,
-    //       cart_item_id: cartProduct.cart_item_id,
-    //     })
-    //   );
-    // }
-  };
-
-  const handleDecreaseQuantity = () => {
-    // if (!cartId) return;
-    // if (cartProduct.quantity > 1) {
-    //   dispatch(
-    //     updateCartItem({
-    //       cart_id: cartId,
-    //       cart_item_id: cartProduct.cart_item_id,
-    //       quantity: quantity - 1,
-    //     })
-    //   );
-    //   setQuantity(quantity - 1);
-    // } else {
-    //   handleRemoveProductFromCart();
-    // }
-  };
-
-  const handleIncreaseQuantity = () => {
-    // if (!cartId) return;
-    // dispatch(
-    //   updateCartItem({
-    //     cart_id: cartId,
-    //     cart_item_id: cartProduct.cart_item_id,
-    //     quantity: quantity + 1,
-    //   })
-    // );
-    // setQuantity(quantity + 1);
-  };
+const CartItamCard: React.FC<Props> = ({ item }) => {
+  const { token } = useAuthStore();
+  const { removeItemFromCart } = useCartStore();
 
   return (
     <div className="w-full h-max flex mt-3 items-center md:mt-5 rounded-lg shadow-md">
-      <div className="flex items-center justify-center w-max h-max p-2">
-        <img
-          src={item.product?.images[0]}
-          className="w-20 md:w-32 h-full md:h-28 object-cover rounded-lg"
-          alt=""
-        />
+      <div className="flex items-center justify-center p-2">
+        <div className="relative w-20 h-20 md:w-32 md:h-32">
+          <Image
+            src={item.product?.images[0]}
+            layout="fill"
+            objectFit="cover"
+            className="rounded-lg"
+            alt={item.product.title || "Product image"}
+          />
+        </div>
       </div>
       <div className="w-full p-2 flex my-2">
         <div className="flex flex-col w-full items-centerc justify-center">
@@ -79,7 +45,11 @@ const CartItamCard: React.FC<Props> = ({ item, cartId }) => {
             </div>
             <button
               className="flex gap-1 mx-2 items-center justify-center cursor-pointer"
-              onClick={handleRemoveProductFromCart}
+              onClick={() => {
+                token
+                  ? removeItemFromCart(item.product._id, token)
+                  : showErrorToast("Please login to continue shopping");
+              }}
             >
               <Trash size={20} className="text-red-400 ml-2" />
               <p className="text-red-400 text-xs md:text-sm">Remove</p>
@@ -87,21 +57,7 @@ const CartItamCard: React.FC<Props> = ({ item, cartId }) => {
           </div>
         </div>
         <div className="flex flex-col w-max rounded-lg items-center justify-center gap-1">
-          <button
-            className="text-gray-600 flex flex-1 items-center justify-center font-bold px-4 py-1 text-xs md:text-base bg-gray-100 rounded-md"
-            onClick={handleIncreaseQuantity}
-          >
-            +
-          </button>
-          <div className="text-gray-600 flex flex-1 items-center justify-center font-bold px-4 py-1 text-xs md:text-base rounded-md">
-            {item.quantity}
-          </div>
-          <button
-            className="text-gray-600 flex flex-1 items-center justify-center font-bold px-4 py-1 text-xs md:text-base bg-gray-100 rounded-md"
-            onClick={handleDecreaseQuantity}
-          >
-            -
-          </button>
+          <QuantityButton item={item} />
         </div>
       </div>
     </div>

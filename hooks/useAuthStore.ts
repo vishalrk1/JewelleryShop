@@ -122,6 +122,7 @@ const useAuthStore = create<AuthState>(
         showSucessToast("Logged out successfully!");
       },
       checkAuth: async () => {
+        set({ fetching: true, status: "loading", error: null });
         const { token } = get();
         if (token) {
           useUserStore.getState().getUser(token);

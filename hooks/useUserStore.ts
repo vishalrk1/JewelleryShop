@@ -5,6 +5,7 @@ import useAuthStore from "./useAuthStore";
 import useAddressStore from "./useAddressStore";
 import useWishlistStore from "./useWishlistStore";
 import useCartStore from "./useCartStore";
+import useCategoryStore from "./useCategoryStore";
 
 interface UserState {
   user: IUser | null;
@@ -29,6 +30,9 @@ const useUserStore = create<UserState>((set, get) => ({
           },
         }
       );
+      // if categories data is not present means not sent from server fetch it again
+      !useCategoryStore.getState().categories &&
+        useCategoryStore.getState().getCategory();
       useWishlistStore.getState().getWishlist(token);
       useCartStore.getState().getCart(token);
       useAddressStore.getState().setAddresses(res.data.user?.addresses);

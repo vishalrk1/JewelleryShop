@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React from "react";
 import * as z from "zod";
 
 import { CardWrapper } from "./card-wrapper";
@@ -125,7 +125,9 @@ const RegisterForm = () => {
             />
           </div>
           {error && <FormError message={error} />}
-          {user && !error && <FormSucess message={"Registered in sucessfully, Enjoy shopping"} />}
+          {user && !error && (
+            <FormSucess message={"Registered in sucessfully, Enjoy shopping"} />
+          )}
           <Button
             className="w-full flex gap-2"
             type="submit"
