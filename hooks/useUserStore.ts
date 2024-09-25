@@ -4,6 +4,7 @@ import { create } from "zustand";
 import useAuthStore from "./useAuthStore";
 import useAddressStore from "./useAddressStore";
 import useWishlistStore from "./useWishlistStore";
+import useCartStore from "./useCartStore";
 
 interface UserState {
   user: IUser | null;
@@ -28,9 +29,10 @@ const useUserStore = create<UserState>((set, get) => ({
           },
         }
       );
-      set({ user: res.data.user, fetching: false, error: null });
       useWishlistStore.getState().getWishlist(token);
+      useCartStore.getState().getCart(token);
       useAddressStore.getState().setAddresses(res.data.user?.addresses);
+      set({ user: res.data.user, fetching: false, error: null });
     } catch (error) {
       useAuthStore.getState().logoutUser(); // logging out user if failed to get data
       const errorMessage = axios.isAxiosError(error)

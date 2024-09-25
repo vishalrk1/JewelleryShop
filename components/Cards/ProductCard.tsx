@@ -1,9 +1,7 @@
-import { RootState } from "@/redux/store/store";
 import { showErrorToast } from "@/utils/toasts";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { twMerge } from "tailwind-merge";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -11,6 +9,7 @@ import { IProduct } from "@/lib/types";
 import useWishlistStore from "@/hooks/useWishlistStore";
 import useUserStore from "@/hooks/useUserStore";
 import useAuthStore from "@/hooks/useAuthStore";
+import useCartStore from "@/hooks/useCartStore";
 
 interface ProductCardProps {
   item: IProduct;
@@ -19,15 +18,17 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
   const { token } = useAuthStore();
+  const { user } = useUserStore();
+  const { addItemToCart, isProductInCart } = useCartStore();
   const { deleteWishlistItem, isProductInWishlist, addItemToWishlist } =
     useWishlistStore();
-  const { user } = useUserStore();
 
   const product = item;
   const isWishlisted = isProductInWishlist(item._id.toString());
+  const isInCart = isProductInCart(item._id.toString());
 
   const handelBtnAction = (productId: string, token: string) => {
-    // if user is not logged in show error tiast
+    // if user is not logged in show error toast
     if (!user) {
       showErrorToast("Please login");
       return;
@@ -38,6 +39,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
       deleteWishlistItem(productId, token);
     } else {
       addItemToWishlist(productId, token);
+    }
+  };
+
+  const handelCartBtn = (
+    productId: string,
+    quantity: number,
+    token: string
+  ) => {
+    if (isInCart) {
+      return;
+    } else {
+      addItemToCart(productId, quantity, token);
     }
   };
 
@@ -83,14 +96,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
           </div>
           <Button
             className="w-full mt-2"
-            // onClick={() =>
-            //   handelAddToCart({
-            //     cart_id: Number(cart?.id),
-            //     product_id: Number(product._id),
-            //     user: user,
-            //     dispatch: dispatch,
-            //   })
-            // }
+            onClick={() =>
+              token
+                ? handelCartBtn(product._id, 1, token)
+                : showErrorToast("Please login to continue shopping")
+            }
           >
             Add to Cart
           </Button>

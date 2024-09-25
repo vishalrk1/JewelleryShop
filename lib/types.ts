@@ -58,3 +58,15 @@ export interface IWishlist {
   user: string;
   products: IProduct[];
 }
+
+export interface ICart {
+  _id: string;
+  user: string;
+  items: ICartItem[];
+}
+
+export interface ICartItem {
+  _id: string;
+  quantity: number;
+  product: IProduct;
+}
