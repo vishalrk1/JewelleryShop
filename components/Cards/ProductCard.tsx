@@ -7,13 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { twMerge } from "tailwind-merge";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import {
-  handelAddToCart,
-  handelAddToWishlist,
-  handelRemoveSavedItem,
-} from "@/utils/ProductsFunction";
-import { products_product } from "@/prisma/generated/client";
 import { IProduct } from "@/lib/types";
+import useWishlistStore from "@/hooks/useWishlistStore";
+import useUserStore from "@/hooks/useUserStore";
+import useAuthStore from "@/hooks/useAuthStore";
 
 interface ProductCardProps {
   item: IProduct;
@@ -21,15 +18,28 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
-  const dispatch = useDispatch<any>();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { cart } = useSelector((state: RootState) => state.cart);
-  const { wishlist } = useSelector((state: RootState) => state.wishlist);
+  const { token } = useAuthStore();
+  const { deleteWishlistItem, isProductInWishlist, addItemToWishlist } =
+    useWishlistStore();
+  const { user } = useUserStore();
 
-  // const product = isWishlist
-  //   ? (item?.product as products_product)
-  //   : (item as products_product);
   const product = item;
+  const isWishlisted = isProductInWishlist(item._id.toString());
+
+  const handelBtnAction = (productId: string, token: string) => {
+    // if user is not logged in show error tiast
+    if (!user) {
+      showErrorToast("Please login");
+      return;
+    }
+
+    // if user is logged in add or remove product from wishlist
+    if (isWishlisted) {
+      deleteWishlistItem(productId, token);
+    } else {
+      addItemToWishlist(productId, token);
+    }
+  };
 
   return (
     <div className="bg-gray-50 rounded-xl overflow-hidden p-3">
@@ -39,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
             alt="Earrings"
             className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-in-out pointer-events-none"
             height={400}
-            src={product.images[0]}
+            src={product?.images[0]}
             style={{
               aspectRatio: "400/400",
               objectFit: "cover",
@@ -57,42 +67,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
             <Heart
               className={twMerge("w-14 md:w-16 h-6 border-none cursor-pointer")}
               onClick={() => {
-                user && wishlist
-                  ? isWishlist
-                    ? handelRemoveSavedItem({
-                        id: item?._id,
-                        wishlist_id: wishlist.id.toString(),
-                        product_id: product._id.toString(),
-                        dispatch: dispatch,
-                      })
-                    : handelAddToWishlist({
-                        wishlist_id: wishlist?.id.toString(),
-                        product_id: product._id.toString(),
-                        user: user,
-                        dispatch: dispatch,
-                      })
-                  : showErrorToast("Please login");
+                user && token
+                  ? handelBtnAction(product._id.toString(), token)
+                  : showErrorToast("Please login to continue shopping");
               }}
-              fill={product.isWishlisted ? "red" : "none"}
-              color={product.isWishlisted ? "red" : "black"}
+              fill={isWishlisted ? "red" : "none"}
+              color={isWishlisted ? "red" : "black"}
             />
           </div>
           <p className="hidden md:block mt-1 h-8 text-xs text-gray-500 line-clamp-2">
-            {product.description}
+            {product?.description}
           </p>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-gray-900 font-medium">{`RS. ${product.price}`}</span>
+            <span className="text-gray-900 font-medium">{`RS. ${product?.price}`}</span>
           </div>
           <Button
             className="w-full mt-2"
-            onClick={() =>
-              handelAddToCart({
-                cart_id: Number(cart?.id),
-                product_id: Number(product._id),
-                user: user,
-                dispatch: dispatch,
-              })
-            }
+            // onClick={() =>
+            //   handelAddToCart({
+            //     cart_id: Number(cart?.id),
+            //     product_id: Number(product._id),
+            //     user: user,
+            //     dispatch: dispatch,
+            //   })
+            // }
           >
             Add to Cart
           </Button>

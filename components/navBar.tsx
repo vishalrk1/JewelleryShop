@@ -7,16 +7,16 @@ import { MobileSidebar } from "./mobileSidebar";
 import Image from "next/image";
 
 import logo from "@/public/assets/LogoBlack.png";
-import { ICategory } from "@/lib/types";
+import { ICategory, NavRoute } from "@/lib/types";
 import { getCategoriesSvr } from "@/utils/getFunction/getCategories";
 
 const Navbar = async () => {
-  let catDb: ICategory[] = [];
-  let routes = [] as any[];
+  let categories: ICategory[] = [];
+  let routes = [] as NavRoute[];
 
   try {
-    catDb = await getCategoriesSvr();
-    catDb?.forEach((category) => {
+    categories = await getCategoriesSvr();
+    categories?.forEach((category) => {
       routes.push({
         href: `/product/${category._id}`,
         label: category.title,
@@ -42,7 +42,7 @@ const Navbar = async () => {
             />
           </div>
         </Link>
-        <NavLinks routes={routes} className="mx-6" />
+        <NavLinks routes={routes} categories={categories} className="mx-6" />
         <div className="ml-auto flex items-center space-x-4">
           {/* <ModeToggle /> */}
           <AuthButtons />

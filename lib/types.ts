@@ -1,3 +1,8 @@
+export interface NavRoute {
+  href: string;
+  label: string;
+}
+
 export interface ICategory {
   _id: string;
   title: string;
@@ -46,4 +51,10 @@ export interface IUser extends Document {
   addresses: Array<IAddress>;
   isProfileComplete: boolean;
   lastLogin: Date;
+}
+
+export interface IWishlist {
+  _id: string;
+  user: string;
+  products: IProduct[];
 }

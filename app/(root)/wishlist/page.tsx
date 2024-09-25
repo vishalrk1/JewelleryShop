@@ -2,19 +2,19 @@
 import Loader from "@/components/Loader";
 import ProductList from "@/components/Products/ProductList";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RootState } from "@/redux/store/store";
-import { redirect } from "next/navigation";
-import React from "react";
-import { useSelector } from "react-redux";
+import useAuthStore from "@/hooks/useAuthStore";
+import useWishlistStore from "@/hooks/useWishlistStore";
+import React, { useEffect } from "react";
 
 const WislistPage = () => {
-  const { user, userData } = useSelector((state: RootState) => state.auth);
-  const { wishlistItems, fetching } = useSelector(
-    (state: RootState) => state.wishlist
-  );
+  const { token } = useAuthStore();
+  const { wishlist, getWishlist, fetching } = useWishlistStore();
 
-  if (!user) return redirect("/");
-  if (!userData) redirect("/updateProfile");
+  useEffect(() => {
+    if (token && !wishlist) {
+      getWishlist(token);
+    }
+  }, [token]);
 
   return (
     <main className="min-h-screen">
@@ -29,7 +29,7 @@ const WislistPage = () => {
             </div>
           ) : (
             <>
-              {wishlistItems?.length === 0 ? (
+              {wishlist?.products?.length === 0 ? (
                 <div className="w-full flex flex-col justify-center items-center h-screen">
                   <h1 className="text-2xl text-gray-700">
                     Wishlist Is Empty 🙃
@@ -38,7 +38,7 @@ const WislistPage = () => {
               ) : (
                 <ProductList
                   currentTab="all"
-                  productsData={wishlistItems ? wishlistItems : []}
+                  productsData={wishlist?.products || []}
                   isWishlist={true}
                   isLoadings={fetching}
                 />

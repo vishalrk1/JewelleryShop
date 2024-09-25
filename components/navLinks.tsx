@@ -1,15 +1,24 @@
 "use client";
+import useCategoryStore from "@/hooks/useCategoryStore";
+import { ICategory, NavRoute } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 interface Props {
   className?: string;
-  routes: any[];
+  routes: NavRoute[];
+  categories: ICategory[];
 }
 
-const NavLinks: React.FC<Props> = ({ className, routes }) => {
+const NavLinks: React.FC<Props> = ({ className, routes, categories }) => {
   const pathname = usePathname();
+  const { setCategory } = useCategoryStore();
+
+  useEffect(() => {
+    setCategory(categories);
+  }, routes);
 
   return (
     <nav
