@@ -4,6 +4,9 @@ import axios from "axios";
 import { create, StateCreator } from "zustand";
 import { persist, PersistOptions } from "zustand/middleware";
 import useUserStore from "./useUserStore";
+import useWishlistStore from "./useWishlistStore";
+import useCartStore from "./useCartStore";
+import useAddressStore from "./useAddressStore";
 
 interface AuthState {
   token: string | null;
@@ -88,6 +91,9 @@ const useAuthStore = create<AuthState>(
           if (res.data) {
             delete res.data.password; // Ensure password is not stored
             useUserStore.getState().setUser(res.data.user as IUser);
+            useWishlistStore.getState().getWishlist(res.data.token);
+            useCartStore.getState().getCart(res.data.token);
+            useAddressStore.getState().setAddresses(res.data.user?.addresses);
             set({
               status: "succeeded",
               token: res.data.token,
