@@ -28,62 +28,47 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import Loader from "../Loader";
+import useAuthStore from "@/hooks/useAuthStore";
+import useUserStore from "@/hooks/useUserStore";
+import useCartStore from "@/hooks/useCartStore";
+import useOrderStore from "@/hooks/useOrderStore";
+import useAddressStore from "@/hooks/useAddressStore";
+import { IAddress } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 // import AddressDropdown from "./AddressDropdown";
 
 const CheckoutCard = () => {
-  const { user, userData } = useSelector((state: RootState) => state.auth);
-  const { cart, cartItems } = useSelector((state: RootState) => state.cart);
-  const [addressId, setAddressId] = useState<null | string>(null);
-  const [phone, setPhone] = useState("");
-  const [cartValue, setCartValue] = useState(0);
-  const [convenienceFee, setConvenienceFee] = useState(150);
-  const [loading, setLoading] = useState(false);
+  const { token } = useAuthStore();
+  const { user } = useUserStore();
+  const { addresses } = useAddressStore();
+  const { totalAmount, convenienceFee } = useCartStore();
+  const { fetching, error, creatOrder } = useOrderStore();
+
+  const [address, setAddress] = useState<IAddress | null>(null);
+  const router = useRouter()
 
   useEffect(() => {
-    if (cartItems?.length > 0) {
-      let cartTotal = cartItems.reduce((acc, item) => {
-        return acc + item?.products_product?.prod_price * item?.quantity;
-      }, 0);
-      setCartValue(cartTotal);
-      if (cartTotal > 1000) {
-        setConvenienceFee(0);
-      } else {
-        setConvenienceFee(150);
-      }
+    if (addresses) {
+      setAddress(addresses[0]);
     }
-  }, [cartItems]);
+  }, [addresses]);
 
-  useEffect(() => {
-    setAddressId(userData?.main_useraddress[0].id);
-  }, [userData]);
+  const handelAddressUpdate = (val: string) => {
+    const newAddress = addresses.find((item) => item._id === val);
+    if (newAddress) {
+      setAddress(newAddress);
+    }
+  };
 
   const handelCheckout = async () => {
-    try {
-      setLoading(true);
-      const orderId = uuidv4();
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/orders/${orderId}/checkout`,
-        {},
-        {
-          params: {
-            userId: user?.id,
-            email: user?.email,
-            cartId: cart?.id,
-            addressId: userData?.main_useraddress[0].id,
-          },
-        }
-      );
-      console.log(res);
-      if (res.status === 200) {
-        window.location.assign(res.data.url);
-      } else {
-        throw new Error("Something went wrong");
-      }
-    } catch (error) {
-      showErrorToast("Something went wrong cant procced order right now");
-    } finally {
-      setLoading(false);
+    if (token && address) {
+      console.log("Sending the call")
+      creatOrder(token, "pending", address).finally(() => {
+        router.replace("/orders")
+      });
+    } else {
+      showErrorToast("Please login to continue shopping");
     }
   };
 
@@ -126,39 +111,35 @@ const CheckoutCard = () => {
               name="phone"
               type="text"
               id="phone"
-              placeholder={userData?.user_phone}
+              placeholder={user?.phone}
               disabled
             />
           </div>
-          {addressId && (
+          {addresses && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
-                  {
-                    userData?.main_useraddress.find(
-                      (address: any) => address.id === addressId
-                    )?.address_type
-                  }
+                  {address
+                    ? `${address.address_type} - ${address.address_line1}`
+                    : "Select Address"}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="mx-2 md:w-full">
                 <DropdownMenuLabel>Choose Address</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup
-                  value={addressId}
-                  onValueChange={setAddressId}
+                  value={address?._id}
+                  onValueChange={handelAddressUpdate}
                 >
-                  {userData?.main_useraddress.map(
-                    (address: any, index: number) => (
-                      <DropdownMenuRadioItem
-                        value={address.id}
-                        key={index}
-                        className="hover:cursor-pointer"
-                      >
-                        {`${address.address_type} - ${address.address_line1}`}
-                      </DropdownMenuRadioItem>
-                    )
-                  )}
+                  {addresses.map((address: IAddress) => (
+                    <DropdownMenuRadioItem
+                      value={address._id}
+                      key={address._id}
+                      className="hover:cursor-pointer"
+                    >
+                      {`${address.address_type} - ${address.address_line1}`}
+                    </DropdownMenuRadioItem>
+                  ))}
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -172,7 +153,7 @@ const CheckoutCard = () => {
         <CardContent className="grid gap-4">
           <div className="grid grid-cols-[1fr_auto] items-center gap-4">
             <p>Cart Total</p>
-            <p>{cartValue}</p>
+            <p>{totalAmount}</p>
           </div>
           <div className="grid grid-cols-[1fr_auto] items-center gap-4">
             <p>Convenience Fee</p>
@@ -181,23 +162,23 @@ const CheckoutCard = () => {
           <Separator />
           <div className="grid grid-cols-[1fr_auto] items-center gap-4 font-medium">
             <p>Order Total</p>
-            <p>{convenienceFee + cartValue}</p>
+            <p>{convenienceFee + totalAmount}</p>
           </div>
         </CardContent>
         <CardFooter>
           <Button
             type="button"
-            // onClick={() => handelCheckout()}
-            onClick={() => {
-              showErrorToast(
-                "Cant proceed order right now, please try again later",
-                true
-              );
-            }}
+            onClick={handelCheckout}
+            // onClick={() => {
+            //   showErrorToast(
+            //     "Cant proceed order right now, please try again later",
+            //     true
+            //   );
+            // }}
             className="w-full"
-            disabled={loading}
+            disabled={fetching}
           >
-            {loading && (
+            {fetching && (
               <Loader
                 className="w-4 h-4 border-2 mx-2"
                 color="border-gray-100"

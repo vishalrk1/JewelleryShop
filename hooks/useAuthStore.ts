@@ -125,7 +125,13 @@ const useAuthStore = create<AuthState>(
         set({ fetching: true, status: "loading", error: null });
         const { token } = get();
         if (token) {
-          useUserStore.getState().getUser(token);
+          try {
+            useUserStore.getState().getUser(token);
+          } catch (error) {
+            set({ fetching: false, status: "idle", error: null });
+          }
+        } else {
+          set({ fetching: false, status: "idle", error: null });
         }
       },
     }),

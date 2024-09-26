@@ -28,7 +28,8 @@ export interface IProduct {
   isWishlisted: boolean;
 }
 
-export interface IAddress extends Document {
+export interface IAddress {
+  _id: string;
   address_line1: string;
   address_line2: string;
   address_type: "Home" | "Work" | "Other";
@@ -39,7 +40,7 @@ export interface IAddress extends Document {
   isDefault: boolean;
 }
 
-export interface IUser extends Document {
+export interface IUser {
   _id: string;
   email: string;
   password: string;
@@ -69,4 +70,24 @@ export interface ICartItem {
   _id: string | null;
   quantity: number;
   product: IProduct;
+}
+
+export interface OrderItem {
+  product: IProduct;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  _id: string;
+  user: IUser;
+  items: OrderItem[];
+  totalAmount: number;
+  shippingAddress: IAddress;
+  paymentMethod: string;
+  paymentStatus: "pending" | "paid" | "failed";
+  orderStatus: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+  trackingNumber?: string;
+  createdAt: Date;
+  updatedAt: string;
 }

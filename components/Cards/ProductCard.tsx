@@ -1,16 +1,18 @@
 import { showErrorToast } from "@/utils/toasts";
 import { Heart } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useCallback } from "react";
 import { twMerge } from "tailwind-merge";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { IProduct } from "@/lib/types";
+import QuantityButton from "../buttons/QuantityButton";
+
+// zustand store hooks
 import useWishlistStore from "@/hooks/useWishlistStore";
 import useUserStore from "@/hooks/useUserStore";
 import useAuthStore from "@/hooks/useAuthStore";
 import useCartStore from "@/hooks/useCartStore";
-import QuantityButton from "../buttons/QuantityButton";
 
 interface ProductCardProps {
   item: IProduct;
@@ -29,32 +31,34 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
   const isInCart = isProductInCart(item._id.toString());
   const cartItem = cart?.items.find((item) => item.product._id === product._id);
 
-  const handelBtnAction = (productId: string, token: string) => {
-    // if user is not logged in show error toast
-    if (!user) {
-      showErrorToast("Please login");
-      return;
-    }
+  const handelBtnAction = useCallback(
+    (productId: string, token: string) => {
+      // if user is not logged in show error toast
+      if (!user) {
+        showErrorToast("Please login");
+        return;
+      }
 
-    // if user is logged in add or remove product from wishlist
-    if (isWishlisted) {
-      deleteWishlistItem(productId, token);
-    } else {
-      addItemToWishlist(productId, token);
-    }
-  };
+      // if user is logged in add or remove product from wishlist
+      if (isWishlisted) {
+        deleteWishlistItem(productId, token);
+      } else {
+        addItemToWishlist(productId, token);
+      }
+    },
+    [user, isWishlisted, deleteWishlistItem, addItemToWishlist]
+  );
 
-  const handelCartBtn = (
-    productId: string,
-    quantity: number,
-    token: string
-  ) => {
-    if (isInCart) {
-      return;
-    } else {
-      addItemToCart(productId, quantity, token);
-    }
-  };
+  const handelCartBtn = useCallback(
+    (productId: string, quantity: number, token: string) => {
+      if (isInCart) {
+        return;
+      } else {
+        addItemToCart(productId, quantity, token);
+      }
+    },
+    [isInCart, addItemToCart]
+  );
 
   return (
     <div className="bg-gray-50 rounded-xl overflow-hidden p-3">
@@ -108,7 +112,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
               Add to Cart
             </Button>
           ) : (
-            <div className="flex items-center justify-between mt-2 w-full p-1 border-2 border-solid border-gray-200 rounded-lg">
+            <div className="flex flex-row-reverse items-center justify-between mt-2 w-full p-1 border-2 border-solid border-gray-200 rounded-lg">
               <QuantityButton item={cartItem} />
             </div>
           )}

@@ -1,27 +1,28 @@
 "use client";
+import React, { useEffect } from "react";
 import OrdersContainer from "@/components/Cards/OrderContainer";
 import Loader from "@/components/Loader";
-import { getOrders } from "@/redux/store/orders/action";
-import { RootState } from "@/redux/store/store";
+
 import { redirect } from "next/navigation";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
+// zustand store
+import useOrderStore from "@/hooks/useOrderStore";
+import useUserStore from "@/hooks/useUserStore";
+import useAuthStore from "@/hooks/useAuthStore";
+import OrdersContainerSkeleton from "@/components/Skeletons/OrderCardSkeleton";
 
 const OrdersPage = () => {
-  const dispatch = useDispatch<any>();
-  const { user, userData } = useSelector((state: RootState) => state.auth);
-  const { orders, fetching } = useSelector((state: RootState) => state.orders);
+  const { token } = useAuthStore();
+  const { user } = useUserStore();
+  const { orders, fetching, getOrders } = useOrderStore();
 
   if (!user) {
     redirect("/");
   }
-  if (!userData) redirect("/updateProfile");
 
   useEffect(() => {
-    if (user) {
-      dispatch(getOrders({ user_id: user?.id }));
-    }
-  }, []);
+    if (token) getOrders(token);
+  }, [token, getOrders]);
 
   return (
     <main className="min-h-screen flex flex-col divide-y-2 mx-auto max-w-6xl md:mt-6 px-4 md:px-12">
@@ -40,14 +41,15 @@ const OrdersPage = () => {
             </div>
           ) : (
             orders?.map((order, index) => (
-              <OrdersContainer orderData={order} key={index} />
+              <OrdersContainer orderData={order} key={order._id} />
             ))
           )}
         </section>
       ) : (
-        <div className="flex justify-center items-center h-screen gap-3">
-          <Loader className="h-10 w-10" />
-          <p className="text-gray-600 md:text-2xl">Loading...</p>
+        <div className="flex flex-col justify-center items-center min-h-screen h-full my-4">
+          {[1,2,3,4].map(() => (
+            <OrdersContainerSkeleton key={Math.random()} />
+          ))}
         </div>
       )}
     </main>

@@ -7,6 +7,8 @@ interface CartStoreState {
   cart: ICart | null;
   fetching: boolean;
   error: string | null;
+  totalAmount: number;
+  convenienceFee: number;
   getCart: (token: string) => Promise<void>;
   addItemToCart: (
     productId: string,
@@ -19,7 +21,8 @@ interface CartStoreState {
     quantity: number,
     token: string
   ) => Promise<void>;
-  clearCart: (token: string) => Promise<void>;
+  clearCart: () => void;
+  calculateTotalPrice: () => void;
   isProductInCart: (productId: string) => boolean;
 }
 
@@ -27,6 +30,8 @@ const useCartStore = create<CartStoreState>((set, get) => ({
   cart: null,
   fetching: false,
   error: null,
+  totalAmount: 0,
+  convenienceFee: 0,
   getCart: async (token: string) => {
     set({ fetching: true, error: null });
     try {
@@ -39,6 +44,7 @@ const useCartStore = create<CartStoreState>((set, get) => ({
         }
       );
       set({ cart: res.data.data, fetching: false, error: null });
+      get().calculateTotalPrice();
     } catch (error) {
       const errorMessage = axios.isAxiosError(error)
         ? error?.response?.data?.message
@@ -62,6 +68,7 @@ const useCartStore = create<CartStoreState>((set, get) => ({
         }
       );
       set({ cart: res.data.data, fetching: false, error: null });
+      get().calculateTotalPrice();
       showSucessToast("Item added to cart successfully");
     } catch (error) {
       const errorMessage = axios.isAxiosError(error)
@@ -82,6 +89,7 @@ const useCartStore = create<CartStoreState>((set, get) => ({
         }
       );
       set({ cart: res.data.data, fetching: false, error: null });
+      get().calculateTotalPrice();
       showSucessToast("Item removed from cart successfully");
     } catch (error) {
       const errorMessage = axios.isAxiosError(error)
@@ -138,6 +146,7 @@ const useCartStore = create<CartStoreState>((set, get) => ({
         return;
       }
       set({ cart: res.data.data, fetching: false, error: null });
+      get().calculateTotalPrice();
       showSucessToast("Item quantity updated successfully");
     } catch (error) {
       get().getCart(token); // refetch & up[date] cart in case of api failure
@@ -148,7 +157,20 @@ const useCartStore = create<CartStoreState>((set, get) => ({
       showErrorToast(errorMessage, true);
     }
   },
-  clearCart: async () => {},
+  clearCart: () => {
+    set({ cart: null, fetching: true, error: null, totalAmount: 0, convenienceFee: 0 });
+  },
+  calculateTotalPrice: () => {
+    const totalCatValue = get().cart?.items.reduce((total, item) => {
+      return total + item.product.price * item.quantity;
+    }, 0);
+    set({
+      totalAmount: totalCatValue || 0,
+      fetching: false,
+      error: null,
+      convenienceFee: 0.1 * (totalCatValue || 0),
+    });
+  },
   isProductInCart: (productId: string) => {
     const cart = get().cart;
     return cart?.items.some((item) => item.product._id === productId) || false;

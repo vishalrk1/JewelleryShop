@@ -1,20 +1,18 @@
-export function convertDate(dateString: string): string {
-  if (!dateString) {
-    return "";
-  }
+export function convertDate(isoString: string): string {
+  const date = new Date(isoString);
+  
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
 
-  const [year, month, day] = dateString.substring(0, 10).split("-");
-  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  const day = date.getUTCDate().toString().padStart(2, '0');
+  const month = months[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
 
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  const formattedDate: string = date.toLocaleDateString("en-US", options);
-
-  return formattedDate;
+  return `${day} ${month} ${year}`;
 }
+
 
 export const FAQQuestions = [
   {

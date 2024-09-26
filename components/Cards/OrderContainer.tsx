@@ -2,9 +2,10 @@ import React from "react";
 import { convertDate } from "../../utils/dateUtils";
 import { twMerge } from "tailwind-merge";
 import OrderItamCard from "../../components/Cards/OrderItemCard";
+import { Order, OrderItem } from "@/lib/types";
 
 interface Props {
-  orderData: any;
+  orderData: Order;
 }
 
 const OrdersContainer: React.FC<Props> = ({ orderData }) => {
@@ -14,22 +15,22 @@ const OrdersContainer: React.FC<Props> = ({ orderData }) => {
         <div className="flex flex-2 gap-8">
           <div className="flex flex-col items-center justify-center gap-1">
             <p className="text-xs md:text-base text-gray-600">ORDER PLACED</p>
-            {orderData?.payment_date && (
+            {orderData?.updatedAt && (
               <p className="text-xs md:text-sm text-gray-700 font-bold">
-                {convertDate(orderData?.payment_date as string)}
+                {convertDate(orderData?.updatedAt)}
               </p>
             )}
           </div>
           <div className="flex flex-col items-center justify-center gap-1">
             <p className="text-xs md:text-base text-gray-600">TOTAL</p>
             <p className="text-xs md:text-sm text-gray-700 font-bold">
-              {`${orderData?.total_amount}`}
+              {`${orderData?.totalAmount}`}
             </p>
           </div>
           <div className="hidden lg:flex flex-col items-start justify-start gap-1">
             <p className="text-xs md:text-base text-gray-600">SHIP TO</p>
             <p className="text-xs md:text-sm text-gray-700 font-bold">
-              {orderData.main_useraddress?.address_line1}
+              {orderData.shippingAddress?.address_line1}
             </p>
           </div>
         </div>
@@ -37,22 +38,18 @@ const OrdersContainer: React.FC<Props> = ({ orderData }) => {
           <div className="flex-col gap-1">
             <p className="text-xs md:text-base text-gray-600 mt-3 md:mt-0">
               ORDER #{" "}
-              <span className="text-gray-700 font-bold">
-                {orderData?.order_id}
-              </span>
+              <span className="text-gray-700 font-bold">{orderData?._id}</span>
             </p>
             <p className="text-xs md:text-base text-gray-600 mt-1">
               PAYMENT STATUS:{" "}
               <span
                 className={twMerge(
-                  orderData?.payment_status === "success"
+                  orderData?.orderStatus === "delivered"
                     ? "text-green-600 font-bold text-xs md:text-base"
                     : "text-red-600 font-bold text-xs md:text-base"
                 )}
               >
-                {orderData?.payment_status === "success"
-                  ? "Paid"
-                  : "Pending"}
+                {orderData?.paymentStatus === "paid" ? "Paid" : "Pending"}
               </span>
             </p>
           </div>
@@ -62,17 +59,17 @@ const OrdersContainer: React.FC<Props> = ({ orderData }) => {
         <p
           className={twMerge(
             "text-sm md:text-xl font-bold",
-            orderData?.delivery_status === "Delivered"
+            orderData?.orderStatus === "delivered"
               ? "text-gray-600"
               : "text-green-800"
           )}
         >
-          {orderData?.delivery_status === "Delivered"
+          {orderData?.orderStatus === "delivered"
             ? "Order Delivered"
             : "Arriving Soon"}
         </p>
         <div className="flex flex-col items-start md:flex-row md:flex-wrap md:items-center justify-start gap-3 w-full">
-          {orderData?.order_orderitem?.map((item: any, index: number) => (
+          {orderData?.items?.map((item: OrderItem, index: number) => (
             <OrderItamCard orderItem={item} key={index} />
           ))}
         </div>

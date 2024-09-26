@@ -38,6 +38,7 @@ const useUserStore = create<UserState>((set, get) => ({
       useAddressStore.getState().setAddresses(res.data.user?.addresses);
       set({ user: res.data.user, fetching: false, error: null });
     } catch (error) {
+      useUserStore.getState()
       useAuthStore.getState().logoutUser(); // logging out user if failed to get data
       const errorMessage = axios.isAxiosError(error)
         ? error.message
