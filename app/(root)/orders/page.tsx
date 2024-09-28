@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
 import OrdersContainer from "@/components/Cards/OrderContainer";
-import Loader from "@/components/Loader";
-
 import { redirect } from "next/navigation";
 
 // zustand store
