@@ -24,7 +24,7 @@ interface Props {
 
 const FormatedForm: React.FC<Props> = ({ form, schema }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
       {schema.map((item: any, index: any) => {
         return (
           <FormField
@@ -65,6 +65,7 @@ const FormatedForm: React.FC<Props> = ({ form, schema }) => {
                       placeholder={item.placeholder}
                       disabled={item.disabled}
                       {...field}
+                      className="w-full"
                     />
                   )}
                 </FormControl>

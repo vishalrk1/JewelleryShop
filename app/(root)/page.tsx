@@ -22,9 +22,9 @@ export default async function Home() {
   }
 
   const feedbacks = await prismadb.userFeedbacks.findMany({
-    where: {
-      isFeatured: true,
-    },
+    // where: {
+    //   isFeatured: true,
+    // },
     include: {
       user: {
         include: {
@@ -33,6 +33,8 @@ export default async function Home() {
       },
     },
   });
+
+  console.log(feedbacks)
 
   return (
     <main className="min-h-screen flex flex-col">

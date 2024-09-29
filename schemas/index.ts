@@ -36,16 +36,7 @@ export const NewUserDetailsSchema = z.object({
   last_name: z.string().min(1, { message: "Last name is required" }),
   user_gender: z.string().min(1, { message: "Gender is required" }),
   user_phone: z.string().min(10, { message: "Valid Phone is required" }),
-  user_pfp_url: z.string().min(1, { message: "Image is required" }),
-
-  // address fields
-  address_type: z.string().min(1, { message: "Address type is required" }),
-  address_line1: z.string().min(1, { message: "Address line 1 is required" }),
-  address_line2: z.string().min(1, { message: "Address line 2 is required" }),
-  city: z.string().min(1, { message: "City is required" }),
-  state: z.string().min(1, { message: "State is required" }),
-  country: z.string().min(1, { message: "Country is required" }),
-  postal_code: z.string().min(1, { message: "Postal code is required" }),
+  image: z.string().min(1, { message: "Image is required" }),
 });
 
 export const UserDetailsFormSchema = z.object({

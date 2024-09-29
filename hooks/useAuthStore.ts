@@ -68,13 +68,16 @@ const useAuthStore = create<AuthState>(
             showSucessToast("Registration successful 😎");
           }
         } catch (error: any) {
-          console.log(error);
+          const errorMessage = axios.isAxiosError(error)
+            ? error?.response?.data?.message
+            : "Registration failed!!";
+          set({ error: errorMessage, fetching: false });
           set({
             status: "failed",
-            error: error?.response?.data || "Registration failed",
+            error: errorMessage || "Registration failed",
             fetching: false,
           });
-          showErrorToast(error?.data, true);
+          showErrorToast(errorMessage, true);
         }
       },
       loginUser: async (phone: string, password: string) => {
