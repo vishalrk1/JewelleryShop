@@ -1,4 +1,11 @@
 # Illusion Store
+A Full-Stack E-commerce Application using Next.js and Node.js, delivering a responsive and seamless user experience
+across devices.
+
+## TODO
+- [ ] Improved edit user & UI flow
+- [ ] Search functionality
+- [ ] Admin panel for used with admin role
 
 ## Screenshots
 ![screenshot/img-1.png](https://github.com/user-attachments/assets/f68835e2-ff91-4417-ae1b-2ce4512a4ae5)
