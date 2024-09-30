@@ -6,6 +6,7 @@ across devices.
 - [ ] Improved edit user & UI flow
 - [ ] Search functionality
 - [ ] Admin panel for used with admin role
+- [ ] Add animations on homepage
 
 ## Screenshots
 ![screenshot/img-1.png](https://github.com/user-attachments/assets/f68835e2-ff91-4417-ae1b-2ce4512a4ae5)
