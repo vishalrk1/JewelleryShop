@@ -7,16 +7,23 @@ import useWishlistStore from "./useWishlistStore";
 import useCartStore from "./useCartStore";
 import useCategoryStore from "./useCategoryStore";
 
+import * as z from "zod";
+import { showErrorToast, showSucessToast } from "@/utils/toasts";
+import { NewUserDetailsSchema } from "@/app/(root)/(auth)/updateProfile/page";
+
 interface UserState {
   user: IUser | null;
+  isProfileComplete: boolean;
   fetching: boolean;
   error: string | null;
   getUser: (token: string) => Promise<void>;
+  updateUser: (data: z.infer<typeof NewUserDetailsSchema>) => Promise<void>;
   setUser: (user: IUser | null) => void;
 }
 
 const useUserStore = create<UserState>((set, get) => ({
   user: null,
+  isProfileComplete: false,
   fetching: false,
   error: null,
   // if get usr data with token
@@ -36,14 +43,52 @@ const useUserStore = create<UserState>((set, get) => ({
       useWishlistStore.getState().getWishlist(token);
       useCartStore.getState().getCart(token);
       useAddressStore.getState().setAddresses(res.data.user?.addresses);
-      set({ user: res.data.user, fetching: false, error: null });
+      set({
+        user: res.data?.user,
+        isProfileComplete: res?.data?.user.isProfileComplete === "true",
+        fetching: false,
+        error: null,
+      });
     } catch (error) {
-      useUserStore.getState()
+      useUserStore.getState();
       useAuthStore.getState().logoutUser(); // logging out user if failed to get data
       const errorMessage = axios.isAxiosError(error)
         ? error.message
         : "An unknown error occurred";
       set({ error: errorMessage, fetching: false });
+    }
+  },
+  updateUser: async (data) => {
+    const token = useAuthStore.getState().token;
+    set({ fetching: true, error: null });
+    try {
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/update`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      set({
+        user: res.data?.user,
+        isProfileComplete: res?.data?.user.isProfileComplete === "true",
+        fetching: false,
+        error: null,
+      });
+      showSucessToast("Profile updated successfully");
+    } catch (error) {
+      const errorMessage = axios.isAxiosError(error)
+        ? error?.response?.data?.message
+        : "Updating profile failed!!";
+      set({ error: errorMessage, fetching: false });
+      set({
+        error: errorMessage || "Registration failed",
+        fetching: false,
+      });
+      showErrorToast(errorMessage, true);
     }
   },
   // update user

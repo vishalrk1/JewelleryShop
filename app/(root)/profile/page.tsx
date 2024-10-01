@@ -11,11 +11,11 @@ import useAddressStore from "@/hooks/useAddressStore";
 import useUserStore from "@/hooks/useUserStore";
 import { Mail, Phone, SquarePen, User2Icon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
 const ProfilePage = () => {
-  // const { user, userData } = useSelector((state: RootState) => state.auth);
   const { user } = useUserStore();
   const { addresses } = useAddressStore();
   if (!user) return redirect("/");
@@ -32,12 +32,12 @@ const ProfilePage = () => {
             className="aspect-square rounded-2xl p-2 pointer-events-none"
           />
         </div>
-        {/* <Link href="/updateProfile" className="w-full"> */}
-        <Button variant="default" className="flex gap-3 w-full">
-          <SquarePen className="w-4 h-4" />
-          Edit Profile
-        </Button>
-        {/* </Link> */}
+        <Link href="/updateProfile" className="w-full">
+          <Button variant="default" className="flex gap-3 w-full">
+            <SquarePen className="w-4 h-4" />
+            Edit Profile
+          </Button>
+        </Link>
       </section>
       <section className="flex-2 w-full gap-4">
         <h1 className="md:text-2xl font-semibold p-4">Personal Information</h1>

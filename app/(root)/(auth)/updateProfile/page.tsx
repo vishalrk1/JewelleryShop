@@ -1,108 +1,100 @@
 "use client";
-import FormatedForm from "@/components/forms/FormatedForm";
-import Loader from "@/components/Loader";
+import React, { useState, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Edit } from "lucide-react";
+import useUserStore from "@/hooks/useUserStore";
+import { Avatar } from "@radix-ui/react-avatar";
 import { AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import useUserStore from "@/hooks/useUserStore";
-import { createUserProfile } from "@/redux/store/auth/action";
-import { RootState } from "@/redux/store/store";
-import { supabase } from "@/redux/supabase";
-import {
-  AddressDetailsSchema,
-  NewUserDetailsSchema,
-  UserAddressFormFields,
-  UserDetailsFormFields,
-  UserDetailsFormSchema,
-} from "@/schemas";
-import { ProfileFormsCardTitle } from "@/utils/titlesData";
-import { showErrorToast, showSucessToast } from "@/utils/toasts";
-import { userDetailTabsData } from "@/utils/userDetailTabs";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Avatar } from "@radix-ui/react-avatar";
-import { CheckCircle2, Edit, Trash, UploadCloud } from "lucide-react";
-import { redirect } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import NoUserImage from "../../../../public/assets/NoUserImage.jpg";
-
-import * as z from "zod";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import NoUserImage from "../../../../public/assets/NoUserImage.jpg"; // Assume this exists
+import { useParams, useRouter } from "next/navigation";
 
-const UpdateProfileDetailsPage = () => {
-  const { user, fetching } = useUserStore();
-  const [isHidrate, setIsHidrate] = useState(false);
-  const [profileImag, setProfileImage] = useState<string | ArrayBuffer | null>(
-    NoUserImage.src
-  );
+export const NewUserDetailsSchema = z.object({
+  email: z.string().email(),
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  image: z.string().url().optional(),
+  phone: z.string().optional(),
+});
+
+type FormData = z.infer<typeof NewUserDetailsSchema>;
+
+const UpdateProfileDetailsPage: React.FC = () => {
+  const router = useRouter();
+  const { user, updateUser, isProfileComplete } = useUserStore();
+  const [profileImage, setProfileImage] = useState<string>(NoUserImage.src);
   const [userPfpFile, setUserPfpFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const form = useForm<z.infer<typeof NewUserDetailsSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(NewUserDetailsSchema),
     defaultValues: {
-      email: user?.email,
-      first_name: user?.first_name ? user?.first_name : "",
-      last_name: user?.last_name ? user?.last_name : "",
-      image: user?.image ? user?.image : NoUserImage.src,
-      phone: user?.phone ? user?.phone : "",
+      email: "",
+      first_name: "",
+      last_name: "",
+      image: NoUserImage.src,
+      phone: "",
     },
-    mode: "onChange",
+    mode: "onSubmit", // Changed from 'onChange' to 'onSubmit'
   });
 
   useEffect(() => {
     if (user) {
       form.reset({
-        email: user?.email,
-        first_name: user?.first_name ? user?.first_name : "",
-        last_name: user?.last_name ? user?.last_name : "",
-        image: user?.image ? user?.image : NoUserImage.src,
-        phone: user?.phone ? user?.phone : "",
+        email: user.email || "",
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        image: user.image || NoUserImage.src,
+        phone: user.phone || "",
       });
+      setProfileImage(user.image || NoUserImage.src);
     }
-  }, [user]);
+  }, [user, form]);
 
-  const handelImageInput = (e: any) => {
-    const file = e.target.files[0];
-    setUserPfpFile(file);
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setProfileImage(reader.result);
-      }
-    };
-    reader?.readAsDataURL(file);
+  const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setUserPfpFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setProfileImage(reader.result as string);
+          form.setValue("image", reader.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleEditClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    fileInputRef.current?.click();
   };
 
-  console.log(form.getValues());
+  const onSubmit = async (data: FormData) => {
+    console.log("Form submitted with data:", data); // Debug log
+    try {
+      updateUser(data)
+        .then(() => {
+          router.replace(isProfileComplete ? "/profile" : "/");
+        })
+        .catch((error) => {
+          console.error("Failed to update profile:", error);
+        });
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
+  };
 
   return (
     <main className="min-h-screen px-8 flex items-center justify-center w-full h-screen gap-10 mb-4">
@@ -110,7 +102,8 @@ const UpdateProfileDetailsPage = () => {
         <div className="flex flex-col items-center gap-4">
           <Avatar>
             <AvatarImage
-              src={form.getValues().image as string}
+              src={form.getValues("image") || profileImage}
+              alt="Profile"
               className="rounded-full object-cover pointer-events-none"
             />
           </Avatar>
@@ -125,7 +118,7 @@ const UpdateProfileDetailsPage = () => {
             ref={fileInputRef}
             type="file"
             className="hidden"
-            onChange={handelImageInput}
+            onChange={handleImageInput}
             accept="image/*"
           />
         </div>
@@ -133,140 +126,83 @@ const UpdateProfileDetailsPage = () => {
       <section className="px-6 h-full w-full flex flex-col items-center justify-start">
         <div className="w-full">
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(() => {})}
-              className="grid grid-cols-2 gap-4 gap-y-6 w-full"
-            >
-              <FormField
-                name="email"
-                control={form.control}
-                defaultValue={form.getValues().email}
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="my-0 text-base">Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        className="w-full"
-                        disabled
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              ></FormField>
-              <FormField
-                name="phone"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="my-0 text-base">
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="tel"
-                        className="w-full"
-                        disabled
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              ></FormField>
-              <FormField
-                name="first_name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="my-0 text-base">First Name</FormLabel>
-                    <FormControl>
-                      <Input type="text" className="w-full" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="last_name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="my-0 text-base">Last Name</FormLabel>
-                    <FormControl>
-                      <Input type="text" className="w-full" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="user_gender"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="my-0 text-base">
-                      Select your Gender
-                    </FormLabel>
-                    <Select
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+              <div className="grid grid-cols-2 gap-4 gap-y-6">
+                <FormField
+                  name="email"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="my-0 text-base">Email</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={"Gender"} />
-                          <SelectContent>
-                            {["Male", "Female"].map(
-                              (option: any, index: number) => {
-                                return (
-                                  <SelectItem value={option.value} key={index}>
-                                    {option}
-                                  </SelectItem>
-                                );
-                              }
-                            )}
-                          </SelectContent>
-                        </SelectTrigger>
+                        <Input
+                          type="email"
+                          className="w-full"
+                          disabled
+                          {...field}
+                        />
                       </FormControl>
-                    </Select>
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="phone"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="my-0 text-base">
+                        Phone Number
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="tel" className="w-full" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="first_name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="my-0 text-base">
+                        First Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="text" className="w-full" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="last_name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="my-0 text-base">
+                        Last Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="text" className="w-full" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex flex-row items-center justify-end p-3 my-3">
+                <Button type="submit" className="w-1/3">
+                  {isProfileComplete ? "Update Profile" : "Complete Profile"}
+                </Button>
+              </div>
             </form>
           </Form>
         </div>
       </section>
     </main>
   );
-  //   formData: z.infer<typeof NewUserDetailsSchema>
-  // ) => {
-  //   setIsSubmitting(true);
-  //   try {
-  //     if (profileImag && userPfpFile) {
-  //       const { data, error } = await supabase.storage
-  //         .from("Images")
-  //         .upload(
-  //           `user_pfp/${userPfpFile.name}_${user?.id}_${Date.now()}`,
-  //           userPfpFile
-  //         );
-  //       if (error) {
-  //         console.log(error);
-  //         showSucessToast("Cant upload image please try again ");
-  //         return;
-  //       }
-  //       formData.user_pfp_url = `${process.env.NEXT_PUBLIC_STORAGE_BUCKET}/Images/${data.path}`;
-  //     }
-  //     dispatch(
-  //       createUserProfile({
-  //         userData: formData,
-  //         userId: user?.id,
-  //       })
-  //     );
-  //   } catch (error) {
-  //     showErrorToast("Cant upload image please try again ");
-  //     console.log(error);
-  //   }
-  //   setIsSubmitting(false);
-  // };
 };
 
 export default UpdateProfileDetailsPage;
