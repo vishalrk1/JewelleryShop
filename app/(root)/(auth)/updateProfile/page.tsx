@@ -11,7 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Form, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useUserStore from "@/hooks/useUserStore";
 import { createUserProfile } from "@/redux/store/auth/action";
@@ -31,11 +37,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "@radix-ui/react-avatar";
 import { CheckCircle2, Edit, Trash, UploadCloud } from "lucide-react";
 import { redirect } from "next/navigation";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import NoUserImage from "../../../../public/assets/NoUserImage.jpg";
 
 import * as z from "zod";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const UpdateProfileDetailsPage = () => {
   const { user, fetching } = useUserStore();
@@ -53,10 +67,22 @@ const UpdateProfileDetailsPage = () => {
       first_name: user?.first_name ? user?.first_name : "",
       last_name: user?.last_name ? user?.last_name : "",
       image: user?.image ? user?.image : NoUserImage.src,
-      user_phone: user?.phone ? user?.phone : "",
+      phone: user?.phone ? user?.phone : "",
     },
     mode: "onChange",
   });
+
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        email: user?.email,
+        first_name: user?.first_name ? user?.first_name : "",
+        last_name: user?.last_name ? user?.last_name : "",
+        image: user?.image ? user?.image : NoUserImage.src,
+        phone: user?.phone ? user?.phone : "",
+      });
+    }
+  }, [user]);
 
   const handelImageInput = (e: any) => {
     const file = e.target.files[0];
@@ -75,6 +101,8 @@ const UpdateProfileDetailsPage = () => {
       fileInputRef.current.click();
     }
   };
+
+  console.log(form.getValues());
 
   return (
     <main className="min-h-screen px-8 flex items-center justify-center w-full h-screen gap-10 mb-4">
@@ -103,19 +131,106 @@ const UpdateProfileDetailsPage = () => {
         </div>
       </section>
       <section className="px-6 h-full w-full flex flex-col items-center justify-start">
-        <div className="w-full grid grid-cols-2 gap-4">
+        <div className="w-full">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(() => {})}
-              className="flex flex-wrap gap-4 w-full"
+              className="grid grid-cols-2 gap-4 gap-y-6 w-full"
             >
-              <FormField name="email" control={form.control} render={({field})=>(
-                <FormItem>
-
-                </FormItem>
-              )}>
-
-              </FormField>
+              <FormField
+                name="email"
+                control={form.control}
+                defaultValue={form.getValues().email}
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="my-0 text-base">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        className="w-full"
+                        disabled
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
+              <FormField
+                name="phone"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="my-0 text-base">
+                      Phone Number
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        className="w-full"
+                        disabled
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
+              <FormField
+                name="first_name"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="my-0 text-base">First Name</FormLabel>
+                    <FormControl>
+                      <Input type="text" className="w-full" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="last_name"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="my-0 text-base">Last Name</FormLabel>
+                    <FormControl>
+                      <Input type="text" className="w-full" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="user_gender"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="my-0 text-base">
+                      Select your Gender
+                    </FormLabel>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={"Gender"} />
+                          <SelectContent>
+                            {["Male", "Female"].map(
+                              (option: any, index: number) => {
+                                return (
+                                  <SelectItem value={option.value} key={index}>
+                                    {option}
+                                  </SelectItem>
+                                );
+                              }
+                            )}
+                          </SelectContent>
+                        </SelectTrigger>
+                      </FormControl>
+                    </Select>
+                  </FormItem>
+                )}
+              />
             </form>
           </Form>
         </div>

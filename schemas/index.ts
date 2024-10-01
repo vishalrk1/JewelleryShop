@@ -35,7 +35,7 @@ export const NewUserDetailsSchema = z.object({
   first_name: z.string().min(1, { message: "First name is required" }),
   last_name: z.string().min(1, { message: "Last name is required" }),
   user_gender: z.string().min(1, { message: "Gender is required" }),
-  user_phone: z.string().min(10, { message: "Valid Phone is required" }),
+  phone: z.string().min(10, { message: "Valid Phone is required" }),
   image: z.string().min(1, { message: "Image is required" }),
 });
 
@@ -45,7 +45,7 @@ export const UserDetailsFormSchema = z.object({
   first_name: z.string().min(1, { message: "First name is required" }),
   last_name: z.string().min(1, { message: "Last name is required" }),
   user_gender: z.string().min(1, { message: "Gender is required" }),
-  user_phone: z.string().min(1, { message: "Phone is required" }),
+  phone: z.string().min(1, { message: "Phone is required" }),
   user_pfp_url: z.string().min(1, { message: "Image is required" }),
   user_image_file: z
     .any()
@@ -117,7 +117,7 @@ export const UserDetailsFormFields = [
   },
   {
     label: "Phone",
-    name: "user_phone",
+    name: "phone",
     type: "number",
     placeholder: "Enter your phone",
     required: true,
