@@ -3,6 +3,7 @@ import axios from "axios";
 import { create } from "zustand";
 import useAddressStore from "./useAddressStore";
 import useCartStore from "./useCartStore";
+import { showErrorToast, showSucessToast } from "@/utils/toasts";
 
 interface OrderStoreState {
   orders: Order[];
@@ -13,7 +14,7 @@ interface OrderStoreState {
     token: string,
     paymentMethod: string,
     shippingAddress: IAddress
-  ) => Promise<void>;
+  ) => Promise<boolean>;
 }
 
 const useOrderStore = create<OrderStoreState>((set, get) => ({
@@ -49,9 +50,6 @@ const useOrderStore = create<OrderStoreState>((set, get) => ({
       if (!shippingAddress) {
         throw new Error("No shipping address found");
       }
-
-      console.log("Create order status api call")
-
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/order/create`,
         {
@@ -64,7 +62,7 @@ const useOrderStore = create<OrderStoreState>((set, get) => ({
           },
         }
       );
-      console.log("API call wasa sucess updating state now")
+      console.log("API call wasa sucess updating state now");
       set({
         orders: get().orders.concat([res.data.data as Order]),
         fetching: false,
@@ -72,11 +70,16 @@ const useOrderStore = create<OrderStoreState>((set, get) => ({
       });
       useCartStore.getState().clearCart();
       useCartStore.getState().getCart(token);
+      showSucessToast("Order placed successfully 😎")
+      return true;
     } catch (error) {
+      console.log(error)
       const errorMessage = axios.isAxiosError(error)
         ? error?.response?.data?.message
         : "An unknown error occurred";
+      showErrorToast(errorMessage, true)
       set({ error: errorMessage, fetching: false });
+      return false;
     }
   },
 }));

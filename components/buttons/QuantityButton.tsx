@@ -3,6 +3,7 @@ import useCartStore from "@/hooks/useCartStore";
 import { ICartItem } from "@/lib/types";
 import { showErrorToast } from "@/utils/toasts";
 import React from "react";
+import Loader from "../Loader";
 
 interface Props {
   item?: ICartItem;
@@ -10,7 +11,7 @@ interface Props {
 
 const QuantityButton: React.FC<Props> = ({ item }) => {
   const { token } = useAuthStore();
-  const { updateCartItemQuantity } = useCartStore();
+  const { updateCartItemQuantity, fetching } = useCartStore();
 
   const handeQuantityCHange = (change: number) => {
     if (!item) {
@@ -34,6 +35,7 @@ const QuantityButton: React.FC<Props> = ({ item }) => {
       <button
         className="text-gray-600 flex flex-1 items-center justify-center font-bold px-4 py-1 text-xs md:text-base bg-gray-100 rounded-md"
         onClick={() => handeQuantityCHange(1)}
+        disabled={fetching}
       >
         +
       </button>
@@ -43,6 +45,7 @@ const QuantityButton: React.FC<Props> = ({ item }) => {
       <button
         className="text-gray-600 flex flex-1 items-center justify-center font-bold px-4 py-1 text-xs md:text-base bg-gray-100 rounded-md"
         onClick={() => handeQuantityCHange(-1)}
+        disabled={fetching}
       >
         -
       </button>

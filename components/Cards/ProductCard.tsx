@@ -30,6 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
   const isWishlisted = isProductInWishlist(item._id.toString());
   const isInCart = isProductInCart(item._id.toString());
   const cartItem = cart?.items.find((item) => item.product._id === product._id);
+  const isInStock = item.stockQuantity > 0;
 
   const handelBtnAction = useCallback(
     (productId: string, token: string) => {
@@ -103,13 +104,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, isWishlist }) => {
           {!isInCart ? (
             <Button
               className="w-full mt-2"
-              onClick={() =>
-                token
-                  ? handelCartBtn(product._id, 1, token)
-                  : showErrorToast("Please login to continue shopping")
-              }
+              variant={isInStock ? "default" : "secondary"}
+              onClick={() => {
+                if (isInStock && token) {
+                  handelCartBtn(product._id, 1, token);
+                } else if (isInStock && !token) {
+                  showErrorToast("Please login to continue shopping");
+                } else if (!isInStock) {
+                  return;
+                }
+              }}
             >
-              Add to Cart
+              {isInStock ? "Add to Cart" : "Out of Stock"}
             </Button>
           ) : (
             <div className="flex flex-row-reverse items-center justify-between mt-2 w-full p-1 border-2 border-solid border-gray-200 rounded-lg">

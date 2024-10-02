@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Trash } from "lucide-react";
+import { Trash, TriangleAlert } from "lucide-react";
 import { ICartItem } from "@/lib/types";
 import useAuthStore from "@/hooks/useAuthStore";
 import useCartStore from "@/hooks/useCartStore";
@@ -39,6 +39,14 @@ const CartItamCard: React.FC<Props> = ({ item }) => {
               {item.product.description}
             </p>
           </div>
+          {item.product.stockQuantity === 0 && (
+            <div className="flex flex-row gap-2 items-center bg-destructive/15 p-2 rounded-md my-1 w-max">
+              <TriangleAlert className="hidden md:block h-4 w-4 text-orange-500" />
+              <p className="text-orange-500 text-xs md:text-sm">
+                Item is not available in stock
+              </p>
+            </div>
+          )}
           <div className="flex w-full items-start mt-1 md:mt-2 divide-x divide-solid divide-gray-400">
             <div className="text-gray-600 font-bold text-sm md:text-base">
               {`${item.product.price}`}

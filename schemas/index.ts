@@ -56,15 +56,15 @@ export const UserDetailsFormSchema = z.object({
     ),
 });
 
-export const AddressDetailsSchema = z.object({
-  address_type: z.string().min(1, { message: "Address type is required" }),
-  address_line1: z.string().min(1, { message: "Address line 1 is required" }),
-  address_line2: z.string().min(1, { message: "Address line 2 is required" }),
-  city: z.string().min(1, { message: "City is required" }),
-  state: z.string().min(1, { message: "State is required" }),
-  country: z.string().min(1, { message: "Country is required" }),
-  postal_code: z.string().min(1, { message: "Postal code is required" }),
-});
+  export const AddressDetailsSchema = z.object({
+    address_type: z.string().min(1, { message: "Address type is required" }),
+    address_line1: z.string().min(1, { message: "Address line 1 is required" }),
+    address_line2: z.string().min(1, { message: "Address line 2 is required" }),
+    city: z.string().min(1, { message: "City is required" }),
+    state: z.string().min(1, { message: "State is required" }),
+    country: z.string().min(1, { message: "Country is required" }),
+    postal_code: z.string().min(1, { message: "Postal code is required" }),
+  });
 
 export const productFormSchema = z.object({
   prod_title: z.string().min(1, "Name is required"),

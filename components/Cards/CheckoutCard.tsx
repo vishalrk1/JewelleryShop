@@ -46,7 +46,7 @@ const CheckoutCard = () => {
   const { fetching, error, creatOrder } = useOrderStore();
 
   const [address, setAddress] = useState<IAddress | null>(null);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     if (addresses) {
@@ -63,9 +63,11 @@ const CheckoutCard = () => {
 
   const handelCheckout = async () => {
     if (token && address) {
-      console.log("Sending the call")
-      creatOrder(token, "pending", address).finally(() => {
-        router.replace("/orders")
+      console.log("Sending the call");
+      creatOrder(token, "pending", address).then((data) => {
+        if (data) {
+          router.replace("/orders");
+        }
       });
     } else {
       showErrorToast("Please login to continue shopping");

@@ -3,17 +3,26 @@ import { twMerge } from "tailwind-merge";
 
 export default function Loader({
   className,
-  color,
+  color = "border-black",
+  size = "md",
 }: {
   className?: string;
   color?: string;
+  size?: "sm" | "md" | "lg";
 }) {
+  const sizeClasses = {
+    sm: "h-6 w-6 border-2",
+    md: "h-12 w-12 border-3",
+    lg: "h-16 w-16 border-4",
+  };
+
   return (
     <div className="flex items-center justify-center">
       <div
         className={twMerge(
-          color ? color : "border-black",
-          "inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]",
+          color,
+          "inline-block animate-spin rounded-full border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]",
+          sizeClasses[size],
           className
         )}
         role="status"
