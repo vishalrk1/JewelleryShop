@@ -9,7 +9,7 @@ import useCategoryStore from "./useCategoryStore";
 
 import * as z from "zod";
 import { showErrorToast, showSucessToast } from "@/utils/toasts";
-import { NewUserDetailsSchema } from "@/app/(root)/(auth)/updateProfile/page";
+import { UserDetailsSchema } from "@/app/(root)/(auth)/updateProfile/page";
 
 interface UserState {
   user: IUser | null;
@@ -17,7 +17,7 @@ interface UserState {
   fetching: boolean;
   error: string | null;
   getUser: (token: string) => Promise<void>;
-  updateUser: (data: z.infer<typeof NewUserDetailsSchema>) => Promise<void>;
+  updateUser: (data: z.infer<typeof UserDetailsSchema>) => Promise<boolean>;
   setUser: (user: IUser | null) => void;
 }
 
@@ -72,13 +72,15 @@ const useUserStore = create<UserState>((set, get) => ({
           },
         }
       );
+      useAddressStore.getState().setAddresses(res.data.user?.addresses);
       set({
         user: res.data?.user,
-        isProfileComplete: res?.data?.user.isProfileComplete === "true",
+        isProfileComplete: res?.data?.user.isProfileComplete,
         fetching: false,
         error: null,
       });
       showSucessToast("Profile updated successfully");
+      return true;
     } catch (error) {
       const errorMessage = axios.isAxiosError(error)
         ? error?.response?.data?.message
@@ -89,6 +91,7 @@ const useUserStore = create<UserState>((set, get) => ({
         fetching: false,
       });
       showErrorToast(errorMessage, true);
+      return false;
     }
   },
   // update user

@@ -28,15 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const NewUserDetailsSchema = z.object({
-  email: z.string().email(),
-  first_name: z.string().min(1, "First name is required"),
-  last_name: z.string().min(1, "Last name is required"),
-  image: z.string().url().optional(),
-  phone: z.string().optional(),
-});
-
-export const AddressDetailsSchema = z.object({
+const AddressDetailsSchema = z.object({
   address_type: z.string().min(1, { message: "Address type is required" }),
   address_line1: z.string().min(1, { message: "Address line 1 is required" }),
   address_line2: z.string().min(1, { message: "Address line 2 is required" }),
@@ -46,18 +38,20 @@ export const AddressDetailsSchema = z.object({
   postal_code: z.string().min(1, { message: "Postal code is required" }),
 });
 
-const combinedSchema = z.intersection(
-  NewUserDetailsSchema,
-  z.object({
-    address: AddressDetailsSchema.optional(),
-  })
-);
+export const UserDetailsSchema = z.object({
+  email: z.string().email(),
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  image: z.string().url().optional(),
+  phone: z.string().optional(),
+  address: AddressDetailsSchema.optional(),
+});
 
-type FormData = z.infer<typeof combinedSchema>;
+type FormData = z.infer<typeof UserDetailsSchema>;
 
 const UpdateProfileDetailsPage: React.FC = () => {
   const router = useRouter();
-  const { user, updateUser, isProfileComplete, fetching } = useUserStore();
+  const { user, updateUser, fetching } = useUserStore();
   const [profileImage, setProfileImage] = useState<string>(NoUserImage.src);
   const [userPfpFile, setUserPfpFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -67,17 +61,27 @@ const UpdateProfileDetailsPage: React.FC = () => {
     { label: "Other", value: "Other" },
   ];
 
+  if (!user && !fetching) router.push("/");
+
   const form = useForm<FormData>({
-    resolver: zodResolver(NewUserDetailsSchema),
+    resolver: zodResolver(UserDetailsSchema),
     defaultValues: {
       email: "",
       first_name: "",
       last_name: "",
       image: NoUserImage.src,
       phone: "",
-      address: undefined,
+      address: {
+        address_line1: "",
+        address_line2: "",
+        city: "",
+        state: "",
+        country: "",
+        postal_code: "",
+        address_type: addressTypes[0].value,
+      },
     },
-    mode: "onSubmit", // Changed from 'onChange' to 'onSubmit'
+    mode: "onSubmit",
   });
 
   useEffect(() => {
@@ -88,23 +92,21 @@ const UpdateProfileDetailsPage: React.FC = () => {
         last_name: user.last_name || "",
         image: user.image || NoUserImage.src,
         phone: user.phone || "",
-        address:
-          user?.addresses[0] ||
-          (!isProfileComplete
-            ? {
-                address_line1: "",
-                address_line2: "",
-                city: "",
-                state: "",
-                country: "",
-                postal_code: "",
-                address_type: "",
-              }
-            : undefined),
+        address: user?.isProfileComplete
+          ? undefined
+          : {
+              address_line1: "",
+              address_line2: "",
+              city: "",
+              state: "",
+              country: "",
+              postal_code: "",
+              address_type: addressTypes[0].value,
+            },
       });
       setProfileImage(user.image || NoUserImage.src);
     }
-  }, [user, form, isProfileComplete]);
+  }, [user, form]);
 
   const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -126,11 +128,15 @@ const UpdateProfileDetailsPage: React.FC = () => {
   };
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form submitted with data:", data); // Debug log
     try {
-      updateUser(data)
-        .then(() => {
-          router.replace(isProfileComplete ? "/profile" : "/");
+      updateUser({
+        ...data,
+        address: user?.isProfileComplete ? undefined : data?.address,
+      })
+        .then((data) => {
+          if (data) {
+            router.replace(user?.isProfileComplete ? "/profile" : "/");
+          }
         })
         .catch((error) => {
           console.error("Failed to update profile:", error);
@@ -141,8 +147,8 @@ const UpdateProfileDetailsPage: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen h-full px-8 flex w-full gap-10 mb-4">
-      <section className="w-1/3 flex flex-col items-center justify-start">
+    <main className="min-h-screen h-full px-8 flex flex-col md:flex-row w-full gap-10 mb-4">
+      {/* <section className="w-1/3 flex flex-col items-center justify-start">
         <div className="flex flex-col items-center gap-4">
           <Avatar>
             <AvatarImage
@@ -166,19 +172,19 @@ const UpdateProfileDetailsPage: React.FC = () => {
             accept="image/*"
           />
         </div>
-      </section>
+      </section> */}
       <section className="px-6 h-full w-full flex flex-col">
         {!fetching && (
           <div className="w-full px-6">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                 <h1 className="text-2xl font-semibold mb-2 text-left">
-                  {isProfileComplete
+                  {user?.isProfileComplete
                     ? "Update Your Profile Details"
                     : "Complete Your Profile"}
                 </h1>
                 <Separator className="mb-6" />
-                <div className="grid grid-cols-2 gap-4 gap-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 gap-y-6">
                   <FormField
                     name="email"
                     control={form.control}
@@ -186,7 +192,12 @@ const UpdateProfileDetailsPage: React.FC = () => {
                       <FormItem className="w-full">
                         <FormLabel className="my-0 text-base">Email</FormLabel>
                         <FormControl>
-                          <Input type="email" className="w-full" {...field} />
+                          <Input
+                            type="email"
+                            disabled
+                            className="w-full"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -201,7 +212,12 @@ const UpdateProfileDetailsPage: React.FC = () => {
                           Phone Number
                         </FormLabel>
                         <FormControl>
-                          <Input type="tel" className="w-full" {...field} />
+                          <Input
+                            type="tel"
+                            disabled
+                            className="w-full"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -238,7 +254,7 @@ const UpdateProfileDetailsPage: React.FC = () => {
                     )}
                   />
                 </div>
-                {!isProfileComplete && !fetching && (
+                {!user?.isProfileComplete && !fetching && (
                   <>
                     <h1 className="text-2xl font-semibold mt-12 mb-2 text-left">
                       Add Primary Address
@@ -411,7 +427,9 @@ const UpdateProfileDetailsPage: React.FC = () => {
                 )}
                 <div className="flex flex-row items-center justify-end p-3 my-3">
                   <Button type="submit" className="w-1/3">
-                    {isProfileComplete ? "Update Profile" : "Complete Profile"}
+                    {user?.isProfileComplete
+                      ? "Update Profile"
+                      : "Complete Profile"}
                   </Button>
                 </div>
               </form>
