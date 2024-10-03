@@ -12,7 +12,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/lib/types";
-import useAuthStore from "@/hooks/useAuthStore";
+import { useModel } from "@/hooks/useModal";
 
 interface Props {
   user: IUser;
@@ -21,7 +21,7 @@ interface Props {
 
 const UserDropdown: React.FC<Props> = ({ user, is_staff }) => {
   const router = useRouter();
-  const { logoutUser } = useAuthStore();
+  const { onOpen } = useModel();
 
   return (
     <DropdownMenu>
@@ -84,7 +84,7 @@ const UserDropdown: React.FC<Props> = ({ user, is_staff }) => {
           Support
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logoutUser}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={onOpen}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

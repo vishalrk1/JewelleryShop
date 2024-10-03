@@ -7,6 +7,7 @@ import useUserStore from "./useUserStore";
 import useWishlistStore from "./useWishlistStore";
 import useCartStore from "./useCartStore";
 import useAddressStore from "./useAddressStore";
+import { useModel } from "./useModal";
 
 interface AuthState {
   token: string | null;
@@ -122,6 +123,7 @@ const useAuthStore = create<AuthState>(
           status: "succeeded",
           fetching: false,
         });
+        useModel.getState().onClose();
         showSucessToast("Logged out successfully!");
       },
       checkAuth: async () => {
@@ -130,6 +132,7 @@ const useAuthStore = create<AuthState>(
         if (token) {
           try {
             useUserStore.getState().getUser(token);
+            set({ fetching: false, status: "idle", error: null });
           } catch (error) {
             set({ fetching: false, status: "idle", error: null });
           }

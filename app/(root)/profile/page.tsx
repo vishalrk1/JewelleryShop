@@ -10,14 +10,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useAddressStore from "@/hooks/useAddressStore";
 import useUserStore from "@/hooks/useUserStore";
 import { IAddress } from "@/lib/types";
-import { LucideIcon, Mail, Phone, SquarePen, User2Icon } from "lucide-react";
+import {
+  ChevronRight,
+  LucideIcon,
+  Mail,
+  Phone,
+  SquarePen,
+  User2Icon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const ProfilePage = () => {
   const { user } = useUserStore();
   const { addresses } = useAddressStore();
+  const router = useRouter();
+
+  if (!user) return router.replace("/");
 
   let UserDatailData: {
     label: string;
@@ -42,7 +53,7 @@ const ProfilePage = () => {
   ];
 
   return (
-    <main className="min-h-screen flex flex-col lg:flex-row justify-center h-full gap-4 mx-auto max-w-8xl mt-4 md:mt-6 px-4 md:px-12 mb-8">
+    <main className="min-h-screen flex flex-col lg:flex-row lg:justify-center gap-4 mx-auto max-w-8xl mt-4 md:mt-6 px-4 md:px-12 mb-8">
       <section className="hidden lg:flex flex-1 flex-col gap-2 items-end w-full">
         <div className="w-full aspect-square rounded-xl bg-gray-100 relative">
           {user ? (
@@ -65,7 +76,7 @@ const ProfilePage = () => {
         </Link>
       </section>
       <section className="flex-2 w-full gap-4 px-3">
-        <div className="w-full flex items-center justify-between">
+        <div className="w-full flex items-center justify-between mb-2">
           <h1 className="md:text-2xl font-bold py-2">Personal Information</h1>
           <Link href="/updateProfile" className="block lg:hidden w-max">
             <Button variant="default" className="flex gap-3 w-full">
@@ -76,7 +87,10 @@ const ProfilePage = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-1">
           {UserDatailData.map((item, index) => (
-            <Card className="p-3 hover:-translate-y-1 transition-all duration-300">
+            <Card
+              className="p-3 cursor-pointer hover:-translate-y-1 transition-all duration-300"
+              key={item.label}
+            >
               <div className="h-max flex flex-row items-center gap-2">
                 <div className="bg-slate-200 rounded-full p-2">
                   <item.icon size={24} />
@@ -85,7 +99,7 @@ const ProfilePage = () => {
                   <p className="text-sm text-black font-semibold">
                     {item.label}
                   </p>
-                  <p className="text-base text-gray-600 my-0">{item.value}</p>
+                  <p className="text-sm text-gray-600 my-0">{item.value}</p>
                 </div>
               </div>
             </Card>
@@ -104,14 +118,20 @@ const ProfilePage = () => {
             </Card>
           )} */}
         </div>
-        <div className="flex items-center py-4 mt-2">
-          <h1 className="text-xl font-semibold">Your Addresses</h1>
+        <div className="w-full flex items-center justify-between mt-6">
+          <h1 className="text-xl font-bold py-2">Your Addresses</h1>
+          <Link href="/profile/address/new" className="w-max">
+            <Button variant="secondary" className="flex gap-1 w-full group">
+              Add New Address
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-all duration-300" />
+            </Button>
+          </Link>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
-          {addresses?.map((item: IAddress, index: number) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 w-full mt-2">
+          {addresses?.map((item: IAddress) => (
             <Card
-              key={index}
-              className="hover:-translate-y-1 transition-all duration-200"
+              key={item._id}
+              className="relative hover:scale-105 transition-all duration-300 group"
             >
               <CardHeader className="space-y-0">
                 <CardTitle className="text-base items-center flex font-medium">
@@ -119,7 +139,7 @@ const ProfilePage = () => {
                 </CardTitle>
                 <CardDescription className="items-start flex flex-col">
                   <p>{`${item.address_line1} ${
-                    item.address_line2 && item.address_line2
+                    item.address_line2 ? item.address_line2 : ""
                   }`}</p>
                   <p>
                     {item.city}, {item.postal_code}
@@ -127,6 +147,15 @@ const ProfilePage = () => {
                   <p>{item.country}</p>
                 </CardDescription>
               </CardHeader>
+              <Button
+                variant="link"
+                className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 bottom-0 right-0"
+                onClick={() => {
+                  router.push(`/profile/address/${item._id}`);
+                }}
+              >
+                Edit Address
+              </Button>
             </Card>
           ))}
         </div>

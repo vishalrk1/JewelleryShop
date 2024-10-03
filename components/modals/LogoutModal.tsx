@@ -3,22 +3,22 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Modal from "./modals";
+import useAuthStore from "@/hooks/useAuthStore";
 
-interface AlertModalProps {
-  description?: string;
+interface LogoutModalProps {
   isOpen: boolean;
   onConfirm: () => void;
   onClose: () => void;
   loading: boolean;
 }
 
-export const AlertModal: React.FC<AlertModalProps> = ({
-  description,
+export const LogoutModal: React.FC<LogoutModalProps> = ({
   isOpen,
   onConfirm,
   onClose,
   loading,
 }) => {
+  const { logoutUser } = useAuthStore();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   return (
     <Modal
       title="Are You Sure?"
-      description={description ? description : "This changes cannot be undone"}
+      description="You will be logged out of your account"
       isOpen={isOpen}
       onClose={onClose}
     >

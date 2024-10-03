@@ -20,10 +20,10 @@ export default function Loader({
     <div className="flex items-center justify-center">
       <div
         className={twMerge(
-          color,
           "inline-block animate-spin rounded-full border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]",
           sizeClasses[size],
-          className
+          className,
+          color,
         )}
         role="status"
       >
