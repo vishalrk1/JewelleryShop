@@ -8,18 +8,19 @@ interface OrderItemCardProps {
 
 const OrderItamCard: React.FC<OrderItemCardProps> = ({ orderItem }) => {
   return (
-    <div className="w-fit md:w-2/5 h-max flex mt-3 items-center md:mt-5 rounded-lg shadow-sm">
-      <div className="relative w-20 md:w-32 h-full md:h-20 p-2">
+    <div className="w-full md:w-2/5 h-max flex mt-3 items-center md:mt-5 gap-2 rounded-lg shadow-sm">
+      <div className="relative w-20 md:w-32 h-14 md:h-20 p-2">
         <Image
           src={orderItem?.product?.images[0]}
           fill
-          className="object-cover rounded-lg"
+          className="mx-1 h-full object-cover rounded-lg"
           alt=""
+          quality={40}
         />
       </div>
       <div className="w-full p-2 flex my-2">
         <div className="flex flex-col w-full items-centerc justify-center">
-          <div className="text-sm md:text-lg font-bold">
+          <div className="text-sm md:text-base font-bold">
             {orderItem?.product?.title}
           </div>
           <div className="flex w-full items-start mt-1 md:mt-2 divide-x divide-solid divide-gray-400">

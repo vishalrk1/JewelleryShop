@@ -147,7 +147,7 @@ const UpdateProfileDetailsPage: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen h-full px-8 flex flex-col md:flex-row w-full gap-10 mb-4">
+    <main className="min-h-screen h-full flex flex-col md:flex-row w-full gap-10 mb-4">
       {/* <section className="w-1/3 flex flex-col items-center justify-start">
         <div className="flex flex-col items-center gap-4">
           <Avatar>
@@ -173,7 +173,7 @@ const UpdateProfileDetailsPage: React.FC = () => {
           />
         </div>
       </section> */}
-      <section className="px-6 h-full w-full flex flex-col">
+      <section className="h-full w-full flex flex-col">
         {!fetching && (
           <div className="w-full px-6">
             <Form {...form}>

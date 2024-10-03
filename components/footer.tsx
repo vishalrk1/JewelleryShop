@@ -10,9 +10,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { showErrorToast, showSucessToast } from "@/utils/toasts";
 import axios from "axios";
+import useUserStore from "@/hooks/useUserStore";
 
 const Footer = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user } = useUserStore();
   const [message, setMessage] = useState("");
   const footerNavLinks = [
     { label: "Home", href: "/" },
@@ -28,7 +29,7 @@ const Footer = () => {
         {
           params: {
             message: message,
-            userId: user?.id,
+            userId: user?._id,
           },
         }
       );
@@ -50,7 +51,7 @@ const Footer = () => {
           <Link
             key={index}
             href={item.href}
-            className="text-gray-500 hover:text-white font-light text-lg"
+            className="text-gray-500 hover:text-white font-light text-lg hover:-translate-y-0.5 transition-all duration-200"
           >
             {item.label}
           </Link>
@@ -58,7 +59,7 @@ const Footer = () => {
       </section>
       <Separator className="bg-gray-500 mb-6" />
       <section className="flex justify-center items-center">
-      <div className="flex items-center md:justify-center gap-4 px-8 md:w-1/2">
+        <div className="flex items-center md:justify-center gap-4 px-8 md:w-1/2">
           <Image
             alt="illusion-logo"
             src={logo}
@@ -91,8 +92,6 @@ const Footer = () => {
             Submit
           </Button>
         </div>
-
-        
       </section>
     </footer>
   );
