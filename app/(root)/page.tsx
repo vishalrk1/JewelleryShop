@@ -34,8 +34,6 @@ export default async function Home() {
     },
   });
 
-  console.log(feedbacks)
-
   return (
     <main className="min-h-screen flex flex-col">
       <section className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden">

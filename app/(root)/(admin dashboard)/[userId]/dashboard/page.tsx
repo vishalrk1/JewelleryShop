@@ -1,7 +1,9 @@
+"use server";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import prismadb from "@/lib/prismadb";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -12,41 +14,10 @@ interface AdminDashboardProps {
 
 const AdminDashboard: React.FC<AdminDashboardProps> = async ({ params }) => {
   const userId = params?.userId;
-  const user = await prismadb.auth_user.findUnique({
-    where: { id: parseInt(userId) },
-    include: {
-      main_userprofile: true,
-    },
-  });
+  const cookieStore = cookies();
+  const token = cookieStore.get("auth_token");
 
-  const data = [
-    {
-      name: "Total Users",
-      value: await prismadb.auth_user.count(),
-    },
-    {
-      name: "Products Available",
-      value: await prismadb.products_product.count({
-        where: {
-          prod_instock: true,
-        },
-      }),
-    },
-    {
-      name: "Orders Placed",
-      value: await prismadb.order_order.count(),
-    },
-    {
-      name: "Total Items Sold",
-      value: await prismadb.order_orderitem.count(),
-    },
-  ];
-
-  if (!user) {
-    redirect("/login");
-  } else if (user && !user?.is_staff) {
-    redirect("/");
-  }
+  console.log(token);
 
   return (
     <main className="h-screen flex flex-col p-10">
@@ -67,20 +38,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = async ({ params }) => {
         <h1 className="text-2xl font-bold mb-2 text-primary">
           Store Statistics
         </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {data?.map((item, index) => (
-            <Card className="" key={index}>
-              <CardHeader>
-                <CardTitle className="w-full flex justify-between text-xl items-center gap-2 font-medium">
-                  {item?.name}
-                  <div className="flex justify-end items-end text-4xl font-normal overflow-clip line-clamp-1">
-                    {item?.value}
-                  </div>
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
       </section>
     </main>
   );

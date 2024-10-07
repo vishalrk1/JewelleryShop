@@ -1,4 +1,5 @@
 "use client";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAddressStore from "@/hooks/useAddressStore";
+import useAuthStore from "@/hooks/useAuthStore";
 import useUserStore from "@/hooks/useUserStore";
 import { IAddress } from "@/lib/types";
 import {
@@ -24,6 +26,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const ProfilePage = () => {
+  const { token } = useAuthStore();
   const { user } = useUserStore();
   const { addresses } = useAddressStore();
   const router = useRouter();
@@ -51,6 +54,26 @@ const ProfilePage = () => {
       value: user?.phone,
     },
   ];
+
+  const redirectTODashboard = async () => {
+    try {
+      const response = await fetch("/api/setCookie", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      if (response.ok) {
+        router.push(`/${user?._id}/dashboard`);
+      } else {
+        console.error("Failed to set auth cookie");
+      }
+    } catch (error) {
+      console.error("Error setting auth cookie:", error);
+    }
+  };
 
   return (
     <main className="min-h-screen flex flex-col lg:flex-row lg:justify-center gap-4 mx-auto max-w-8xl mt-4 md:mt-6 px-4 md:px-12 mb-8">
@@ -104,19 +127,30 @@ const ProfilePage = () => {
               </div>
             </Card>
           ))}
-          {/* {user?.is_staff && (
-            <Card className="">
-              <CardHeader>
-                <CardTitle className="text-xl items-center flex gap-2 font-medium">
-                  Admin Access
-                  <Badge className="bg-green-400 text-slate-600">Granted</Badge>
-                </CardTitle>
-                <CardDescription className="text-lg font-normal overflow-clip line-clamp-1">
-                  <Button variant="secondary">Visit Dashboard</Button>
-                </CardDescription>
-              </CardHeader>
+        </div>
+        <div className="w-full flex flex-row items-center">
+          {user?.role === "admin" && (
+            <Card className="w-max px-6 p-3 mt-3 cursor-pointer hover:-translate-y-1 transition-all duration-300">
+              <div className="h-max flex flex-row items-center gap-2">
+                <div className="flex flex-col gap-2 justify-start">
+                  <p className="flex items-center gap-3 text-sm text-black font-semibold">
+                    Admin Access
+                    <Badge className="bg-green-400 text-slate-600">
+                      Granted
+                    </Badge>
+                  </p>
+                  <Button
+                    variant="secondary"
+                    className="flex gap-1 py-1 w-full group"
+                    onClick={redirectTODashboard}
+                  >
+                    Visit Dashboard
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-all duration-300" />
+                  </Button>
+                </div>
+              </div>
             </Card>
-          )} */}
+          )}
         </div>
         <div className="w-full flex items-center justify-between mt-6">
           <h1 className="text-xl font-bold py-2">Your Addresses</h1>
