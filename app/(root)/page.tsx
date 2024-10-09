@@ -3,37 +3,18 @@
 import CategoryCards from "@/components/Cards/CategoryCards";
 import { Button } from "@/components/ui/button";
 import prismadb from "@/lib/prismadb";
-import { ICategory, IProduct } from "@/lib/types";
+import { Feedback, ICategory, IProduct } from "@/lib/types";
 import { getCategoriesSvr } from "@/utils/getFunction/getCategories";
 import { getFeaturedProducts } from "@/utils/getFunction/getFeaturedProducts";
+import { getFeaturedFeedbacks } from "@/utils/getFunction/getFeedbacks";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-  let categories: ICategory[] = [];
-  let featuredProducts: IProduct[] = await getFeaturedProducts();
+  let categories: ICategory[] = (await getCategoriesSvr()) || [];
+  let featuredProducts: IProduct[] = (await getFeaturedProducts()) || [];
+  let feedbacks: Feedback[] = (await getFeaturedFeedbacks()) || [];
   let error: string | null = null;
-
-  try {
-    categories = await getCategoriesSvr();
-    featuredProducts = await getFeaturedProducts();
-  } catch (error) {
-    error = (error as Error).message;
-  }
-
-  const feedbacks = await prismadb.userFeedbacks.findMany({
-    // where: {
-    //   isFeatured: true,
-    // },
-    include: {
-      user: {
-        include: {
-          main_userprofile: true,
-        },
-      },
-    },
-  });
-
   return (
     <main className="min-h-screen flex flex-col">
       <section className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden">
@@ -134,31 +115,36 @@ export default async function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
-            {feedbacks?.map((item: any, index: number) => (
-              <div key={index} className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0">
-                    <Image
-                      src={item?.user?.main_userprofile?.user_pfp_url}
-                      alt={item?.user?.username}
-                      className="h-12 w-12 rounded-full"
-                      height={48}
-                      style={{
-                        aspectRatio: "48/48",
-                        objectFit: "cover",
-                      }}
-                      width={48}
-                    />
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-medium text-gray-900">
-                      {item?.user?.first_name} {item?.user?.last_name}
-                    </h3>
-                    <p className="text-base text-gray-500">{item.message}</p>
+            {feedbacks?.map((item: Feedback, index: number) => {
+              return (
+                <div
+                  key={item._id}
+                  className="bg-white rounded-lg shadow-lg p-6"
+                >
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0">
+                      <Image
+                        src={item?.user?.image}
+                        alt={`${item?.user?.first_name} ${item?.user?.last_name}`}
+                        className="h-12 w-12 rounded-full"
+                        height={48}
+                        style={{
+                          aspectRatio: "48/48",
+                          objectFit: "cover",
+                        }}
+                        width={48}
+                      />
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {item?.user?.first_name} {item?.user?.last_name}
+                      </h3>
+                      <p className="text-base text-gray-500">{item.message}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

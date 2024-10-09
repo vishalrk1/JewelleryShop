@@ -6,14 +6,17 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { Separator } from "./ui/separator";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store/store";
-import { showErrorToast, showSucessToast } from "@/utils/toasts";
+import { showErrorToast } from "@/utils/toasts";
 import axios from "axios";
 import useUserStore from "@/hooks/useUserStore";
+import useAuthStore from "@/hooks/useAuthStore";
+import useFeedbackStore from "@/hooks/useFeedbackStore";
+import Loader from "./Loader";
 
 const Footer = () => {
   const { user } = useUserStore();
+  const { token } = useAuthStore();
+  const { fetching, addFeedback } = useFeedbackStore();
   const [message, setMessage] = useState("");
   const footerNavLinks = [
     { label: "Home", href: "/" },
@@ -21,26 +24,15 @@ const Footer = () => {
     { label: "Contact", href: "/contact" },
   ];
 
-  const handelFeedbackSubmit = async () => {
-    try {
-      const req = await axios.post(
-        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/feedbacks`,
-        {},
-        {
-          params: {
-            message: message,
-            userId: user?._id,
-          },
+  const handelSubmitFeedback = () => {
+    if (!user || !token) {
+      showErrorToast("Please login to submit feedback");
+    } else {
+      addFeedback(message, token).then((data)=>{
+        if(data) {
+          setMessage("");
         }
-      );
-      console.log(req.status);
-      if (req.status === 200) {
-        setMessage("");
-        showSucessToast("Feedback submitted");
-      }
-    } catch (error) {
-      setMessage("");
-      showErrorToast("you already have submitted feedback");
+      });
     }
   };
 
@@ -82,13 +74,18 @@ const Footer = () => {
             onClick={() => {
               if (!message) {
                 showErrorToast("Please enter your feedback");
-              } else if (!user) {
-                showErrorToast("Please login to submit feedback");
               } else {
-                handelFeedbackSubmit();
+                handelSubmitFeedback();
               }
             }}
+            disabled={fetching}
           >
+            {fetching && (
+              <Loader
+                className="w-4 h-4 border-2 mx-2"
+                color="border-gray-100"
+              />
+            )}
             Submit
           </Button>
         </div>

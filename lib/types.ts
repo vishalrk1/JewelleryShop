@@ -91,3 +91,12 @@ export interface Order {
   createdAt: Date;
   updatedAt: string;
 }
+
+export interface Feedback {
+  _id: string;
+  user: IUser;
+  message: string;
+  isFeatured: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
