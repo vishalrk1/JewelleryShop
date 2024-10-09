@@ -1,21 +1,23 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { serialize } from "cookie";
-import { NextRequest } from "next/server";
+"use server";
+
+import { NextApiResponse } from "next";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, res: NextApiResponse) {
   const { token } = await req.json();
   console.log("POST TOKEN: ", token);
 
   // Set the cookie
-  res.setHeader(
-    "Set-Cookie",
-    serialize("auth_token", token, {
-      httpOnly: true,
-      sameSite: "strict",
-      maxAge: 3600, // 1 hour
-      path: "/",
-    })
-  );
+  const oneDay = 24 * 60 * 60 * 1000;
+  cookies().set("auth_token", token, {
+    httpOnly: true,
+    sameSite: "strict",
+    maxAge: oneDay,
+  });
 
-  res.status(200).json({ message: "Auth cookie set successfully" });
+  return NextResponse.json(
+    { message: "Auth cookie set successfully" },
+    { status: 200 }
+  );
 }

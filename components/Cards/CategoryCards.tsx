@@ -40,7 +40,7 @@ const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
                   {category.description}
                 </p>
               </div>
-              <Link href={`product/${category._id}/${category._id}`}>
+              <Link href={`product/${category._id}`}>
                 <Button variant="default" size="sm">
                   Shop Now
                 </Button>
