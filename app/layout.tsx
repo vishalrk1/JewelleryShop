@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navBar";
-import { ReduxProvider } from "@/provider/redux-provider";
 import { ToasterProvider } from "@/provider/toast-provider";
 import Footer from "@/components/footer";
 
@@ -27,14 +26,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={Poopins.className}>
-        <ReduxProvider>
-          <ToasterProvider />
-          <Navbar />
-          {children}
-          <Analytics />
-          <SpeedInsights />
-          <Footer />
-        </ReduxProvider>
+        <ToasterProvider />
+        <Navbar />
+        {children}
+        <Analytics />
+        <SpeedInsights />
+        <Footer />
       </body>
     </html>
   );

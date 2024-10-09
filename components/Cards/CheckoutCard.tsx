@@ -1,12 +1,7 @@
 "use client";
-import { RootState } from "@/redux/store/store";
-import React, { useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { showErrorToast } from "@/utils/toasts";
-
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
 import {
   Card,
   CardContent,
@@ -16,7 +11,6 @@ import {
 } from "../ui/card";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
 import { Separator } from "../ui/separator";
 import {
   DropdownMenu,
@@ -43,7 +37,7 @@ const CheckoutCard = () => {
   const { user } = useUserStore();
   const { addresses } = useAddressStore();
   const { totalAmount, convenienceFee } = useCartStore();
-  const { fetching, error, creatOrder } = useOrderStore();
+  const { fetching, creatOrder } = useOrderStore();
 
   const [address, setAddress] = useState<IAddress | null>(null);
   const router = useRouter();

@@ -1,8 +1,9 @@
 # Illusion Store
 # TODO
-- [ ] Add debounsing for cart state update
+- [x] Add debounsing for cart state update
 - [ ] Add Animations to home page components ( frames motion )
-- [ ] Use ReCharts for admin dashboard
+- [x] Use ReCharts for admin dashboard
+- [ ] Add skeleton in wishlist page
 
 ## Screenshots
 ![screenshot/img-1.png](https://github.com/user-attachments/assets/f68835e2-ff91-4417-ae1b-2ce4512a4ae5)
