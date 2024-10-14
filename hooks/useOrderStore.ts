@@ -73,7 +73,6 @@ const useOrderStore = create<OrderStoreState>((set, get) => ({
       showSucessToast("Order placed successfully 😎")
       return true;
     } catch (error) {
-      console.log(error)
       const errorMessage = axios.isAxiosError(error)
         ? error?.response?.data?.message
         : "An unknown error occurred";

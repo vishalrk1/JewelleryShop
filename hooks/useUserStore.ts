@@ -53,8 +53,8 @@ const useUserStore = create<UserState>((set, get) => ({
       useUserStore.getState();
       useAuthStore.getState().logoutUser(); // logging out user if failed to get data
       const errorMessage = axios.isAxiosError(error)
-        ? error.message
-        : "An unknown error occurred";
+            ? error?.response?.data?.message
+            : "An unknow error has occuted";
       set({ error: errorMessage, fetching: false });
     }
   },

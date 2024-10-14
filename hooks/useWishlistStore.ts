@@ -32,8 +32,8 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
       set({ wishlist: res.data?.data, fetching: false, error: null });
     } catch (error) {
       const errorMessage = axios.isAxiosError(error)
-        ? error.message
-        : "An unknown error occurred";
+        ? error?.response?.data?.message
+        : "An unknow error has occuted";
       set({ error: errorMessage, fetching: false });
       showErrorToast("Failed to fetch Wishlist please try again");
     }
@@ -57,8 +57,8 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
       showSucessToast("Item added to wishlist successfully");
     } catch (error) {
       const errorMessage = axios.isAxiosError(error)
-        ? error.message
-        : "An unknown error occurred";
+        ? error?.response?.data?.message
+        : "An unknow error has occuted";
       set({ error: errorMessage, fetching: false });
       showErrorToast("Failed to add item to wishlist please try again");
     }
@@ -80,8 +80,8 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
       showSucessToast("Item removed from wishlist successfully");
     } catch (error) {
       const errorMessage = axios.isAxiosError(error)
-        ? error.message
-        : "An unknown error occurred";
+        ? error?.response?.data?.message
+        : "An unknow error has occuted";
       set({ error: errorMessage, fetching: false });
       showErrorToast("Failed to delete item from wishlist please try again");
     }

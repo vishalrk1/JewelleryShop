@@ -107,12 +107,16 @@ const useAuthStore = create<AuthState>(
             showSucessToast("Login successful 😎, Welcome back!!");
           }
         } catch (error: any) {
+          const errorMessage = axios.isAxiosError(error)
+            ? error?.response?.data?.message
+            : "Login Failed!!";
+          set({ error: errorMessage, fetching: false });
           set({
             status: "failed",
-            error: error.response?.data || "Login failed",
+            error: errorMessage || "Login Failed",
             fetching: false,
           });
-          showErrorToast(error.response?.data, true);
+          showErrorToast(errorMessage, true);
         }
       },
       logoutUser: () => {

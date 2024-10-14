@@ -35,13 +35,12 @@ const useProductStore = create<ProductsState>((set) => ({
         throw new Error(res.data.message);
       }
     } catch (error) {
-        const errorMessage = axios.isAxiosError(error)
-        ? error.message
-        : "An unknown error occurred";
+      const errorMessage = axios.isAxiosError(error)
+        ? error?.response?.data?.message
+        : "Cant fetch the products";
       set({ error: errorMessage, fetching: false });
     }
   },
 }));
 
 export default useProductStore;
-
