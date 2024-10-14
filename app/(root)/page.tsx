@@ -2,7 +2,6 @@
 
 import CategoryCards from "@/components/Cards/CategoryCards";
 import { Button } from "@/components/ui/button";
-import prismadb from "@/lib/prismadb";
 import { Feedback, ICategory, IProduct } from "@/lib/types";
 import { getCategoriesSvr } from "@/utils/getFunction/getCategories";
 import { getFeaturedProducts } from "@/utils/getFunction/getFeaturedProducts";

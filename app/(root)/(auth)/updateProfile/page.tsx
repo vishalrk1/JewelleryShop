@@ -24,27 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const AddressDetailsSchema = z.object({
-  address_type: z.string().min(1, { message: "Address type is required" }),
-  address_line1: z.string().min(1, { message: "Address line 1 is required" }),
-  address_line2: z.string().min(1, { message: "Address line 2 is required" }),
-  city: z.string().min(1, { message: "City is required" }),
-  state: z.string().min(1, { message: "State is required" }),
-  country: z.string().min(1, { message: "Country is required" }),
-  postal_code: z.string().min(1, { message: "Postal code is required" }),
-});
-
-export const UserDetailsSchema = z.object({
-  email: z.string().email(),
-  first_name: z.string().min(1, "First name is required"),
-  last_name: z.string().min(1, "Last name is required"),
-  image: z.string().url().optional(),
-  phone: z.string().optional(),
-  address: AddressDetailsSchema.optional(),
-});
-
-type FormData = z.infer<typeof UserDetailsSchema>;
+import { FormData, UserDetailsSchema } from "@/schemas";
 
 const UpdateProfileDetailsPage: React.FC = () => {
   const router = useRouter();
@@ -58,7 +38,9 @@ const UpdateProfileDetailsPage: React.FC = () => {
     { label: "Other", value: "Other" },
   ];
 
-  if (!user && !fetching) router.push("/");
+  useEffect(() => {
+    if (!user && !fetching) router.push("/");
+  }, [user, fetching, router]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(UserDetailsSchema),

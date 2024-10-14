@@ -2,8 +2,6 @@
 import { Menu } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet";
 
 import logo from "@/public/assets/Logo Gold.png";

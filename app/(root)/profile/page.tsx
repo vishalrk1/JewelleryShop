@@ -23,15 +23,17 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 const ProfilePage = () => {
   const { token } = useAuthStore();
-  const { user } = useUserStore();
+  const { user, fetching } = useUserStore();
   const { addresses } = useAddressStore();
   const router = useRouter();
 
-  if (!user) return router.replace("/");
+  useEffect(() => {
+    if (!user && !fetching) router.replace("/");
+  }, [user, fetching, router]);
 
   let UserDatailData: {
     label: string;

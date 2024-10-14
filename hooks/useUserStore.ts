@@ -9,7 +9,7 @@ import useCategoryStore from "./useCategoryStore";
 
 import * as z from "zod";
 import { showErrorToast, showSucessToast } from "@/utils/toasts";
-import { UserDetailsSchema } from "@/app/(root)/(auth)/updateProfile/page";
+import { UserDetailsSchema } from "@/schemas";
 
 interface UserState {
   user: IUser | null;

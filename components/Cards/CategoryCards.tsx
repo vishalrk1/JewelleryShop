@@ -2,7 +2,6 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { categories_category } from "@/prisma/generated/client";
 import { ICategory } from "@/lib/types";
 
 interface CategoryCardsProps {

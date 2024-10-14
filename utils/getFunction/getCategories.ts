@@ -1,4 +1,4 @@
-import { ErrorResponse, ICategory } from "@/lib/types";
+import { ICategory } from "@/lib/types";
 import axios from "axios";
 
 // function to get categories
