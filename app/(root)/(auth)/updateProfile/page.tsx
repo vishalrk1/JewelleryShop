@@ -66,7 +66,9 @@ const UpdateProfileDetailsPage: React.FC = () => {
       email: "",
       first_name: "",
       last_name: "",
-      image: NoUserImage.src,
+      image:
+        NoUserImage.src ||
+        "https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png",
       phone: "",
       address: {
         address_line1: "",
@@ -87,7 +89,9 @@ const UpdateProfileDetailsPage: React.FC = () => {
         email: user.email || "",
         first_name: user.first_name || "",
         last_name: user.last_name || "",
-        image: user.image || NoUserImage.src,
+        image:
+          user.image ||
+          "https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png",
         phone: user.phone || "",
         address: user?.isProfileComplete
           ? undefined
