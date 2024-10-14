@@ -4,6 +4,14 @@
 - [ ] Add Animations to home page components ( frames motion )
 - [x] Use ReCharts for admin dashboard
 - [ ] Add skeleton in wishlist page
+A Full-Stack E-commerce Application using Next.js and Node.js, delivering a responsive and seamless user experience
+across devices.
+
+## TODO
+- [ ] Improved edit user & UI flow
+- [ ] Search functionality
+- [ ] Admin panel for used with admin role
+- [ ] Add animations on homepage
 
 ## Screenshots
 ![screenshot/img-1.png](https://github.com/user-attachments/assets/f68835e2-ff91-4417-ae1b-2ce4512a4ae5)
