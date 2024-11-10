@@ -31,7 +31,6 @@ const ProductsTabs: React.FC<Props> = ({
           </TabsTrigger>
         </TabsList>
       </div>
-
       <ProductList
         productsData={productsData}
         currentTab={currentTab}
